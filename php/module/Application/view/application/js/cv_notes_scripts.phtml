@@ -1,0 +1,40 @@
+<?php $modal_name = (isset($modal_name)) ? $modal_name : '#cv_notes_modal';?>
+
+<script type="text/javascript">
+	$('body').on('click','<?=$modal_name;?> .custom_pagination a, <?=$modal_name;?> .cv_notes_switch a,<?=$modal_name;?> .delete_cvnote, <?=$modal_name;?> .fast_notes_link a', function(e){
+		e.preventDefault();
+		var link_href = $(this).attr('href');
+		getContent(link_href);
+	});
+
+	$('body').on('change','<?=$modal_name;?> .fast_notes_form form', function(e){
+		e.preventDefault();
+		var data = $(this).serializeArray();
+		var action = $(this).attr('action');
+		getContent(action, data);
+	});
+
+	$('body').on('submit','<?=$modal_name;?> .fast_notes_form form', function(e){
+		e.preventDefault();
+		var data = $(this).serializeArray();
+		var action = $(this).attr('action');
+		getContent(action, data);
+	});
+
+
+	function getContent(action, data)
+	{
+		$('<?=$modal_name;?> .notes_content').css('opacity' , 0.4);
+		$.get(action, data, function(response){
+			var redirect_pattern = /seamansdb/;
+   			if(response.redirect.length > 3) {
+    			return getContent(response.redirect);
+     		} else {
+	     		var new_content = $(response.data).filter('.notes_content');
+	     		$('<?=$modal_name;?> .notes_content').replaceWith(new_content);
+     		}
+     		$('<?=$modal_name;?> .notes_content').css('opacity' , 1);
+		}, 'json');
+
+	}
+</script>

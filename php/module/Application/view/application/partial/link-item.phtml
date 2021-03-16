@@ -1,0 +1,42 @@
+<?php 
+
+	$url = isset($url)? $url : null;
+	$title = (isset($title) && $title)? $title : $url;
+	$thumb = isset($thumb)? $thumb : null;
+	$description = isset($description)? $description : null;
+
+	if(isset($form_element)) {
+		$thumb = $form_element->getAttribute('data-thumb');
+		$description = $form_element->getAttribute('data-description');
+		$title = $form_element->getAttribute('data-title');
+		$url = $form_element->getAttribute('data-url');
+	}
+?>
+<hr class="mb05 mt05" />
+<div class="row">
+	<?php if (isset($form_element)): ?>
+		<div class="col-md-1">
+			<button type="button" class="btn btn-default"><?=$this->formElement($form_element);?></button>
+		</div>
+	<?php endif ?>
+	<div class="col-md-<?=isset($form_element)? 11 : 12;?>">
+		<div class="media">
+			<?php if ($thumb): ?>
+				<div class="media-left pb05">
+					<a href="<?=$url;?>" target="_blank">
+						<img class="media-object" src="/<?=_PICSWWW_.$thumb;?>" width="48px" title="<?=$title;?>">
+					</a>
+				</div>
+			<?php endif ?>
+			<div class="media-body">
+				<a href="<?=$url;?>" target="_blank">
+					<h5 class="media-heading"><?=$title;?></h5>
+				</a>
+				<?php if ($description): ?>
+					<p class="small text-muted"><?=zlessChars($description, 20);?>...</p>
+				<?php endif ?>
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,76 @@
+<section class="container-fluid">
+	<div class="row">
+		<div class="col-md-3">
+			<?php if ($this->isPermitted('admin\controller\tasks.add')): ?>
+				<div class="row pb">
+					<div class="col-md-12">
+						<a href="<?=$this->url('admin/actions', ['controller' => 'tasks', 'action' => 'add']);?>">
+							<button class="btn btn-success form-control"><span class="fa fa-plus"></span> <?=$this->translate('Add New Task');?> </button>
+						</a>
+					</div>
+				</div>
+			<?php endif ?>
+
+			<div class="row">
+				<div class="col-md-12">
+					<?php 
+					     $filters_list = [
+						     ['name' => 'my_tasks', 'value' => 1, 'title' => $this->translate('My Active Tasks'), 'icon' => 'fa fa-bolt'], 
+						     ['name' => 'status', 'value' => 'postponed', 'title' => $this->translate('Postponed Tasks'), 'icon' => 'fa fa-pause'], 
+						     ['name' => 'status', 'value' => 'closed', 'title' => $this->translate('Closed Tasks'), 'icon' => 'fa fa-times'], 
+					     ];
+					?>
+					<div class="box">
+						<div class="box-body no-padding">
+							<?=$this->partial('application/partial/custom_vert_filters', ['filters' => $q_options['filters'], 'filters_list' => $filters_list]);?>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+		<div class="col-md-9" id="task_list">
+			<?php foreach ($data_list as $task): ?>
+				<?=$this->partial('admin/partial/task-item', ['task' => $task]);?>
+			<?php endforeach ?>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<?=$this->partial('application/partial/custom_pagination');?>
+		</div>
+	</div>
+</section>
+
+
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'task_modal',
+					'modal_title' => $this->translate('Task Management')
+));?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#task_modal']);?>
+<?=$this->partial('admin/js/tasks_scripts');?>
+
+<script type="text/javascript">
+	setTaskPriorityBind();
+	function setTaskPriorityBind(){
+		$('.change_task_priority').click(function(e){
+			e.preventDefault();
+			var url = $(this).attr('href');
+			$.get(url, function(response) {
+				if (response.success = 1) {
+					var curr_location = window.location.href;
+					$.get(curr_location, function(response) {
+						var task_list = $(response.data).find('#task_list');
+						$('#task_list').replaceWith(task_list);
+						setAdminTaskBinds();
+						setTaskPriorityBind();
+					}, 'json');
+				}
+			}, 'json');
+		});
+	}
+
+</script>
+
+

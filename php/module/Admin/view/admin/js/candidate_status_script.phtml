@@ -1,0 +1,11 @@
+<script type="text/javascript">
+	$('select#candidate_status').on('change', function(e) {
+		var user_id = $(this).data('user');
+		var vacancy_id = $(this).data('vacancy');
+		var status = this.value;
+		$.get('/vacancies/set-candidate-status/'+user_id, { request: 'json', vacancy: vacancy_id, status: status }, function(response) {
+			if(response.success == true) $.notify({message: response.message },notify_success_settings); 
+			else $.notify({message: response.message },notify_error_settings);
+		}, 'json');
+	});
+</script>

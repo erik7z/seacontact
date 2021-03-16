@@ -1,0 +1,23 @@
+<section id="news" class="container-fluid" data-type="main_section">
+	<?php
+	$this->layout()->show_breadcrumbs = true;
+	$this->layout()->page_filters = $this->partial('my/partial/news-list-filter.phtml');
+	?>
+	<div class="row">
+		<?=$this->partial('application/partial/tags-map.phtml');?>
+	</div>
+	<div class="row data-list" data-limit="<?=$q_options['_limit'];?>" data-offset="<?=$q_options['_offset'];?>">
+		<div class="col-md-12">
+			<?=$this->partial('application/partial/news-list.phtml');?>
+		</div>
+	</div> <!-- data-list -->
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<?=$this->partial('application/partial/custom_pagination');?>
+		</div>
+	</div>
+</section>
+<?=$this->partial('application/image-gallery');?>
+<?=$this->partial('application/modal',array(
+	'modal_name' => 'news_full_modal',
+	));?>

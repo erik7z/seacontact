@@ -1,0 +1,41 @@
+<div class="row comments-form">
+	<?php
+
+		$submit_color = (isset($submit_color)) ? $submit_color : 'info';
+		$submit_icon = (isset($submit_icon)) ? $submit_icon : 'fa fa-send';
+
+		$form = (isset($this->form) && $this->form)? $this->form : new \Application\Form\CommentsForm;
+		$form->prepare();
+		$form->setAttribute('name', 'comments_form');
+		if(isset($action)) $form->setAttribute('action', $action);
+		$form->setAttribute('class', 'form-horizontal');
+		$fieldset = $form->get('comments');
+		echo $this->form()->openTag($form);
+	?>
+	<div class="col-md-12 labels-block">
+		<?=$this->formRow($fieldset->get('id'));?>
+		<?=$this->formRow($fieldset->get('reply_on'));?>
+		<div class="row">
+			<div class="col-md-2 hidden-xs text-center pt pr0 pl">
+				<?php if ($this->identity()): ?>
+					<a href="<?= $this->url('sc/userinfo', array('user' => zgetUserLogin($this->identity()), 'controller' => null)); ?>" title="<?=zgetUserName($this->identity());?>">
+						<img src="<?=zgetUserAvatar($this->identity());?>" width="25px" height="25px" class="img-circle"/>
+					</a>
+				<?php else: ?>
+					<img src="<?='/'._IMGWWW_._AVABLANKUSER_;?>" width="25px" height="25px" class="img-circle"/>
+				<?php endif ?>
+
+			</div>
+			<div class="col-md-8 col-xs-8 comment-text">
+				<?=$this->formElement($fieldset->get('comment')->setAttribute('class','form-control'));?>
+				<?=$this->formElementErrors($fieldset->get('comment'));?>									
+			</div>
+			<div class="col-md-2 col-xs-4 comment-submit" style="padding-right: 20px;">
+				<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn-'.$submit_color.' form-control'));?>
+					<span class="<?=$submit_icon;?>"></span>
+				<?=$this->formButton()->closeTag();?>		
+			</div>
+		</div>
+	</div>
+	<?=$this->form()->closeTag(); ?>
+</div>

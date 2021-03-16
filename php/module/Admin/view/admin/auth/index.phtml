@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title> << Login >> Seacontact Admin Module</title>
+    
+    
+    
+    
+	 <?= $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.png'))
+	     ->appendStylesheet('/css/admin/login.css')
+	 ;?>
+    
+	 <?= $this->headScript()
+	   ->prependFile($this->basePath('/js/admin-login.js'))
+	   ->prependFile($this->basePath('/js/jquery-2.1.3.min.js'))
+	 ;?>
+    
+  </head>
+
+  <body>
+
+    <div class="wrapper">
+		<div class="container">
+			<?php if(!$form->has('captcha')) :?>
+				<h1 class="admin-auth-header">SC ADMIN</h1>
+			<?php endif ?>
+			<div class="row">
+				<div class="col-md-12">
+					<?php
+						$form->prepare();
+						$action = ($action) ? $action : '/auth';
+						$form->setAttribute('action', $action);
+						echo $this->form()->openTag($form);
+						// echo $this->formElement($this->form->get('csrf'));
+					?>
+						<?=$this->formElement($this->form->get('user')->get('email')); ?>
+						<?=$this->formElement($this->form->get('user')->get('password')); ?>
+						<?php if($this->form->has('captcha')) {?>
+				            <?= $this->formElement($this->form->get('captcha'));?>
+						<?php }?>
+						<?=$this->formElement($this->form->get('submit')->setValue($this->translate('Enter'))->setAttributes(array(
+								'id' => 'login-button'))); ?>
+					<?= $this->form()->closeTag();?>
+				</div>
+			</div>
+			<?php if($this->flashMessenger()->hasErrorMessages()) :?>
+				<div class="row">
+					<div class="alert alert-danger col-md-12" role="alert">
+					 <?=$this->flashMessenger()->render("error");?>
+					</div>
+				</div>
+			<?php endif?>
+
+		</div>
+		
+		<ul class="bg-bubbles">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+  </body>
+</html>

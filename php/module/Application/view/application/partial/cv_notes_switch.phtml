@@ -1,0 +1,68 @@
+ <?php 
+	 $active_page = (isset($page))? $page : ((isset($q_options['_page']))? $q_options['_page'] : 1);
+	 $limit = (isset($limit))? $limit : ((isset($q_options['_limit']))? $q_options['_limit'] : 10);
+	 $filters = (isset($filters))? $filters : ((isset($q_options['filters']))? $q_options['filters'] : []);
+
+   $route_name = $this->routeMatch()->getRoute();
+   $route_params = $this->routeMatch()->getRouteParams();
+   $query_params = ['query' => [
+             '_page' => $active_page,
+             '_limit' => $limit,
+             'filters' => $filters,
+           ]];
+
+     if(isset($order)) $query_params['query']['_order'] = $order;
+     if(isset($order_by)) $query_params['query']['order_by'] = $order_by;
+?>
+
+<div class="btn-group" role="group" aria-label="<?=$this->translate('Notes select');?>">
+	<?php $query_params['query']['filters'] = [];?>
+	<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+		<?php $class = ($filters == []) ? 'info' : 'default';?>
+		<button type="button" class="btn btn-sm btn-<?=$class;?>"><?=$this->translate('All');?></button>
+	</a>
+	<?php $query_params['query']['filters'] = ['only' => 'company_all'];?>
+	<?php $class = (isset($filters['only']) &&  $filters['only'] == 'company_all') ? 'info' : 'default';?>
+	<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+  		<button type="button" class="btn btn-sm btn-<?=$class;?>">
+  		<span class="fa fa-university"></span>
+  		<?=$this->translate('Any Company');?>
+  		</button>
+  	</a>
+	<?php $query_params['query']['filters'] = ['only' => 'company_private'];?>
+	<?php $class = (isset($filters['only']) &&  $filters['only'] == 'company_private') ? 'info' : 'default';?>
+	<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+  		<button type="button" class="btn btn-sm btn-<?=$class;?>">
+  		<span class="fa fa-university"></span>
+  		<?=$this->translate('Company Private');?>
+  		</button>
+  	</a>
+
+	<?php if ($show_admin_notes): ?>
+		<?php $query_params['query']['filters'] = ['only' => 'admin_all'];?>
+		<?php $class = (isset($filters['only']) &&  $filters['only'] == 'admin_all') ? 'info' : 'default';?>
+		<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+	  		<button type="button" class="btn btn-sm btn-<?=$class;?>">
+	  			<span class="fa fa-user-secret"></span>
+	  			<?=$this->translate('Any Admin');?>
+	  		</button>
+	  	</a>
+		<?php $query_params['query']['filters'] = ['only' => 'admin_private'];?>
+		<?php $class = (isset($filters['only']) &&  $filters['only'] == 'admin_private') ? 'info' : 'default';?>
+		<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+	  		<button type="button" class="btn btn-sm btn-<?=$class;?>">
+		  		<span class="fa fa-user-secret"></span>
+		  		<?=$this->translate('My Private');?>
+	  		</button>
+	  	</a>
+	<?php endif ?>
+
+	<?php $query_params['query']['filters'] = ['only' => 'auto_notes'];?>
+	<?php $class = (isset($filters['only']) &&  $filters['only'] == 'auto_notes') ? 'info' : 'default';?>
+	<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+  		<button type="button" class="btn btn-sm btn-<?=$class;?>">
+	  		<span class="glyphicon glyphicon-cog"></span>
+	  		<?=$this->translate('Auto Generated');?>
+  		</button>
+  	</a>
+</div>

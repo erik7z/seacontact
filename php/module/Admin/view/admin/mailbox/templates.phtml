@@ -1,0 +1,36 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<?=$this->partial('admin/partial/mail-form');?>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-9">
+			<div class="box box-solid">
+				<div class="box-header bg-warning text-center with-border">
+					<i class="fa fa-text-width"></i>
+					<h3 class="box-title"><?=$this->translate('Template Keywords');?> </h3>
+				</div><!-- /.box-header -->
+				<div class="box-body ">
+					<div class="row">
+						<dl class="col-md-6 text-center">
+							<dt><b>%site_name%</b></dt>
+							<dd class="text-muted"><span class="small"><?=$this->translate('Site Name');?></span>: <b><?=_SITENAME_;?></b></dd>
+							<dt class="pt05"><b>%author_name%</b></dt>
+							<dd class="text-muted"><span class="small"><?=$this->translate('Your Name');?></span>: <b><?=zgetUserName($this->identity());?></b></dd>
+						</dl>
+						<dl class="col-md-6 text-center">
+							<dt><b>%user_name%</b></dt>
+							<dd class="text-muted"><span class="small"><?=$this->translate('User Name');?></span>: <b>Vasya Batareykin</b></dd>
+							<dt class="pt05"><b>%email%</b></dt>
+							<dd class="text-muted"><span class="small"><?=$this->translate('User E-mail');?></span>: <b>vasya@mail.ru</b></dd>
+							<dt class="pt05"><b>%cv_page%</b></dt>
+							<dd class="text-muted"><span class="small"><?=$this->translate('User CV page');?></span>: <b><?=$this->url('sc/userinfo', array('user' =>  'vasya_batareykin', 'controller' => 'cv'));?></b></dd>
+						</dl>
+					</div>
+
+				</div><!-- /.box-body -->
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,245 @@
+<form action="<?=$this->url('admin/actions', array('controller' => 'mailbox', 'action' => 'with-selected'));?>" method="post">
+	<div class="row pb">
+		<div class="col-md-3 pt05">
+			<button type="button" class="btn btn-success btn-md form-control" aria-label="New Mail" data-toggle="modal" data-title="New Mail" data-action="new_mail" data-target="#new_mail_modal">
+			  <span class="fa fa-envelope-o" aria-hidden="true"></span> <?=$this->translate('New Mail');?>
+			</button>
+		</div>
+		<div class="col-md-5 pt05">
+			<?php 
+				$filters_list[] = ['name' => 'unreaded', 'value' => 1, 'title' => $this->translate('Unreaded Messages'), 'icon' => 'fa fa-filter']; 
+			?>
+			<?=$this->partial('application/partial/custom_horiz_filters', ['filters' => $q_options['filters'], 'filters_list' => $filters_list, 'show_all_btn' => 0, 'merge_with_current' => 1]);?>
+		</div>
+		<div class="col-md-4  pt05 form-inline text-right">
+			<div class="form-group">
+				<label><?=$this->translate('With selected');?></label>
+				<?=$this->partial('admin/partial/select-action');?>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="row">
+				<div class="col-md-12 pb">
+					<a  class="refresh_mailbox" href="<?=$this->url('admin/actions', array('controller' => 'mailbox', 'action' => 'refresh-mailbox'), ['query' => ['force' => 1]]);?>">
+						<button type="button" class="btn btn-default  btn-md form-control">
+						  <span class="fa fa-refresh" aria-hidden="true"></span> <?=$this->translate('Refresh Mail');?>
+						</button>
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<?php foreach ($mail_accounts as $account): ?>
+						<?php  $filters_list = []; ?>
+						<?php
+							$folders = json_decode($account['folders']);
+							if(is_array($folders)) {
+								foreach ($folders as $folder) {
+									array_push($filters_list, ['name' => 'folder', 'value' => $folder->folder, 'title' => $folder->folder, 'count' => $folder->count, 'count_new' => $folder->count_new, 'icon' => 'fa fa-folder-o']);
+								}
+							}
+							$custom_buttons = [['class' => 'bg-info add_edit_folder', 'icon' => 'fa fa-plus' , 'title' => $this->translate('Add Folder'), 'href' => $this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'create-new-folder'], ['query' => ['mail_box' => $account['mail_box']]])]];
+						 ?>
+						<div class="box box-solid">
+				            <div class="box-body no-padding">
+					            <?=$this->partial('application/partial/custom_vert_filters', ['default_text' => '<b>'.$account['mail_box'].'</b>', 'default_count' => $account['unreaded'], 'menu_data_id' => str_replace(['.','@','-'], '', $account['mail_box']), 'default_class' => 'toggle_v_filters', 'default_icon' => 'fa fa-envelope', 'filters' => $q_options['filters'],'main_filters' => ['mail_box' => $account['mail_box']], 'filters_list' => $filters_list, 'custom_buttons' => $custom_buttons]);?>
+				            </div>
+						</div>
+					<?php endforeach;?>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-9">
+				<div class="box">
+					<div class="box-header bg-info">
+						<?php if (isset($q_options['filters']['mail_box'])): ?>
+							<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox'], ['query' => ['filters' => ['mail_box' => $q_options['filters']['mail_box'] ]]]);?>">
+								<button class="btn btn-default btn-sm" type="button">
+									<i class="fa fa-envelope"></i> <?=$q_options['filters']['mail_box'];?>
+								</button>
+							</a>
+						<?php endif ?>
+						<?php if (isset($q_options['filters']['folder'])): ?>
+							/
+							<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox'], ['query' => ['filters' => ['mail_box' => $q_options['filters']['mail_box'], 'folder' => $q_options['filters']['folder'] ]]]);?>">
+								<button class="btn btn-default btn-sm" type="button">
+									<i class="fa fa-folder-o"></i> <?=$q_options['filters']['folder'];?>
+								</button>
+							</a>
+							<span class="pull-right">
+									<button class="add_edit_folder btn btn-default btn-sm" type="button">
+										<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'edit-folder'], ['query' => ['mail_box' => $q_options['filters']['mail_box'], 'folder' => $q_options['filters']['folder'] ]]);?>">
+												<i class="fa fa-cog"></i> <?=$this->translate('Edit Folder');?>
+										</a>
+									</button>
+								<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'delete-folder'], ['query' => ['mail_box' => $q_options['filters']['mail_box'], 'folder' => $q_options['filters']['folder'] ]]);?>">
+									<button class="btn btn-danger btn-sm" type="button">
+										<i class="fa fa-trash"></i> <?=$this->translate('Delete Folder');?>
+									</button>
+								</a>
+							</span>
+						<?php endif ?>
+						<?php if (isset($q_options['filters']['unreaded'])): ?>
+							<button class="btn btn-default btn-sm" type="button">
+								<i class="fa fa-filter"></i> <?=$this->translate('Unreaded Messages');?>
+							</button>
+						<?php endif ?>
+					</div>
+					<div class="box-body table-responsive ">
+						<table class="table table-hover table-bordered table-condensed">
+							<thead>
+								<tr>
+									<th class="text-center col-sm-1"><input type="checkbox" id="mail_all" /></th>
+									<th class="text-center col-sm-5"><?=$this->translate('Subject');?></th>
+									<th class="text-center col-sm-3"><?=$this->translate('Mail From');?></th>
+									<th class="text-center col-sm-2"><?=$this->translate('Mail To');?></th>
+									<th class="text-center col-sm-1"><span class="glyphicon glyphicon-trash"></span></th>
+								</tr>
+
+							</thead>
+
+								<?php foreach($data_list as $mail) {?>
+									<tr <?php if ($mail->flag_seen == false): ?> class="bg-warning" <?php endif ?> >
+										<td class="text-center">
+											<input type="checkbox" class="select_mail" name="mail_<?=$mail->unique_id;?>" value="<?=$mail->unique_id;?>" />
+										</td>
+										<td>
+ 
+											<a href="<?=$this->url('admin/actions', array('controller' => 'mailbox', 'action' => 'view', 'id' => $mail->unique_id));?>">
+												<i class="fa fa-envelope-o small"></i> 
+
+												<?=zshorterText($mail->subject, 20);?> 
+											</a>
+											<?php $attachments = json_decode($mail->attachments);?>
+											<?php if (count($attachments) > 0): ?>
+												<span class="small glyphicon glyphicon-paperclip"></span>
+											<?php endif ?>
+											<br />
+											<span class="small text-muted">
+												<?php if($mail->time != 0) echo zformatDateTime($mail->time);?>  <span class="pull-right"><i class="fa fa-folder-o"></i> <?=$mail->folder;?> </span>
+											</span>
+										</td>
+										<td class="small">
+											<b><?=$mail->from_name;?></b>
+											<br />
+											<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'new-mail'], 
+												['query' => ['mail_to' => $mail->from_mail]]);?>">
+												<?=$mail->from_mail;?>
+											</a>
+										</td>
+										<td class="small">
+											<?php $mail_to = json_decode($mail->mail_to);?>
+											<?php if (count($mail_to) > 0): ?>
+												<?php foreach ($mail_to as $to): ?>
+													<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'new-mail'], 
+														['query' => ['mail_to' => $to->email]]);?>">
+														<?=$to->email;?>
+													</a>
+												<?php endforeach ?>
+											<?php endif ?>
+										</td>
+										<td class="text-center small">
+											<a class="delete_mail" data-id="<?=$mail->unique_id;?>" href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'to-trash', 'id' => $mail->unique_id], ['query' => ['mail_box' => $mail->mail_box]]);?>" > 
+												<span class="glyphicon glyphicon-trash"></span>
+											</a>
+										</td>
+									</tr>			
+								<?php }?>
+						</table>
+					</div>
+				</div>
+			<?=$this->partial('application/partial/custom_pagination');?>
+		</div>
+	</div>
+</form>
+
+
+
+<?=$this->partial('application/modal',array(
+                    'modal_name' => 'new_mail_modal',
+                    'modal_title' => $this->translate('Send Mail'),
+));?>
+
+<?=$this->partial('application/modal',array(
+                    'modal_name' => 'add_edit_folder_modal',
+                    'modal_size' => 'md',
+                    'modal_title' => $this->translate('Folder Actions'),
+));?>
+
+
+
+<?php  
+	$this->headScript()->appendFile('/vendor/tinymce/tinymce.min.js')
+	->appendFile('/vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js')
+	; 
+	$this->headLink()
+		->appendStylesheet('/vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css')
+		;
+?>
+<script type="text/javascript">
+
+	$("#mail_all").change(function(){
+      $(".select_mail").prop('checked', $(this).prop("checked"));
+    });
+	
+	$('#new_mail_modal').on('show.bs.modal', function (event) {
+		loadContent('/mailbox/new-mail');
+	});
+	
+	var mailbox_id = "<?=(isset($q_options['filters']['mail_box']))? str_replace(['.','@','-'], '', $q_options['filters']['mail_box']) : '';?>";
+	if(mailbox_id) var $menu_cont = $('.v_filters:not([data-id='+mailbox_id+'])');
+	else var $menu_cont = $('.v_filters');
+	$menu_cont.find('li:not(.toggle_v_filters)').hide();
+
+	$('.toggle_v_filters').click(function(e){
+		e.preventDefault();
+		$(this).siblings('li').slideToggle('slow');
+	});
+
+	var refresh = 0;
+	$('.refresh_mailbox').on('click', function(e){
+		e.preventDefault();
+		var $btn = $(this);
+		var href = $btn.attr('href');
+		if(refresh == 1) {
+			alert('Update in progress...');
+			return false;
+		}
+		refresh = 1;
+		$btn.find('.fa-refresh').addClass('fa-spin');
+		$btn.attr('disable', true);
+		$.get(href,null, function(response){
+			refresh = 0;
+			$btn.find('.fa-refresh').removeClass('fa-spin');
+			if(response.success) {
+				$.notify({message: response.message },notify_success_settings);
+				if(response.extra_data.parsed > 0) {
+					$.notify({message: '<?=$this->translate("New messages found, page will be refreshed in 5 seconds");?>' },notify_warning_settings);
+					setTimeout(function(){
+						window.location.reload();
+					}, 7000);
+				}
+			}
+			else $.notify({message: response.message },notify_error_settings);
+			console.log(response);
+		}, 'json');
+	});
+
+	$('.add_edit_folder').click(function(e){
+		e.preventDefault();
+		var href = $(this).find('a').attr('href');
+		$.get(href, null, function(response){
+			if(response.success == true) {
+				$('#add_edit_folder_modal .load-content').empty().html(response.data);
+				$('#add_edit_folder_modal').modal('show');
+			}
+			console.log(href);
+		}, 'json');
+	});
+
+</script>
+
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#new_mail_modal']);?>

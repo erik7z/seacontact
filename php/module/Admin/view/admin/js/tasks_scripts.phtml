@@ -1,0 +1,32 @@
+<script type="text/javascript">
+	$(document).on('ready', function() {
+		setAdminTaskBinds();
+	});
+
+	function setAdminTaskBinds() {
+		$('.add_new_task').click(function(e){
+			$('#task_modal').modal('show');
+			e.preventDefault();
+			var url = $(this).attr('href');
+			loadContent(url);
+		});
+		$('.update_task').click(function(e){
+			$('#task_modal').modal('show');
+			e.preventDefault();
+			var url = $(this).attr('href');
+			loadContent(url);
+		});
+		$('[data-action=delete_task]').click(function(e){
+			e.preventDefault();
+			if(confirm('<?=$this->translate("Are you sure want to delete task ?");?>')) {
+				var url = $(this).data('url');
+				$.get(url, function(response) {
+					if(response.success == 1) window.location.href = response.redirect;
+					else $.notify({message: response.message },notify_error_settings);
+				},'json');
+			}
+
+		});
+
+	}
+</script>

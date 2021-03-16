@@ -1,0 +1,278 @@
+<?php
+	$this->layout()->show_breadcrumbs = true;
+?>
+
+
+<section class="section-settings container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-12">
+					<?php
+						$form = $this->form;
+						$form->prepare();
+						$form->setAttribute('class', 'form-horizontal');
+						$fieldset = $form->get('user');
+						echo $this->form()->openTag($form);
+					?>
+						<br />
+						<div class="form-group">
+							<fieldset class="col-md-8 col-md-offset-2 mb" id="login_change">
+								<legend class="text-center"><?=$this->translate('Change Login');?></legend>
+								<div class="form-group">
+									<div class="col-md-4 col-sm-4 col-xs-4">
+										<?=$this->formLabel($fieldset->get('login'));?>
+									</div>
+									<div class="col-md-6 col-sm-6 col-xs-5">
+										<?=$this->formElement($fieldset->get('login')->setAttributes(array('type' => 'hidden')));?>
+										<?=$this->formElement($fieldset->get('login')->setAttributes(array('type' => 'text', 'class' => 'blocked_input form-control', 'aria-describedby' => 'helpBlock')));?>
+										<?=$this->formElementErrors($fieldset->get('login'));?>
+									</div>
+									<div class="col-md-2 col-sm-2 col-xs-3 text-center">
+										<?=$this->formLabel($form->get('change_login'));?>
+										<br />
+										<?=$this->formCheckbox($form->get('change_login'));?>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<?php $login = ($this->identity()->login)? $this->identity()->login : 'login';?>
+										<span id="helpBlock" class="help-block bg-info"><?=sprintf($this->translate("Your page will be: <span style='color: blue;'>www.seacontact.com</span>/%s ,  nickname can also be used for authorisation"), '<span style="color:red">'.$login.'</span>');?></span>
+									</div>
+								</div>
+							</fieldset>
+							<fieldset class="col-md-8 col-md-offset-2 pt mt">
+								<legend class="text-center"><?=$this->translate('Change Password');?></legend>
+								<div class="row">
+									<div class="col-md-10 col-sm-9 col-xs-9">
+										<div class="form-group">
+											<div class="col-md-5 ">
+												<?=$this->formLabel($fieldset->get('password'));?>
+											</div>
+											<div class="col-md-7">
+												<?=$this->formElement($fieldset->get('password')->setAttributes(['type' => 'hidden']));?>
+												<?=$this->formElement($fieldset->get('password')->setAttributes(['type' => 'password', 'class' => 'blocked_input form-control input-sm']));?>
+												<?=$this->formElementErrors($fieldset->get('password'));?>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-5 ">
+												<?=$this->formLabel($fieldset->get('confirm_password'));?>
+											</div>
+											<div class="col-md-7">
+												<?=$this->formElement($fieldset->get('confirm_password')->setAttributes(['type' => 'hidden']));?>
+												<?=$this->formElement($fieldset->get('confirm_password')->setAttributes(['type' => 'password', 'class' => 'blocked_input form-control input-sm']));?>
+												<?=$this->formElementErrors($fieldset->get('confirm_password'));?>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-2 col-sm-3 col-xs-3 text-center">
+										<?=$this->formLabel($form->get('change_password'));?>
+										<br />
+										<?=$this->formCheckbox($form->get('change_password'));?>
+									</div>
+								</div>
+
+
+							</fieldset>
+						</div>
+						<div class="form-group">
+							<div class="col-md-3 col-md-offset-9 text-center">
+								<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary input-sm btn-sm form-control'));?>
+									<span class="fa fa-save"></span> 
+									<?=$form->get('submit')->getLabel();?>
+								<?=$this->formButton()->closeTag();?>
+							</div>
+						</div>
+						<br />
+						<br />
+						<br />
+						<?php if (!$this->identity()->login): ?>
+							<h4><?=$this->translate('Please set your <b>login</b> to see social settings');?></h4>
+						<?php else : ?>
+							<div class="form-group">
+								<fieldset class="col-md-12">
+									<legend class="text-center"><?=$this->translate('Social networks settings');?></legend>
+										<div class="form-group">
+											<div class="col-md-3">
+												<i class="fa fa-vk text-info"></i> <?=$this->formLabel($fieldset->get('social_vk_parsing'));?>
+												<div class="input-group">
+											      <?=$this->formElement($fieldset->get('social_vk_parsing')->setAttribute('class','form-control input-sm'));?>
+											      <?=$this->formElementErrors($fieldset->get('social_vk_parsing'));?>
+											      <span class="input-group-btn">
+											        <button type="button" class="btn btn-info btn-sm form-control" data-toggle="modal" data-social="vk" data-target="#parse_social_modal"> 
+    													<i class="fa fa-refresh"></i> 
+    												</button>
+											      </span>
+											    </div><!-- /input-group -->
+											</div>
+											<div class="col-md-6">
+												<br />
+												<span id="helpBlock" class="help-block bg-info pt pb pl"><?=sprintf($this->translate("Seacontact will automatically check your wall in Social Networks every hour, and save all new posts marked with %s"), '<span class="text-danger"><b>'._SOCIAL_PARSE_KEYWORD_.$this->identity()->login.'</b></span>');?></span>
+											</div>
+											<div class="col-md-3">
+												<i class="fa fa-facebook text-info"></i> <?=$this->formLabel($fieldset->get('social_fb_parsing'));?>
+												<div class="input-group">
+											      <?=$this->formElement($fieldset->get('social_fb_parsing')->setAttribute('class','form-control input-sm'));?>
+											      <?=$this->formElementErrors($fieldset->get('social_fb_parsing'));?>
+											      <span class="input-group-btn">
+											        <button type="button" class="btn btn-info btn-sm form-control" data-toggle="modal" data-social="fb" data-target="#parse_social_modal"> 
+														<i class="fa fa-refresh"></i> 
+													</button>
+											      </span>
+											    </div><!-- /input-group -->
+											</div>
+										</div>
+										<br />
+										<?php if ($this->isPermitted('application\controller\social.add-vk-public')): ?>
+											<div class="form-group">
+												<legend class="text-center"><?=$this->translate('VK Publics For Parsing');?></legend>
+												<div class="col-md-12">
+													<div class="alert alert-warning ">
+														<p>
+															<?=$this->translate('If you add Public from Vkontakte, and some posts from there, marked with special #tags,  would be saved to Seacontact');?>
+														</p>
+														<p class="text-center"><b><?=$this->translate('You can use some tags to control rules');?>:</b></p>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<dl class="dl-horizontal">
+														<dt><b><?=Application\Service\VkWallParsingService::TAG_SECT_QUEST;?></b></dt>
+														<dd class="text-muted">
+															<span><?=$this->translate('Post will be published in Questions Section');?></span>
+														</dd>
+														<dt><b><?=Application\Service\VkWallParsingService::TAG_FORCE_PUBLIC;?></b></dt>
+														<dd class="text-muted">
+															<span><?=$this->translate('Post will be published from your public name, even if author found');?></span>
+														</dd>
+													</dl>
+												</div>
+												<div class="col-md-6">
+													
+													<dl class="dl-horizontal">
+														<dt><b><?=Application\Service\VkWallParsingService::TAG_ADD_LINK;?></b></dt>
+														<dd class="text-muted">
+															<span><?=$this->translate('Link to your VK public page will be added to the post');?></span>
+														</dd>
+														<dt><b><?=Application\Service\VkWallParsingService::TAG_NO_PARSE;?></b></dt>
+														<dd class="text-muted">
+															<span ><?=$this->translate('Post with this tag will not be parsed in any case');?></span>
+														</dd>
+													</dl>
+												</div>
+												<div class="col-md-4 col-md-offset-4 pb">
+													<button type="button" class="btn btn-success btn-sm form-control btn-responsive" data-toggle="modal" data-target="#vk_public_modal"> 	
+														<i class="fa fa-vk fa-lg"></i> 
+														<?=$this->translate('Add VK Public For Parsing');?>
+													</button>
+												</div>
+												<div class="col-md-12 table-responsive">
+													<div class="box">
+														<div class="box-body">
+															<table class="table table-hover">
+																<tr>
+																	<th><i class="fa fa-refresh"></i></th>
+																	<th class="col-md-5"><?=$this->translate('Public');?></th>
+																	<th class="col-md-4"><?=$this->translate('Tags');?></th>
+																	<th class="col-md-1"><i class="fa fa-trash-o"></i></th>
+																</tr>
+																<?php foreach($publics as $item) {?>
+																	<tr>
+																		<td>
+																	        <button type="button" class="btn btn-default btn-xs " data-toggle="modal" data-social="vk-public" data-public="<?=$item->id;?>" data-target="#parse_social_modal"> 
+						    													<i class="fa fa-refresh"></i> 
+						    												</button>
+																		</td>
+																		<td>
+																			<a href="<?=$item->page;?>" target="_blank">
+																				<?php if ($item->avatar): ?>
+																					<img style="max-height: 24px" alt="<?=$item->name;?>" src="<?=_ADDRESS_._PICSWWW_.$item->avatar;?>">
+																				<?php endif ?>
+																				<?=$item->name;?>
+																			</a>
+																			<?=$item->page;?><br />
+																		</td>
+																		<td><?=$item->parsing_tags;?></td>
+																		<td><a href="<?=$this->url('sc/social/actions', ['action' => 'delete-public', 'id' => $item->id]);?>"><i class="fa fa-trash-o"></i></a></td>
+																	</tr>			
+																<?php }?>
+															</table>
+														</div>
+													</div>
+												</div>
+
+												<br />
+												<br />
+												<br />
+											</div>
+										<?php endif ?>
+								</fieldset>
+							</div>
+							<br />
+							<br />
+							<br />
+							<br />
+							<div class="form-group">
+								<div class="col-md-3 col-md-offset-9 text-center">
+									<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary input-sm btn-sm form-control'));?>
+										<span class="fa fa-save"></span> 
+										<?=$form->get('submit')->getLabel();?>
+									<?=$this->formButton()->closeTag();?>
+								</div>
+							</div>
+						<?php endif ?>
+
+					<?= $this->form()->closeTag();?>
+				</div>
+			</div>
+	
+
+		</div>
+	</div>
+</section>
+
+<?=$this->partial('application/modal', ['modal_name' => 'vk_public_modal','modal_size' => 'md', 'modal_title' => $this->translate('Add VK Public'),]);?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#vk_public_modal']);?>
+<script type="text/javascript">
+	$('#vk_public_modal').on('show.bs.modal', function (event) {
+		loadContent('/social/add-vk-public/');
+	});
+</script>
+
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'parse_social_modal',
+					'modal_size' => 'md',
+					'modal_title' => $this->translate('Get Blog from Social Networks'),
+					'modal_content' => $this->partial('my/partial/get-social-blog'),
+));?>
+<script type="text/javascript">
+	$('.blocked_input').attr('disabled', 'disabled');
+	$('[name=change_login]').attr('checked', false);
+	$('[name=change_password]').attr('checked', false);
+	var dis_pass = 1;
+	$('[name=change_password]').click(function(){
+		if(dis_pass == 1) {
+			$('#confirm_password.blocked_input').attr('disabled', false);
+			$('#password.blocked_input').attr('disabled', false);
+			dis_pass = 0;
+		} else {
+			$('#confirm_password.blocked_input').attr('disabled', true);
+			$('#password.blocked_input').attr('disabled', true);
+			dis_pass = 1;
+		}
+	});
+
+	var dis_login = 1;
+	$('[name=change_login]').click(function(){
+		if(dis_login == 1) {
+			$('#login.blocked_input').attr('disabled', false);
+			$('#login.blocked_input').attr('disabled', false);
+			dis_login = 0;
+		} else {
+			$('#login.blocked_input').attr('disabled', true);
+			$('#login.blocked_input').attr('disabled', true);
+			dis_login = 1;
+		}
+	});
+
+</script>

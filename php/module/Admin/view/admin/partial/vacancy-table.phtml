@@ -1,0 +1,304 @@
+<?php
+	$title = (isset($title))? $title : $this->translate('Vacancies');
+	$user_id = (isset($user_id))? $user_id : null;
+	$table_sorting = (isset($table_sorting))? $table_sorting : 0;
+	$button_filters = (isset($button_filters))? $button_filters : '';
+	$modal_button_id = (isset($modal_button_id))? $modal_button_id : null;
+	$radio_buttons = (isset($radio_buttons))? $radio_buttons : false;
+	$fields = (isset($fields))? array_flip($fields) : array_flip([
+		'id', 'edit', 'company', 
+		'comments', 'rank', 'salary', 'ship_type', 
+		'contract_length', 
+		'publish_time', 'views','subscribers', 'candidates', 'active'
+		]);
+?>
+
+<div class="col-md-12">
+	<div class="box">
+		<div class="box-header bg-info">
+			<div class="row">
+				<div class="col-md-3">
+					<h4><?=$title;?></h4>
+				</div>
+				<div class="col-md-7">
+					<?=$button_filters;?>
+				</div>
+				<div class="col-md-2 text-right">
+				<?php if ($modal_button_id): ?>
+					<button type="button" class="btn btn-success" aria-label="<?=$this->translate('Add Vacancy');?>" data-toggle="modal" data-target="#<?=$modal_button_id;?>">
+					  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> <?=$this->translate('Add Vacancy');?>
+					</button>	
+				<?php endif ?>
+				</div>
+			</div>
+			
+		</div>
+		<div class="box-body">
+			<div class="row">
+				<div class="col-md-12  table-responsive">
+					<table class="table table-bordered table-hover table-condensed table-vacancies">
+						<thead>
+							<tr>
+								<?php if (isset($fields['id'])): ?>
+									<th>
+										<?php if ($table_sorting): ?>
+											<?=$this->partial('application/partial/custom_sorting', ['field_title' => 'ID #', 'field_name' => 'id', 'q_options' => $q_options]);?>
+										<?php else: ?>
+											ID #
+										<?php endif ?>
+									</th>
+								<?php endif ?>
+								<?php if ($radio_buttons): ?>
+									<th><?=$this->translate('Select');?></th>
+								<?php endif ?>
+								<?php if (isset($fields['edit'])): ?>
+									<th class="text-center">
+										<?php if ($table_sorting): ?>
+											<?=$this->partial('application/partial/custom_sorting', ['field_title' => '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span><br /> '.$this->translate('Vacancy'), 'field_name' => 'title', 'q_options' => $q_options]);?>
+										<?php else: ?>
+											<span class="fa fa-edit" aria-hidden="true"></span><br />
+											<?=$this->translate('Vacancy');?>
+										<?php endif ?>
+										
+									</th>
+								<?php endif ?>
+								<?php if (isset($fields['company'])): ?>
+									<th>
+										<?php if ($table_sorting): ?>
+											<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Company'), 'field_name' => 'company_name', 'q_options' => $q_options]);?>
+										<?php else: ?>
+											<?=$this->translate('Company');?>
+										<?php endif ?>
+									</th>
+								<?php endif ?>
+								<?php if (isset($fields['for_company'])): ?>
+									<th>
+										<?php if ($table_sorting): ?>
+											<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('For Company'), 'field_name' => 'for_company', 'q_options' => $q_options]);?>
+										<?php else: ?>
+											<?=$this->translate('For Company');?>
+										<?php endif ?>
+									</th>
+								<?php endif ?>
+								<?php if (isset($fields['urgent'])): ?>
+									<th><span class="glyphicon glyphicon-fire"></span></th>
+								<?php endif ?>
+								<?php if (isset($fields['comments'])): ?>
+									<th><?=$this->translate('Comment');?></th>
+								<?php endif ?>
+								<?php if (isset($fields['rank'])): ?>
+									<th>
+										<?php if ($table_sorting): ?>
+											<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Rank'), 'field_name' => 'rank', 'q_options' => $q_options]);?>
+										<?php else: ?>
+											<?=$this->translate('Rank');?>
+										<?php endif ?>
+									</th>
+								<?php endif ?>
+								<?php if (isset($fields['ship_type'])): ?>
+									<th><?=$this->translate('Ship Type');?></th>
+								<?php endif ?>
+								<?php if (isset($fields['ship_dwt'])): ?>
+									<th><?=$this->translate('Ship DWT');?></th>
+								<?php endif ?>
+								<?php if (isset($fields['contract_length'])): ?>
+									<th><?=$this->translate('Contract');?></th>
+								<?php endif ?>
+								<?php if (isset($fields['date_join'])): ?>
+									<th>
+									<?php if ($table_sorting): ?>
+										<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Date Join'), 'field_name' => 'date_join', 'q_options' => $q_options]);?>
+									<?php else: ?>
+										<?=$this->translate('Date Join');?>
+									<?php endif ?>
+									</th>
+								<?php endif ?>
+								<?php if (isset($fields['publish_time'])): ?>
+									<th>
+									<?php if ($table_sorting): ?>
+										<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Publish Time'), 'field_name' => 'publish_time', 'q_options' => $q_options]);?>
+									<?php else: ?>
+										<?=$this->translate('Publish Time');?>
+									<?php endif ?>
+									</th>
+								<?php endif ?>
+								<?php if (isset($fields['views'])): ?>
+									<th>
+									<?php if ($table_sorting): ?>
+										<?=$this->partial('application/partial/custom_sorting', ['field_title' => '<span class="fa fa-eye"></span> ', 'field_name' => 'views', 'q_options' => $q_options]);?>
+									<?php else: ?>
+										<span class="fa fa-eye"></span> 
+									<?php endif ?>
+									</th>
+								<?php endif ?>
+								<?php if (isset($fields['subscribers'])): ?>
+									<th>
+										<?php if ($table_sorting): ?>
+											<?=$this->partial('application/partial/custom_sorting', ['field_title' => '<span class="fa fa-user-plus"></span> ', 'field_name' => 'subscribers', 'q_options' => $q_options]);?>
+										<?php else: ?>
+											<span class="fa fa-user-plus"></span>
+										<?php endif ?>
+									</th>
+								<?php endif ?>
+								<?php if (isset($fields['candidates'])): ?>
+									<th class="text-center" title="<?=$this->translate('Candidates');?>">
+										<?php if ($table_sorting): ?>
+											<?=$this->partial('application/partial/custom_sorting', ['field_title' => '<span class="fa fa-street-view"></span> ', 'field_name' => 'candidates', 'q_options' => $q_options]);?>
+										<?php else: ?>
+											<span class="fa fa-street-view"></span>
+										<?php endif ?>
+									</th>
+								<?php endif ?>
+								<?php if (isset($fields['active'])): ?>
+									<th><?=$this->translate('Active');?></th>
+								<?php endif ?>
+								<?php if (isset($fields['candidate_assigned_date'])): ?>
+									<th><?=$this->translate('Candidate Assigned');?></th>
+								<?php endif ?>
+								<?php if (isset($fields['candidate_status'])): ?>
+									<th><?=$this->translate('Candidate Status');?></th>
+								<?php endif ?>
+							</tr>
+						</thead>
+
+						<?php foreach($vacancies as $vacancy) {?>
+							<tr <?php if ($vacancy->time <= time() && $vacancy->active == 1): ?> class="success" <?php endif ?> >
+								<?php if (isset($fields['id'])): ?>
+									<td><?=$vacancy->id;?></td>
+								<?php endif ?>
+								<?php if ($radio_buttons): ?>
+									<td class="text-center">
+										<input type="radio" name="vacancy_candidates[vacancy]" value="<?=$vacancy->id;?>" />
+									</td>
+								<?php endif ?>
+
+								<?php if (isset($fields['edit'])): ?>
+									<td class="text-center">
+										<a href="<?=$this->url('admin/actions', array('controller' => 'vacancies', 'action' => 'vacancy', 'id' => $vacancy->id));?>">
+											<button type="button" class="btn btn-default btn-sm form-control" aria-label="View Vacancy">
+						 						<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+											</button>
+										</a>
+										<br />
+										<a href="<?=$this->url('sc/vacancies/actions', array('controller' => 'vacancy', 'action' => 'view', 'id' => $vacancy->id));?>">
+											<?=zshorterText($vacancy->title, 5);?>
+										</a>
+									</td>
+								<?php endif ?>
+								<?php if (isset($fields['company'])): ?>
+									<td>
+										<?php $page = ($vacancy->login) ? $vacancy->login : 'id'.$vacancy->user; ?>
+										<a href="<?=_ADDRESS_.$page;?>"><?=$vacancy->company_name;?></a>
+									</td>
+								<?php endif ?>
+								<?php if (isset($fields['for_company'])): ?>
+									<td>
+										<?php if($vacancy->for_company):?>
+											<a href="<?=$this->url('admin/actions', ['controller' => 'userdb', 'action' => 'owner', 'id' => $vacancy->for_company]);?>"> 
+											<?=$vacancy->for_company_company_name;?>
+												
+											</a>
+										<?php endif?>
+									</td>
+								<?php endif ?>
+								<?php if (isset($fields['urgent'])): ?>
+									<td>
+										<?php if ($vacancy->urgent): ?>
+											<span class="glyphicon glyphicon-fire text-danger"></span>
+										<?php endif ?>
+									</td>
+								<?php endif ?>
+								<?php if (isset($fields['comments'])): ?>
+									<td><?=zshorterText($vacancy->comments, 4);?></td>
+								<?php endif ?>
+								<?php if (isset($fields['rank'])): ?>
+									<td>
+										<?=$vacancy->rank;?> 
+										<?php if ($vacancy->salary): ?> /
+											<?=$vacancy->salary;?> <?=$vacancy->salary_unit;?>
+										<?php endif ?>
+									</td>
+								<?php endif ?>
+								<?php if (isset($fields['ship_type'])): ?>
+									<td><?=$vacancy->ship_type;?></td>
+								<?php endif ?>
+								<?php if (isset($fields['ship_dwt'])): ?>
+									<td><?=$vacancy->ship_dwt;?></td>
+								<?php endif ?>
+								<?php if (isset($fields['contract_length'])): ?>
+									<td><?=zdaysToMonths($vacancy->contract_length);?></td>
+								<?php endif ?>
+								<?php if (isset($fields['date_join'])): ?>
+									<td>
+										<?php if ($vacancy->date_join != 0): ?>
+											<?=zformatDateYear($vacancy->date_join);?>
+										<?php endif ?>
+									</td>
+								<?php endif ?>
+								<?php if (isset($fields['publish_time'])): ?>
+									<td>
+										<span class="hidden"><?=$vacancy->time;?></span>
+										<?=zformatDateTimeYear($vacancy->time);?>
+									</td>
+								<?php endif ?>
+								<?php if (isset($fields['views'])): ?>
+									<td><?=$vacancy->views;?> <span class="fa fa-eye"></span></td>
+								<?php endif ?>
+								<?php if (isset($fields['subscribers'])): ?>
+									<td><?=$vacancy->subscribers;?> <span class="fa fa-user-plus"></span></td>
+								<?php endif ?>
+								<?php if (isset($fields['candidates'])): ?>
+									<td class="text-center"><?=$vacancy->candidates;?> <span class="fa fa-street-view"></span></td>
+								<?php endif ?>
+								<?php if (isset($fields['active'])): ?>
+									<td class="text-center">
+										<span class="hidden"><?=$vacancy->active;?></span>
+										<input type="checkbox" class="active_vacancy" <?=($vacancy->active)? 'checked="checked"' : '';?> name="active_<?=$vacancy->id;?>" data-id="<?=$vacancy->id;?>" value="<?=$vacancy->active;?>" />
+									</td>
+								<?php endif ?>
+								<?php if (isset($fields['candidate_assigned_date'])): ?>
+									<td>
+										<?=zformatDateYear($vacancy->candidate_assigned_date);?>
+									</td>
+								<?php endif ?>
+								<?php if (isset($fields['candidate_status'])): ?>
+									<td>
+										<select data-user="<?=$user_id;?>" data-vacancy="<?=$vacancy->id;?>" name="vacancy_candidates[status]" id="candidate_status" class="form-control" >
+											<?php $status_list = \Application\Model\VacancyCandidatesTable::getCandidateStatusList(); ?>
+											<?php foreach($status_list as $key => $status) :?>
+												<option value="<?=$key;?>" <?php if($key == $vacancy->candidate_status):?> selected="selected" <?php endif?>><?=$status;?></option>
+											<?php endforeach ?>
+										</select>
+									</td>
+								<?php endif ?>
+							</tr>			
+						<?php }?>
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+<?php if (isset($fields['candidate_status'])): ?>
+	<?=$this->partial('admin/js/candidate_status_script');?>
+<?php endif?>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.active_vacancy').on('click', function(e) {
+			var $checkbox = $(this);
+			var id = $checkbox.data('id');
+			var status = ($checkbox.attr('value') == 1) ? 0 : 1;
+			var url = '/vacancies/toggle-active/'+id;
+			$.get(url, {status: status}, function(response) {
+				if(response.success){
+					$checkbox.val(status);
+					$checkbox.parents('tr').toggleClass('success');
+				} else alert(response);
+			}, 'json');
+		});
+	});
+
+</script>

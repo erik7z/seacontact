@@ -1,0 +1,151 @@
+<section id="ships" class="container-fluid">
+	<h1>Ships</h1>
+	<div class="row">
+		<div class="col-md-12 ships-content">
+			<div class="row data-search ship-search">
+				<form action="#" class="col-md-12">		
+				    <input type="search" class="form-control" placeholder="Ship name or IMO#" />
+				    <button type="submit" class="btn btn-primary" value="">
+				    	<span class="glyphicon glyphicon-search"></span>
+				    </button>
+				    <button class="btn btn-default" value="">
+				    	<span class="fa fa-wrench"></span>
+				    </button>
+				</form>
+			</div>
+
+			<div class="row ships-list">
+				<?php foreach ($this->ships as $ship) :?>
+					<div class="col-md-12 ship-item">
+						<div class="row ship-name">
+							<div class="col-md-offset-3 col-md-4">
+								<h4><?=$ship['ship_name'];?></h4>
+							</div>
+						</div>
+						<div class="row ship-info">
+							<div class="col-md-3 ship-data">
+								<table>
+									<tr>
+										<th>IMO</th>
+										<td><?=$ship['imo'];?></td>
+									</tr>
+									<tr>
+										<th>CALLSIGN</th>
+										<td><?=$ship['callsign'];?></td>
+									</tr>
+									<tr>
+										<th>TYPE</th>
+										<td><?=$ship['type'];?></td>
+									</tr>
+									<tr>
+										<th>FLAG</th>
+										<td><?=$ship['flag'];?></td>
+									</tr>
+									<tr>
+										<th>BUILT</th>
+										<td><?=$ship['built'];?></td>
+									</tr>
+									<tr>
+										<th>DWT</th>
+										<td><?=$ship['dwt'];?></td>
+									</tr>
+									<tr>
+										<th>LENGTH</th>
+										<td><?=$ship['length'];?></td>
+									</tr>
+									<tr>
+										<th>BREADTH</th>
+										<td><?=$ship['breadth'];?></td>
+									</tr>
+									<tr>
+										<th>SPEED</th>
+										<td><?=$ship['speed'];?> Kts</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-md-4 ship-photos">
+								<div class="row">
+									<?php if('' != $ship['photos']) {
+										$photos = json_decode($ship['photos']);
+										for ($i=0; $i < count($photos); $i++) {
+											if($i > 3) break;
+											$cols = ($i == 0)? 12:4;
+										?>
+											<img src="<?=$this->basePath('/'._PICSWWW_.$photos[$i]->thumb);?>" class="col-md-<?=$cols;?>"/>
+											<?php if(count($photos) < 2) {?>
+												<button class="btn btn-sm btn-default" value="">
+													<span class="fa fa-camera"></span>
+													Add More Photos
+												</button>
+											<?php } ?>
+										<?php }
+									} else { ?>
+										<img src="<?=$this->basePath('/'._PICSWWW_.'ship_blank.png');?>" class="col-md-12"/>
+										<button class="btn btn-sm btn-default" value="">
+											<span class="fa fa-camera"></span>
+											Add More Photos
+										</button>
+									<?php }	?>			
+								</div>
+							</div>
+							<div class="col-md-2 ship-user-data">
+								<table>
+									<tr>
+										<th><span class="fa fa-user"></span></th>
+										<td>SEAMANS:</td>
+										<td><a href="#"><?=$ship['crew_worked'];?></a></td>
+									</tr>
+									<?php if($ship['photos']) {?>
+										<tr>
+											<th><span class="fa fa-camera"></span></th>
+											<td>PHOTOS:</td>
+											<td><a href="#"><?=count($photos);?></a></td>
+										</tr>
+									<?php }?>
+
+									<tr>
+										<th><span class="fa fa-pencil"></span></th>
+										<td>REVIEWS:</td>
+										<td>12</td>
+									</tr>
+								</table>
+								<?php if(isset($ship['friends_list']) && !empty($ship['friends_list'])) {?>
+									<?php $friends = json_decode($ship['friends_list']);?>
+									<h4>Friends worked:</h4>
+									<ul class="friends-list list-unstyled">
+										<?php for($i = 0; $i < count($friends); $i++) {?>
+											<?php if($i > 1) break;?>
+											<li><a href="<?=$this->basePath($friends[$i]->login);?>">
+													<img src="<?=$this->basePath('/'._PICSWWW_.$friends[$i]->avatar);?>" />
+													<span class="friend_name"><?=$friends[$i]->name;?></span>
+												</a>
+											</li>
+										<?php }?>
+									</ul>
+									<a href="#">See All (<?=count($friends);?>)</a>
+								<?php } ?>
+
+							</div>
+							<div class="col-md-3 ship-control">
+								<button class="btn btn-sm btn-default" value="">
+									<span class="fa fa-camera"></span>
+									Add Photos
+								</button>
+								<button class="btn btn-sm btn-default" value="">
+									<span class="fa fa-star"></span>
+									Add To My Ships
+								</button>
+								<button class="btn btn-sm btn-primary" value="">
+									<span class="fa fa-pencil"></span>
+									Write Review
+								</button>
+							</div>
+						</div> <!-- row  -->
+					</div> <!-- col-md-12 ship_item item-block -->
+				<?php endforeach ?>
+
+			</div> <!-- row ships-list -->
+		</div>		
+	</div>
+
+</section>

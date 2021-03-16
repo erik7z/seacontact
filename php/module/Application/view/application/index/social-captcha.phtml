@@ -1,0 +1,63 @@
+<div id="home" class="auth_page">
+    <div class="headerLine">
+        <?= $this->partial('landing-menu');?>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3><?=$this->translate('Captcha');?></h3>
+                    <div class="fr">
+                        <div style="display: inline-block;">
+                            <div class="form-horizontal">
+                                <?php
+                                    $form = $this->form;
+                                    $form->prepare();
+                                    echo $this->form()->openTag($form);
+                                ?>
+                                    <div class="form-group">   
+                                        <div class="col-md-8">
+                                            <?php if ($form->has('captcha_sid')): ?>
+                                                <div class="form-group">
+                                                    <?=$this->formElement($form->get('captcha_sid')); ?>
+                                                    <div class="col-md-12 text-center">
+                                                        <img src="<?=$captcha_img;?>" />
+                                                    </div>
+                                                </div>
+                                            <?php endif ?>
+                                            <?php if ($form->has('captcha_key')): ?>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <?=$this->formElement($form->get('captcha_key')->setAttributes(array('class' => 'fEmail form-control input-sm'))); ?>
+                                                    </div>
+                                                </div>
+                                            <?php endif ?>
+                                        </div>
+                                        <div class="col-md-4">
+                                        <?php if ($form->has('submit')): ?>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <?=$this->formSubmit($form->get('submit')->setAttribute('class', 'form-control subS btn-sm')->setValue($this->translate('Send'))); ?>
+                                                </div>
+                                            </div>
+                                        <?php endif ?>
+
+                                        </div>
+                                    </div>
+                                <?=$this->form()->closeTag();?>
+                                <?php if ($this->msgs()): ?>
+                                    <div class="form-group">
+                                        <div class="col-md-12 text-center">
+                                            <div class="system-messages">
+                                                <?= $this->msgs();?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?=$this->partial('landing-social');?>
+            </div>
+        </div>
+    </div>
+</div>

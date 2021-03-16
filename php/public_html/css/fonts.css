@@ -1,0 +1,23 @@
+
+/*
+ * Agency FB
+================================================================================ */
+
+@font-face {
+    font-family: 'agency-fb-regular';
+    src: url('/css/fonts/agency-fb/agencyr.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'agency-fb-bold';
+    src: url('/css/fonts/agency-fb/agencyb.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+   color: #1f6094;
+    font-family: 'Roboto', 'sans-serif';
+   font-weight: normal;
+}

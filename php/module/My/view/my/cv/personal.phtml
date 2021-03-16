@@ -1,0 +1,273 @@
+
+<section id ="cv-personal" class="section-cv container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('id', 'personal_form');
+				$form->setAttribute('class', 'form-horizontal');
+				$userFields = $form->get('user');
+				echo $this->form(null)->openTag($form);
+			?>
+			<div class="row">
+				<div class="col-md-10">
+					<h3><?=$this->translate('Personal Information');?></h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-info ">
+						<h4 class="text-center mt0 mb05"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?=$this->translate('<b>Privacy</b>: Information in your CV is visible only to');?>:</h4>
+						<ul class="small">
+							<li class="pb05 pt05"><b><?=$this->translate('Contacts, Mobile, E-mail, Documents, Experience, Personal information');?></b> - <?=$this->translate('Only to REGISTERED and LICENSED Crewing agencies');?></li>
+							<li class="pb05"><b><?=$this->translate('Name, Surname, Names of the Ships');?></b> - <?=$this->translate('Only to your Friends');?></li>
+						</ul>
+						<br />
+						<span class="pull-right small"><i><?=$this->translate('We care for your privacy, and would not provide access to personal information to anybody without your approval');?></i></span>
+						<br />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="cv-avatar col-md-3">
+					
+					<div id="kv-avatar-errors" class="center-block" style="width:300px;display:none"></div>
+					<div class="kv-avatar center-block text-center">
+					<h5><?=$this->translate('CV Form Photo');?></h5>
+						<?= $this->formFile($userFields->get('cv_avatar'));?>
+					</div>
+				</div>
+
+
+				<?= $this->formRow($userFields->get('id')); ?>
+				<div class="col-md-9">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('desired_rank'));?>
+									<?=$this->formElement($userFields->get('desired_rank')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('desired_rank'));?>
+								</div>
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('readiness_date'));?>
+									<?=$this->formElement($userFields->get('readiness_date')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('readiness_date'));?>
+								</div>
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('minimum_salary'));?>
+									<?=$this->formElement($userFields->get('minimum_salary')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('minimum_salary'));?>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('name'));?>
+									<?=$this->formElement($userFields->get('name')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('name'));?>
+								</div>
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('surname'));?>
+									<?=$this->formElement($userFields->get('surname')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('surname'));?>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('sex'));?>
+									<?=$this->formElement($userFields->get('sex')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('sex'));?>
+								</div>
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('dob'));?>
+									<?=$this->formElement($userFields->get('dob')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('dob'));?>
+								</div>
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('english_knowledge'));?>
+									<?=$this->formElement($userFields->get('english_knowledge')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('english_knowledge'));?>
+								</div>
+							</div>									
+							<div class="form-group">
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('nationality'));?>
+									<?=$this->formElement($userFields->get('nationality')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('nationality'));?>
+								</div>
+								<div class="col-md-4">
+									<?=$this->formLabel($userFields->get('home_city'));?>
+									<?=$this->formElement($userFields->get('home_city')->setAttribute('class','form-control input-sm'));?>
+									<?=$this->formElementErrors($userFields->get('home_city'));?>
+								</div>
+							</div>
+							<div class="form-group">
+								<fieldset class="col-md-12">										
+									<legend><?=$this->translate('Contacts');?></legend>
+									<div class="form-group">
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('contact_mobile'));?>
+											<?=$this->formElement($userFields->get('contact_mobile')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('contact_mobile'));?>
+										</div>
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('contact_phone'));?>
+											<?=$this->formElement($userFields->get('contact_phone')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('contact_phone'));?>
+										</div>
+									</div>
+								</fieldset>
+							</div>
+							<div class="form-group">
+								<fieldset class="col-md-12">										
+									<legend><?=$this->translate('Visa');?></legend>
+									<div class="form-group">
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('visa_usa'));?>
+											<?=$this->formElement($userFields->get('visa_usa')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('visa_usa'));?>
+										</div>
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('visa_usa_exp'));?>
+											<?=$this->formElement($userFields->get('visa_usa_exp')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('visa_usa_exp'));?>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('visa_shenghen'));?>
+											<?=$this->formElement($userFields->get('visa_shenghen')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('visa_shenghen'));?>
+										</div>
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('visa_shenghen_exp'));?>
+											<?=$this->formElement($userFields->get('visa_shenghen_exp')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('visa_shenghen_exp'));?>
+										</div>
+
+									</div>
+								</fieldset>
+							</div>
+
+							<div class="form-group">
+								<fieldset class="user_education col-md-12">
+									<legend>
+										<span ><?=$this->translate('Education');?> </span> 
+										<span class="pull-right">
+											<button onClick="return add_category();" type="button" id="add_button" class="btn btn-primary" ><?=$this->translate('Add More Schools');?></button>
+										</span>
+									</legend>
+									<div class="row insert_template">
+										<?php foreach ($form->get('user_education')->getIterator() as $fieldset) {?>
+											<fieldset class="col-md-12 education_item">	
+												<div class="row" style="padding-bottom: 0.5em">
+													<span class="glyphicon glyphicon-remove pull-left delete-entry" data-id="<?=$fieldset->get('id')->getValue();?>"></span>
+												</div>
+												<div class="form-group">
+														<?=$this->formElement($fieldset->get('id')->setAttribute('class','form-control input-sm'));?>
+													<div class="col-md-8">
+														<?=$this->formLabel($fieldset->get('name'));?>
+														<?=$this->formElement($fieldset->get('name')->setAttribute('class','form-control input-sm'));?>
+														<?=$this->formElementErrors($fieldset->get('name'));?>
+													</div>
+													<div class="col-md-4">
+														<?=$this->formLabel($fieldset->get('country'));?>
+														<?=$this->formElement($fieldset->get('country')->setAttribute('class','form-control input-sm'));?>
+														<?=$this->formElementErrors($fieldset->get('country'));?>
+													</div>
+													<div class="col-md-4">
+														<?=$this->formLabel($fieldset->get('from'));?>
+														<?=$this->formElement($fieldset->get('from')->setAttribute('class','form-control input-sm'));?>
+														<?=$this->formElementErrors($fieldset->get('from'));?>
+													</div>
+													<div class="col-md-4">
+														<?=$this->formLabel($fieldset->get('to'));?>
+														<?=$this->formElement($fieldset->get('to')->setAttribute('class','form-control input-sm'));?>
+														<?=$this->formElementErrors($fieldset->get('to'));?>
+													</div>
+													<div class="col-md-4">
+														<?=$this->formLabel($fieldset->get('diploma'));?>
+														<?=$this->formElement($fieldset->get('diploma')->setAttribute('class','form-control input-sm'));?>
+														<?=$this->formElementErrors($fieldset->get('diploma'));?>
+													</div>
+												</div>
+											</fieldset>
+											<hr />
+										<?php }?>
+										<?= $this->customCollection()->renderTemplate($form->get('user_education'));?>
+
+									</div>
+								</fieldset>
+							</div>
+							<div class="form-group">
+								<fieldset class="col-md-12">
+									<legend><?=$this->translate('Other information');?></legend>
+									<div class="row">
+										<div class="col-md-12">
+											<?=$this->formLabel($userFields->get('user_notes'));?>
+											<?=$this->formElement($userFields->get('user_notes')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('user_notes'));?>
+										</div>
+									</div>
+								</fieldset>											
+							</div>							
+						</div>
+
+					</div> <!-- div class="row" -->
+					<div class="row">
+						<div class="col-md-3 col-md-offset-9">
+							<?=$this->formButton()->openTag($form->get('save')->setAttribute('class', 'btn btn-primary'));?>
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+								<?=$form->get('save')->getLabel();?>
+							<?=$this->formButton()->closeTag();?>
+						</div>
+					</div>				
+				</div> <!-- col-md-9 -->
+			</div><!--  row -->
+
+
+
+			<?= $this->form()->closeTag();?>
+
+			<div class="col-md-12">
+				<hr />
+			</div>
+		</div> <!-- col-md-12 -->
+	</div> <!-- row -->
+</section>
+<?=$this->partial('application/js/file_upload');?>
+
+<script>
+	var previewImg = '<img src="<?=zgetUserCvAvatar($this->data);?>" alt="<?=(isset($alt))? $alt : '';?>">';
+	var btnCust = '<?=$this->formButton()->openTag($form->get("save")->setAttribute("class", "btn btn-primary btn-sm"));?>'+
+	             '<span class="glyphicon glyphicon-floppy-disk"></span>'+
+	             '<?=$this->formButton()->closeTag();?>';
+	cv_avatar_upload_settings.layoutTemplates = {main2: '{preview} ' + '{browse}  {remove} '+ btnCust};
+	cv_avatar_upload_settings.defaultPreviewContent = previewImg;
+
+	$(document).on('ready', function() {
+	    $("#cv_avatar_upload").fileinput(cv_avatar_upload_settings);
+	});
+
+	function add_category(){
+		var currentCount = $('form fieldset.user_education .insert_template fieldset').length + delete_count;
+		var template = $('form span[data-template]').data('template');
+		template = template.replace(/__placeholder__/g, currentCount);
+		$('form fieldset.user_education .insert_template').append(template);
+		$('form fieldset.user_education .insert_template').append('<hr />');
+		return false;
+	}
+	
+	var delete_count = 0;
+	$('.delete-entry').click(function(e){
+		var id = $(this).data('id');
+		$(this).closest('fieldset').remove();
+		$('<input></input>', {
+			type: 'hidden',
+			name: 'remove['+delete_count+'][school]',
+			value: id,
+		}).appendTo('form');
+		delete_count++;
+	});
+</script>

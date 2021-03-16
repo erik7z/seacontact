@@ -1,0 +1,108 @@
+<div class="row" id="answer">
+	<div class="col-md-1 text-right visible-lg">
+		<div class="row">
+			<img src="<?=zgetUserAvatar($this->identity());?>" style="width: 48px; height: 48px;" />
+		</div>
+	</div>
+	<div class="col-lg-7 col-md-8 how_to_form" data-toggle="popover" data-placement="right" data-trigger="hover">
+		<?php
+			$form = $this->form;
+			$form->prepare();
+			$form->setAttribute('class', 'form-horizontal');
+			$fieldset = $form->get('question_answers');
+			echo $this->form()->openTag($form);
+		?>
+  		<div class="row">
+			<?= $this->formRow($fieldset->get('id')); ?>
+			<?= $this->formRow($fieldset->get('question_id')); ?>
+			<fieldset class="col-md-12">
+				<div class="form-group">
+					<div class="col-md-12">
+						<div class="form-group">
+							<div class="col-md-12">
+								<?=$this->formElement($fieldset->get('text')->setAttributes(array('class' => 'form-control', 'rows' => 10)));?>
+								<?=$this->formElementErrors($fieldset->get('text'));?>
+							</div>
+						</div>
+						<?php if ($form->has('old_pics')): ?>
+							<div class="form-group">
+								<?php $old_pics = $form->get('old_pics')->getElements(); ?>
+								<?php if (count($old_pics) > 0): ?>
+									<label><?=$this->translate('Attached Pictures');?></label>
+									<div class="col-md-10 file-preview">
+										<?php foreach ($old_pics as $pic): ?>
+											<div class="col-md-2 col-sm-1 col-xs-4 text-right bg-thumb" style="background-image: url(<?= '/'._PICSWWW_.$pic->getAttribute('data-thumb'); ?>)">
+												<?=$this->formElement($pic);?>
+											</div>
+										<?php endforeach ?>
+										<div class="col-md-12">
+											<?=$this->formElementErrors($pic);?>
+										</div>
+									</div>
+								<?php endif ?>
+							</div>
+						<?php endif ?>
+						<div class="form-group">
+							<div class="col-md-12">
+								<?=$this->formFile($form->get('pics')->setAttribute('class','form-control'));?>
+								<?=$this->formElementErrors($form->get('pics'));?>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-4">
+								<div class="input-group">
+									<span class="input-group-addon"><?=$fieldset->get('anonym')->getLabel();?></span>
+									<?=$this->formElement($fieldset->get('anonym')->setAttribute('class', 'form-control'));?>
+									<?=$this->formElementErrors($fieldset->get('anonym'));?>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control'));?>
+									<?=$form->get('submit')->getLabel();?>
+									<span class="fa fa-bolt"></span> 
+								<?=$this->formButton()->closeTag();?>			
+								<?= $this->form()->closeTag(); ?>	
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</fieldset>								      		
+  		</div><!-- row -->
+	</div>
+	<div class="col-md-4 how_to_instructions">
+		<div class="alert alert-warning how_to">
+			<h4 class="text-center title"><?=$this->translate('How to answer on questions');?></h4>
+			<ul>
+				<li><b><?=$this->translate('Please be sure to answer the question. Provide details and share your research!');?></b></li>
+				<li><?=$this->translate('All of us have some experience, but nobody can know everything. Be patient and keep positive attitude.');?></li>
+			</ul>
+			<h5><?=$this->translate('But <i>avoid</i>');?></h5>
+			<ul>
+				<li class="pb"><?=$this->translate('Asking for help, clarification, or responding to other answers.');?></li>
+				<li class="pb"><?=$this->translate('Making statements based on opinion; back them up with references or personal experience.');?></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	// $('.how_to_instructions').removeClass('col-md-4').addClass('col-md-2');
+	// $('.how_to_form').removeClass('col-md-7').addClass('col-md-9');
+	// $('.how_to').hide();
+	// $(function () {
+	//   $('[data-toggle=popover]').popover({
+	//   	container: 'body', 
+	//   	title: function() {
+	//   		return $('.how_to .title').html();
+	//   	},
+	//   	html: true,
+	//   	content: function() {
+	//   		var how_to = $('.how_to');
+	//   		how_to.find('.title').remove();
+	//   		return how_to.html();
+	//   	}
+	//   });
+	// });
+</script>

@@ -1,0 +1,25 @@
+<?php
+	$gallery_id = isset($gallery_id)? $gallery_id : 'pics_grid_'.mt_rand(0, 99);
+	$grid_id = isset($grid_id)? $grid_id : '';
+	$flag_obj = isset($flag_obj)? $flag_obj : 1;
+?>
+<div class="grid-workspace<?=$grid_id;?>">
+	<?php if ($flag_obj): ?>
+		<?php $c_p = count($pics);?>
+		<?php for ($i=0; $i < $c_p; $i++) : ?>
+			<?php if (file_exists(_PICSROOT_.$pics[$i]->img)): ?>
+				<?=$this->partial('application/partial/pics-item', ['img' => $pics[$i]->img, 'thumb' => $pics[$i]->thumb, 'alt' => $pics[$i]->alt, 'gallery_id' => $gallery_id]);?>
+			<?php endif ?>
+		<?php endfor ?>
+	<?php else: ?>
+		<?php 
+			$pics = explode(',', $pics);
+			$c_p = count($pics);
+		?>
+		<?php for ($i=0; $i < $c_p; $i++) : ?>
+			<?php if (file_exists(_PICSROOT_.$pics[$i])): ?>
+				<?=$this->partial('application/partial/pics-item', ['img' => $pics[$i], 'gallery_id' => $gallery_id]);?>
+			<?php endif ?>
+		<?php endfor ?>
+	<?php endif ?>
+</div>

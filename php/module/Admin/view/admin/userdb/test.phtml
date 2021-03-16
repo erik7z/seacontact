@@ -1,0 +1,3 @@
+<?php foreach ($this->notifications()->new_user_add as $not): ?>
+  <li><?=zformatDateTime($not['time']);?> <a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'user', 'id' => $not['user_id']));?>"><?=zgetUserName($not);?></a> </li>
+<?php endforeach ?>

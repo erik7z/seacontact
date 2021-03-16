@@ -1,0 +1,36 @@
+<div class="row">
+	<div class="col-md-12">
+		<label><?=$this->translate('Search query');?> <small class="text-muted copy_button" style="cursor: pointer;">(<?=$this->translate('copy to share');?>)  <i class="fa fa-copy"></i> </small>:</label>
+	</div>
+	<div class="col-md-12">
+		<div class="input-group">
+			<?php 
+
+				if (strpos($this->routeMatch()->getRoute(), 'admin') !== false) {
+					$url = $this->url($this->routeMatch()->getRoute(), ['controller' => 'userdb', 'action' => $this->routeMatch()->getAction()], ['query' => ['filters' => $q_options['filters']]]);
+				} else {
+					$url = $this->url($this->routeMatch()->getRoute(), ['controller' => 'userdb', 'action' => $this->routeMatch()->getAction()], ['query' => ['filters' => $q_options['filters']]]);
+
+				}
+			?>
+			<input type="text" class="form-control" id="copy_input" value="<?=$url;?>" width="90%"></input>							
+			<span class="input-group-btn">
+		        <button class="btn btn-default copy_button" type="button"><i class="fa fa-copy"></i></button>
+		    </span>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function copyToCliboard($element) {
+		var $temp = $('<input />');
+		$('body').append($temp);
+		$temp.val($element.val()).select();
+		document.execCommand('copy');
+		$temp.remove();
+		$.notify({message: '<i class="fa fa-copy"></i> <?=$this->translate("Copied to clipboard !");?>' },notify_success_settings);
+	}
+
+	$('.copy_button').click(function(){
+		copyToCliboard($('#copy_input'));
+	});
+</script>

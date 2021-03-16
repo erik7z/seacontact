@@ -1,0 +1,32 @@
+<section class="container-fluid">
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<h1 class="text-info"><span class="label label-default"><?=$this->translate('Welcome to seacontact Admin module');?></span></h1>
+		</div>
+	</div>
+	<?php if (count($tasks)): ?>
+		<h3><?=$this->translate('My Active Tasks');?></h3>
+		<div class="row">
+			<?php $col_w = (count($tasks) > 1)? '6' : '12';?>
+			<?php foreach ($tasks as $task): ?>
+				<div class="col-md-<?=$col_w;?>">
+					<?=$this->partial('admin/partial/task-item', ['task' => $task]);?>
+				</div>
+			<?php endforeach ?>
+		</div>
+		<a href="<?=$this->url('admin/actions', ['controller' => 'tasks']);?>">
+			<button class="btn btn-default">
+				<?=$this->translate('View All Tasks...');?>
+			</button>
+		</a>
+	<?php endif ?>
+</section>
+
+
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'task_modal',
+					'modal_title' => $this->translate('Task Management')
+));?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#task_modal']);?>
+<?=$this->partial('admin/js/tasks_scripts');?>
+

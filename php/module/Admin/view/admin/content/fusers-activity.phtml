@@ -1,0 +1,72 @@
+<div class="row">
+	<div class="col-md-9">
+		<div class="box">
+			<div class="box-header bg-info">
+				<div class="row">
+					<div class="col-md-2">
+						<h4>
+							<?=$this->translate('Total SCusers');?>
+							<small><?=$total_results;?></small>
+						</h4>
+					</div>
+					<div class="col-md-10">
+						<?php 
+							$filters_list[] = ['name' => 'role', 'value' => 'sc_user', 'title' => $this->translate('Sc Users'), 'icon' => 'fa fa-filter']; 
+							$filters_list[] = ['name' => 'role', 'value' => 'sc_company', 'title' => $this->translate('Sc Companies'), 'icon' => 'fa fa-filter']; 
+						?>
+						<?=$this->partial('application/partial/custom_horiz_filters', ['filters' => $q_options['filters'], 'filters_list' => $filters_list, 'show_all_btn' => 1, 'merge_with_current' => 1]);?>
+						
+					</div>
+				</div>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-md-12 table-responsive">
+						<?=$this->partial('admin/partial/users-table');?>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="col-md-3">
+		<div class="box box-solid">
+			<div class="box-header bg-warning text-center with-border">
+				<h3 class="box-title"><?=$this->translate('Settings');?> </h3>
+			</div><!-- /.box-header -->
+			<div class="box-body ">
+				<ul>
+					<li class="pb05"><span class="label label-default"><?=_MAX_F_USERS_ONLINE_;?></span> <?=$this->translate('Max SC Users Together Online');?></li>
+					<li class="pb05"><span class="label label-default"><?=(_F_USER_ACT_PERIOD_ / 3600) / 24 . ' Days';?></span> <?=$this->translate('Activity Period');?></li>
+					<li class="pb05"><span class="label label-default"><?=round(_F_USER_ACT_TOTAL_TIME_ / 3600) . ' Hrs';?></span> <?=$this->translate('Max Online Time For Period');?></li>
+					<li class="pb05"><span class="label label-default"><?=_PERIOD_MAX_LIKES_;?></span> <?=$this->translate('Max Likes For Period');?></li>
+					<li class="pb05"><span class="label label-default"><?=_PERIOD_MAX_VOTES_;?></span> <?=$this->translate('Max Votes For Period');?></li>
+					<li class="pb05"><span class="label label-default"><?=_PERIOD_MAX_VIEWS_;?></span> <?=$this->translate('Max Views For Period');?></li>
+					<li class="pb05"><span class="label label-default"><?=(_F_POSTS_ACT_PERIOD_ / 3600) / 24 .' Days';?></span> <?=$this->translate('Period for Posts to be liked/voted/viewed');?></li>
+					<li class="pb05"><span class="label label-default">07:00 - 24:00</span> <?=$this->translate('SCusers activity time');?></li>
+				</ul>
+				<hr />
+				<ul>
+					<li class="pb05"><span class="label label-default"><?=_MAX_F_COMP_ONLINE_;?></span> <?=$this->translate('Max SC Companies Together Online');?></li>
+				</ul>
+			</div><!-- /.box-body -->
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 text-center">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+</div>
+
+<?=$this->partial('application/modal', ['modal_name' => 'messagesModal']);?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#messagesModal']);?>
+<script type="text/javascript">
+	$('#messagesModal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget);
+		var user_id = button.data('id');
+		var modal = $(this);
+		modal.find('.modal-title').text(button.data('title'));
+		loadContent('/userdb/user-messages/'+user_id);
+	});
+</script>

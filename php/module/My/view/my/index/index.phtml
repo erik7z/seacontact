@@ -1,0 +1,345 @@
+<section id="info" class="container-fluid">
+	<div class="row section-content">
+		<div class="col-md-3 col-md-push-9 user-info">
+			<div class="row item-block drop-shadow">
+				<div class="col-md-12">
+					<div class="row user-avatar-big">
+						<div  class="col-md-12">
+							<img src="<?=zgetUserAvatar($this->identity());?>" />
+						</div>
+					</div> <!-- user-avatar-big -->
+					<div class="row user-functions">
+						<button type="button" id="avatar_uppload_btn" class="form-control btn btn-sm btn-default">
+							<span class="fa fa-camera"></span> <?=$this->translate('Upload New Avatar');?>
+						</button>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12 small text-center">
+							<h5><?=$this->translate('Your Page');?> :</h5>
+							<span class="fa fa-globe"></span> 
+							<a href="http://www.seacontact.com/<?=$this->identity()->login;?>">
+								seacontact.com/<?=zgetUserLogin($this->identity());?>
+							</a>
+							<hr class="mb05 mt05" />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<h5><?=$this->translate('Your Rating');?> :</h5>
+							<div class="progress" style="margin-bottom: 10px;">
+							  <div class="progress-bar" role="progressbar" aria-valuenow="<?=$this->rating['total'];?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=$this->rating['total'];?>%;">
+							   	<?=$this->rating['total'];?>%
+							  </div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<ul class="list-unstyled small">
+								<?php if ($this->rating['profile'] < $this->rating['max_profile_points']): ?>
+									<li><a href="<?=$this->url('sc/cv/actions', array('action' => 'personal'));?>"><span class="li_user"></span> <?=$this->translate('Personal info');?> <span class="text-danger">+<?=$this->rating['max_profile_points'] - $this->rating['profile'];?>%</span></a></li>
+								<?php endif ?>
+								<?php if ($this->rating['experience'] < $this->rating['max_exp_points']): ?>
+									<li><a href="<?=$this->url('sc/cv/actions', array('action' => 'experience'));?>"><span class="glyphicon glyphicon-signal"></span> <?=$this->translate('Experience');?> <span class="text-danger">+<?=$this->rating['max_exp_points'] - $this->rating['experience'];?>%</span></a></li>
+								<?php endif ?>
+								<?php if ($this->rating['documents'] < $this->rating['max_doc_points']): ?>
+									<li><a href="<?=$this->url('sc/cv/actions', array('action' => 'docs'));?>"><span class="li_note icon"></span> <?=$this->translate('Documents');?> <span class="text-danger">+<?=$this->rating['max_doc_points'] - $this->rating['documents'];?>%</span></a></li>
+								<?php endif ?>
+								<?php if ($this->rating['activity'] < $this->rating['max_activity_points']): ?>
+									<li><a href="#logbook"><span class="linea-ecommerce-megaphone icon"></span> <?=$this->translate('Write something to your logbook');?> <span class="text-danger">+<?=$this->rating['max_activity_points'] - $this->rating['activity'];?>%</span></a></li>
+								<?php endif ?>
+							</ul>
+							<hr class="mb mt" />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12 text-center">
+								<h5 class=" mt0 text-center"><?=$this->translate('Application Form');?></h5>
+								<?php $cv_link = ($this->identity()->cv_file) ? $this->basePath(_FILESWWW_.$this->identity()->cv_file) : '__cv-link__';?>
+								<?php 
+									$cv_uploaded_tpl = '
+									<h5 class="mt0"><span class="bg-info">'.$this->translate('Your CV is already on our server').'</span></h5>
+									<a href="'.$cv_link.'" class="cv_link">
+										<span class="li_note icon-md icon text-info" style="font-size: 60px;"></span>
+									</a>
+									<a href="'.$this->url('sc/cv/actions', array('action' => 'delete-cv')).'" style="position: relative; bottom: 50px; left: 5px;">
+										<span class="glyphicon glyphicon-trash text-danger icon-sm"></span>
+									</a>
+									<a href="'.$this->url('sc/cv/actions', array('action' => 'delete-cv')).'">
+										<button type="button" id="cv_file_btn" class="btn btn-info btn-sm" >
+											<span class="glyphicon glyphicon-refresh"></span> '.$this->translate('Refresh your CV file').'
+										</button>
+									</a>
+									';
+								?>
+								<div class="row" id="cv_uploaded_tpl" data-template ="<?=htmlspecialchars($cv_uploaded_tpl);?>">
+									<?php if($this->identity()->cv_file) { 
+										echo $cv_uploaded_tpl; 
+										} else { ?> 
+											<button type="button" id="cv_file_btn" class="btn btn-success btn-sm" >
+												<span class="glyphicon glyphicon-open"></span> <?=$this->translate('Upload New CV File');?>
+											</button>
+									<?php } ?>
+								</div>
+							
+							<hr class="mt mb" />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<a href="<?=$this->url('sc/cv');?>">
+								<h5 class="text-center"><?=$this->translate('My information');?> 
+									<small><span class="fa fa-pencil text-info"></span></small>
+								</h5>
+							</a>
+							<dl class="pl">
+								<dt class="text-muted"><?=$this->translate('Name');?></dt>
+								<dd class="text-info"><?=zgetUserName($this->identity());?></dd>
+								<dt class="text-muted pt05"><?=$this->translate('Rank');?></dt>
+								<dd class="text-info">
+									<?php if($this->identity()->desired_rank) {?>
+										<?=$this->identity()->desired_rank;?>
+									<?php } ?>
+								</dd>
+								<dt class="text-muted pt05"><?=$this->translate('Nationality');?></dt>
+								<dd class="text-info"><?=$this->identity()->nationality;?></dd>
+								<dt class="text-muted pt05"><?=$this->translate('Contacts');?></dt>
+								<dd class="text-info">
+								  	<address class="mb0">
+								  	  <?php if($this->identity()->contact_phone) {?>
+											<abbr title="Phone">M:</abbr> <?=$this->identity()->contact_phone;?>
+								  	  <?php }?>
+								  	  <?php if($this->identity()->contact_mobile) {?>
+											<abbr title="Mobile">M:</abbr> <?=$this->identity()->contact_mobile;?>
+								  	  <?php }?>
+								  	</address>
+								</dd>
+								<dt class="text-muted pt05"><?=$this->translate('Email');?></dt>
+								<dd class="text-info">
+									<address>
+									  <?php $email = ($this->identity()->contact_email) ? $this->identity()->contact_email : $this->identity()->email; ?>
+									  <a href="mailto:<?=$email;?>"><?=$email;?></a>
+									</address>
+								</dd>
+							</dl>
+							<hr class="mt mb" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<h5 class="text-center"><?=$this->translate('Social Accounts');?></h5>
+						</div>
+						<?php if ($this->identity()->social_vk_domain): ?>
+							<div class="col-md-12 small pb text-center">
+								<span class="fa fa-vk bg-primary p02"></span> 
+								<a href="http://vk.com/<?=$this->identity()->social_vk_domain;?>" target="_blank">
+									vk.com/<?=$this->identity()->social_vk_domain;?>
+								</a>
+							</div>
+						<?php endif ?>
+						<div class="col-md-12 pb">
+							<button class="btn btn-primary btn-sm form-control btn-responsive" data-toggle="modal" data-social="vk" data-action="<?=$this->url('sc/social/actions', ['action' => 'parse-vk']);?>" data-target="#parse_social_modal"> 	
+								<i class="fa fa-vk fa-lg"></i> 
+								<?=sprintf($this->translate('Connect with %s'), 'Vkontakte');?>
+							</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 pb">
+							<button class="btn btn-info btn-sm form-control btn-responsive" data-toggle="modal" data-social="fb" data-action="<?=$this->url('sc/social/actions', ['action' => 'parse-fb']);?>" data-target="#parse_social_modal"> 
+								<i class="fa fa-facebook"></i> 
+								<?=sprintf($this->translate('Connect with %s'), 'Facebook');?>
+							</button>
+						</div>
+						<hr class="mb05" />
+					</div>
+				</div>
+			</div> <!-- row item-block drop-shadow -->
+
+		</div> <!-- user-info -->
+
+		<div class="col-md-9 col-md-pull-3 user-content mt05">
+			<div class="row">
+				<div class="col-md-12 pt">
+					<div class="alert alert-warning ">
+						<h4 class="text-center mt0 mb05"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?=$this->translate('Update your CV');?></h4>
+						<p>
+							<?=$this->translate('Companies are using <b>filters</b> to find seamans in our database, so update <b>OUR CV FORM</b> to find job. <b>Minimum</b> requirements are');?> :
+						</p>
+						<ul class="small">
+							<li class="pb05 pt05"><b><?=sprintf($this->translate('Last %s contracts in Experience section'), 5);?></b> <a href="<?=$this->url('sc/cv/actions', array('action' => 'experience'));?>"><i class="fa fa-hand-o-up"></i> <?=$this->translate('Update Experience');?></a></li>
+							<li class="pb05"><?=$this->translate('Email, mobile and other contact information');?> <a href="<?=$this->url('sc/cv/actions', array('action' => 'personal'));?>"><i class="fa fa-hand-o-up"></i> <?=$this->translate('Update Contacts');?></a></li>
+							<li class="pb05"><?=$this->translate('US or Shenghen Visas');?> <a href="<?=$this->url('sc/cv/actions', array('action' => 'personal'));?>"><i class="fa fa-hand-o-up"></i> <?=$this->translate('Update Visas');?></a></li>
+							<li class="pb05"><?=$this->translate('Passports, License and Endorsment in documents section');?> <a href="<?=$this->url('sc/cv/actions', array('action' => 'docs'));?>"><i class="fa fa-hand-o-up"></i> <?=$this->translate('Update Docs');?></a></li>
+						</ul>
+						<span class="pull-right small"><i><?=$this->translate('After completion you can download updated CV in PDF format');?></i> <a href="<?=$this->url('sc/cv');?>"><i class="fa fa-file-text-o"></i> <?=$this->translate('View My CV');?></a></span>
+						<br />
+					</div>
+				</div>
+			</div>
+			<div class="new-connections row drop-shadow">
+				<div class="col-md-12">
+					<div class="row connections-list">
+						<?php if($partners->count() == 0) { ?>
+							<div class="col-md-12">
+								<h6> <?=$this->translate('No new connections found');?></h6>
+							</div>
+						<?php } ?>
+						<?php foreach ($partners as $partner): ?>
+							<?php 
+								$partner->message_text = '';
+								$partner->add_text = '';
+							?>
+							<?=$this->partial('my/partial/partners-list-item.phtml', $partner);?>
+						<?php endforeach ?>
+						
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<blockquote class="mt05 mb05">
+								<a href="<?=$this->url('sc/contacts/actions', array('action' => 'collegues'));?>">
+									<button type="button" class="btn btn-success btn-sm" >
+										<span class="glyphicon glyphicon-link"></span> <?=$this->translate('See More Connections...');?>
+									</button>
+								</a>
+							</blockquote>
+						</div>
+						<div class="col-md-8">
+							<blockquote class="blockquote-reverse mt05 mb05">
+								<h6><a href="<?=$this->url('sc/cv/actions', array('action' => 'experience'));?>">
+									<?=$this->translate('Add experience in your cv, to get more connections');?>
+									</a>
+								</h6>
+							</blockquote>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="row pb05 pt" data-xhrmenu="data_menu" data-xhrtarg="my_wall">
+				<ul class="nav nav-tabs nav-justified">
+				   <li role="presentation" <?php if (!isset($q_options['filters']) || empty($q_options['filters']) || empty($q_options['filters']['section']) || $q_options['filters']['section'] == 'logbook'): ?> class="active" <?php endif ?>><a href="<?=$this->url('sc/userinfo',['controller' => null,['query' => ['filters' => ['section' => 'logbook']]]]);?>"><?=$this->translate('My Logbook');?></a></li>
+				   <li role="presentation" <?php if (isset($q_options['filters']['section']) && $q_options['filters']['section'] == 'questions'): ?> class="active" <?php endif ?>><a href="<?=$this->url('sc/userinfo',['controller' => null],['query' => ['filters' => ['section' => 'questions']]]);?>"><?=$this->translate('My Questions');?></a></li>
+				   <li role="presentation" <?php if (isset($q_options['filters']['section']) && $q_options['filters']['section'] == 'answers'): ?> class="active" <?php endif ?>><a href="<?=$this->url('sc/userinfo',['controller' => null],['query' => ['filters' => ['section' => 'answers']]]);?>"><?=$this->translate('My Answers');?></a></li>
+				</ul>
+			</div>
+			<div class="row" data-xhrctr="my_wall">
+				<div class="col-md-12 ">
+					<?php if (empty($q_options['filters']) || empty($q_options['filters']['section']) || $q_options['filters']['section'] == 'logbook'): ?>
+						<?=$this->partial('my/partial/logbook-form.phtml', array('form' => $logbookform, 'next_pub_time' => $next_pub_time));?>
+					<?php elseif(isset($q_options['filters']['section']) && $q_options['filters']['section'] == 'questions'):?>
+						<div class="row">
+							<div class="col-md-12 text-center pt pb">
+								<?php if (!count($curr_news)): ?>
+									<h5><?=$this->translate('You have not asked any questions yet');?></h5>
+								<?php endif ?>
+								<?=$this->partial('my/partial/question-ask-btn.phtml');?>
+							</div>
+						</div>
+					<?php elseif(isset($q_options['filters']['section']) && $q_options['filters']['section'] == 'answers'):?>
+						<div class="row">
+							<div class="col-md-12 text-center pt pb">
+								<?php if (!count($curr_news)): ?>
+									<h5><?=$this->translate('You have not answered to any questions yet');?></h5>
+								<?php endif ?>
+								<a href="<?=$this->url('sc/questions');?>">
+									<button type="button" class="btn btn-info">
+										<i class="fa fa-bolt"></i>	<?=$this->translate('See all questions and answers from other seamans');?>
+									</button>
+								</a>
+							</div>
+						</div>
+					<?php endif ?>
+
+					<?=$this->partial('my/partial/news-module.phtml');?>
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<?=$this->partial('application/partial/custom_pagination');?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> <!-- user-content -->
+	</div> <!-- row section-content -->
+
+	<?=$this->partial('application/image-gallery');?>
+	<?=$this->partial('application/modal',array(
+						'modal_name' => 'edit_avatar_modal',
+						'modal_title' => $this->translate('Edit New Avatar'),
+						'modal_content' => $this->partial('my/partial/profile-avatar-edit'),
+						'modal_save_btn' => $this->translate('Save Avatar'),
+						'modal_save_btn_id' => 'butSave',
+						'modal_cancel_btn_id' => 'butCancel',
+	));?>
+	<?=$this->partial('application/modal',array(
+						'modal_name' => 'parse_social_modal',
+						'modal_size' => 'md',
+						'modal_title' => $this->translate('Get Blog from Social Networks'),
+						'modal_content' => $this->partial('my/partial/get-social-blog'),
+	));?>
+	<?php
+		
+		$this->headScript()->appendFile($this->basePath('js/user-info/ajaxupload.js'));
+		$this->headScript()->appendFile($this->basePath('js/user-info/jquery.imgareaselect.min.js'));
+		$this->headScript()->appendFile($this->basePath('js/user-info/_uploadImageCrop.js'._SCRIPTS_VER_));
+		$this->headScript()->appendFile($this->basePath('js/user-info/_uploadFile.js'._SCRIPTS_VER_));
+
+		$this->headLink()->appendStylesheet($this->basePath('css/user-info/imgareaselect-deprecated.css'));
+		$this->headLink()->appendStylesheet($this->basePath('css/user-info/_uploadImageCrop.css'._SCRIPTS_VER_));
+		$this->headLink()->appendStylesheet($this->basePath('css/user-info/user_info_avatar.css'._SCRIPTS_VER_));
+
+	?>
+
+<!-- LOG BOOK FORM SCRIPTS  -->
+<?=$this->partial('application/js/logbook-form-scripts');?>
+<?=$this->partial('application/js/link-preview-scripts');?>
+<?=$this->partial('application/js/file_upload');?>
+<!-- /LOG BOOK FORM SCRIPTS -->
+
+	<script type="text/javascript">
+
+		$(function() {
+			xhrAction.complete_data_menu = function(response) {
+				$('input[name=tags]').tokenfield({
+				  typeahead: [{hint: true,highlight: true,minLength: 1}, { source: tags }],
+				  createTokensOnBlur: true
+				});
+			}
+
+			var upload_cv = new uploadFile('/cv/upload-cv', 'doc|docx|xls|xlsx|pdf', $('#cv_upload_header'));
+			upload_cv.showResult = function(self, response) {
+				self.instructions.text("<?php echo $this->translate('New CV file uploaded!');?>");
+				$('#upload_instructions').text("<?php echo $this->translate('But still, it will be easier for companies to find you, if you fill up CV information on our website.');?>");
+				var template = $('#cv_uploaded_tpl').data('template');
+				template = template.replace(/__cv-link__/g, response.data.www);
+				$('#cv_uploaded_tpl').html(template);
+				$('#cv_uploaded_tpl a.cv_link').attr('href', response.data.www);
+			}
+
+			var upload_avatar = new uploadPics('/cv/set-avatar', '2:3');
+			upload_avatar.showResult = function(self, data) {
+				self.edit_window.addClass('hide');
+				self.sel_area.imgAreaSelect({hide: true, disable: true});
+					$('<img></img>',{
+					src: data.crop_www,
+					'width': data.crop_w,
+					'height': data.crop_h
+					}).prependTo(self.upl_area);
+				self.instructions.text('Your foto uploaded');
+				self.ajaxUpl.enable();
+				self.save_button.addClass('hide');
+			}
+
+			//adding uppload object to global visibility for use in other scripts e.g.(events_edit.js)
+			// window.uppload = uppload;
+
+		});
+
+	</script>
+
+</section>

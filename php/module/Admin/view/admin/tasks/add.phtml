@@ -1,0 +1,94 @@
+<div class="row">
+	<?php
+		$form = $this->form;
+		$form->prepare();
+		$form->setAttribute('class', 'form-horizontal');
+		$fieldset = $form->get('admin_tasks');
+		echo $this->form()->openTag($form);
+	?>
+	<?= $this->formRow($fieldset->get('id')); ?>
+		<fieldset class="col-md-12">
+			<div class="form-group">
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="col-md-12">
+							<?=$this->formLabel($fieldset->get('title'));?>
+							<?=$this->formElement($fieldset->get('title')->setAttribute('class','form-control'));?>
+							<?=$this->formElementErrors($fieldset->get('title'));?>
+						</div>
+						<div class="col-md-12">
+							<?=$this->formLabel($fieldset->get('text'));?>
+							<?=$this->formElement($fieldset->get('text')->setAttribute('class','form-control'));?>
+							<?=$this->formElementErrors($fieldset->get('text'));?>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-5">
+							<?=$this->formLabel($fieldset->get('due_date'));?>
+							<?=$this->formElement($fieldset->get('due_date')->setAttribute('class','form-control'));?>
+							<?=$this->formElementErrors($fieldset->get('due_date'));?>
+						</div>
+						<div class="col-md-4">
+							<?=$this->formLabel($fieldset->get('status'));?>
+							<?=$this->formElement($fieldset->get('status')->setAttribute('class','form-control'));?>
+							<?=$this->formElementErrors($fieldset->get('status'));?>
+						</div>
+						<div class="col-md-3">
+							<?=$this->formLabel($fieldset->get('priority'));?>
+							<?=$this->formElement($fieldset->get('priority')->setAttribute('class','form-control'));?>
+							<?=$this->formElementErrors($fieldset->get('priority'));?>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="col-md-7 col-sm-7">
+							<label><h4><?=$this->translate('Responsible');?></h4></label>
+							<div class="form-group">
+								<?php $response_fields = $form->get('responsible') ?>
+								<div class="col-md-12">
+									<?=$this->formElementErrors($response_fields->get('resp_errors'));?>
+								</div>
+								<?php foreach ($response_fields as $field) :?>
+									<?php if ($field->getName() != 'responsible[resp_errors]'): ?>
+										<div class="col-md-12">
+											<?=$this->formElement($field);?>
+											<?=$this->formLabel($field);?>
+										</div>
+									<?php endif ?>
+
+								<?php endforeach?>
+								
+							</div>
+						</div>
+						<div class="col-md-5  col-sm-5">
+							<label><h4><?=$this->translate('Visible');?></h4></label>
+							<div class="form-group">
+								<?php $vis_fields = $form->get('visible') ?>
+								<div class="col-md-12">
+									<?php foreach ($vis_fields as $field) :?>
+										<?php if ($field->getName() == 'visible[everybody]'): ?>
+											<?=$this->formElement($field);?>
+										<?php else: ?>
+												<?=$this->formElement($field);?>
+												<?=$this->formLabel($field);?>
+										<?php endif ?>
+										<br />
+									<?php endforeach?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-md-12">
+					<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control'));?>
+						<span class="glyphicon glyphicon-ok"></span> 
+						<?=$form->get('submit')->getLabel();?>
+					<?=$this->formButton()->closeTag();?>
+				</div>
+			</div>
+		</fieldset>
+	<?= $this->form()->closeTag();?>							      		
+</div>

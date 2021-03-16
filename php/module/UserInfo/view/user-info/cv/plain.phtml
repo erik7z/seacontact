@@ -1,0 +1,91 @@
+<html>
+  <head>
+		<meta charset="UTF-8">
+ 		<title><?=$this->translate('User CV');?></title>
+ 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 		<style type="text/css">
+	 		body,table, tr, td,h1, h2, h3, h4, h5, h6, p, a  {
+	 			font-family: DejaVu Sans;
+	 		}
+	 		a {
+	 			text-decoration: none;
+	 		}
+	 		body {
+	 			width: 100%;
+	 		}
+	 		table { 
+	 			color: #333;
+	 			font-family: Helvetica, Arial, sans-serif;
+	 			width: 680px; 
+	 			border-collapse: collapse; 
+	 			border-spacing: 0; 
+	 			margin: auto;
+	 			font-size: 12px;
+	 		}
+
+	 		tbody {
+	 			border: 1px solid black;
+	 		}
+	 				
+	 		td, th { 
+	 			border: 1px solid gray;
+	 			min-height: 30px; 
+	 			padding: 0 2px;
+	 			transition: all 0.3s;  /* Simple transition for hover effect */
+	 		}
+	 				
+	 		th {
+	 			background: #DFDFDF;  /* Darken header a bit */
+	 			font-weight: bold;
+	 		}
+	 				
+	 		td {
+	 			background: #FAFAFA;
+	 			text-align: center;
+	 		}
+
+	 		/* Cells in even rows (2,4,6...) are one color */		
+	 		/*tr:nth-child(even) td { background: #F1F1F1; }   */
+
+	 		/* Cells in odd rows (1,3,5...) are another (excludes header cells)  */		
+	 		/*tr:nth-child(odd) td { background: #FEFEFE; }  */
+	 				
+	 		/*tr td:hover { background: #666; color: #FFF; } /* Hover cell effect! */
+	 		legend {
+	 			text-align: center;
+	 			font-weight: bold;
+	 			font-size: 15px;
+	 		}
+	 		td.company_logo {
+	 			
+	 		}
+	 		.text-blue {
+	 			color: #246faf;
+	 		}
+	 		.col-title {
+	 			font-weight: bold;
+	 			background-color: #F3F7F5;
+	 		}
+	 		.company_contacts td {
+	 			border: none;
+	 		}
+	 		.company_contacts {
+	 			padding-bottom: 15px;
+	 		}
+	 		.company_info td {
+	 			border: none;
+	 		}
+ 		</style>
+  </head>
+  <body <?=($print == true) ? 'onload="window.print();"' : '';?> >
+  		<?= $this->partial('user-info/partial/user-cv', [
+  			'plain_cv' => true, 
+  			'user' => $user, 
+  			'user_experience' => $user_experience, 
+  			'user_education' => $user_education,
+  			'user_docs' => $user_docs
+  			]);?>
+  </body>
+
+</html>
+

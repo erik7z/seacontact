@@ -1,0 +1,81 @@
+<?php
+	if(!$form_name) throw new \Application\Exception\Exception("Form name should be provided", 1);
+	$mce_element = (isset($mce_element))? $mce_element : null;
+	$pics_upload = (isset($pics_upload))? $pics_upload : null;
+	$force_redirect = (isset($force_redirect))? $force_redirect : null;
+	$attach_link_preview = (isset($attach_link_preview))? $attach_link_preview : null;
+?>
+
+<script type="text/javascript">
+	<?php if($pics_upload) :?>
+		$("input#pics_upload").fileinput(images_upload_settings);
+	<?php endif ?>
+	<?php if($mce_element) :?>
+		tinymce_standart_settings.elements = '<?=$mce_element;?>';
+		tinyMCE.init(tinymce_standart_settings);
+	<?php endif ?>
+	$('body').on('submit', '<?=$form_name;?>', function(e){
+		e.preventDefault();
+		if(typeof(tinyMCE) != 'undefined') tinyMCE.triggerSave();
+		var form = $(this);
+		var button = $('button[type=submit], input[type=submit]');
+		var url = $(this).attr('action');
+		
+		<?php if($attach_link_preview) :?>
+			var textarea = form.find('textarea');
+			textarea.val(textarea.val()+' '+$('.link_preview').html());
+		<?php endif ?>
+		
+		var form_data = new FormData($(this)[0]);
+		button.attr('disabled',true);
+		
+		$.ajax({
+		    url: url,
+		    type: 'post',
+		    dataType: 'json',
+		    cache: false,
+		    data: form_data,
+		    processData: false,
+		    contentType: false,
+		    complete: function(xhr) { 
+		    	var response = xhr.responseJSON;
+		    	if(response == undefined || response == 'undefined'){
+		    		console.log(xhr.responseText);
+		    		button.attr('disabled',false);
+		    	} 
+		    	else {
+		    		if(response.success == 1) {
+		    			<?php if($force_redirect) :?>
+		    				if(response.redirect == undefined || response.redirect == 'undefined' || response.redirect == 0)  window.location.reload(); 
+		    				else window.location.href = response.redirect;
+		    			<?php else: ?>
+		    				window.location.reload();
+		    			<?php endif ?>
+		    		} 
+		    		else {
+		    			button.attr('disabled',false);
+		    			if(response.code == '401') {
+		    				$("html, body").animate({ scrollTop: $('.auth_container').offset().top }, "slow");
+		    				$.notify({message: response.message },notify_warning_settings);
+		    			} 
+		    			else if(response.code == '777'){
+		    				form.replaceWith($(response.data).find('<?=$form_name;?>'));
+		    				if(typeof(tinyMCE) != 'undefined') {
+		    					tinyMCE.remove();
+		    					tinyMCE.init(tinymce_standart_settings);
+		    				}
+		    				$.notify({message: 'Please check form fields' },notify_warning_settings);
+		    			} 
+		    			else {
+		    				$.notify({message: response.message },notify_warning_settings);
+		    				// ?????? why reload page ?????
+		    				// window.location.reload();
+		    			}
+		    		}
+		    	}
+
+		    },
+		}); 
+	});
+
+</script>

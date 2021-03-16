@@ -1,0 +1,9 @@
+<section class="container-fluid pt">
+	<?=$this->partial('application/partial/answer-form');?>
+</section>
+<?php $this->headScript()->appendFile($this->basePath('vendor/tinymce/tinymce.min.js'));?>
+
+<?=$this->partial('application/js/file_upload');?>
+<?=$this->partial('application/js/tinymce-scripts');?>
+
+<?=$this->partial('application/js/page-form-scripts', ['form_name' => '[name=question_answers_form]', 'mce_element' => 'question_answers[text]', 'pics_upload' => 1, 'force_redirect' => $this->url('sc/questions/actions', ['action' => 'view', 'id' => $this->routeMatch()->getId()])]);?>

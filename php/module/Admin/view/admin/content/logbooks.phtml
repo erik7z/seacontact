@@ -1,0 +1,78 @@
+<section class="container-fluid">
+<div class="row">
+	<div class="col-md-12 table-responsive">
+		<div class="box">
+			<div class="box-header bg-info">
+				<h4><?=$this->translate('Latest Logbooks');?></h4>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered table-hover table-condensed table-favorites">
+					<thead>
+						<tr>
+							<th>ID #</th>
+							<th><?=$this->translate('Logbook');?></th>
+							<th><?=$this->translate('By');?></th>
+							<th><?=$this->translate('Role');?></th>
+							<th><?=$this->translate('Time');?></th>
+							<th class="no-sort"><?=$this->translate('Delete');?></th>
+						</tr>
+					</thead>
+					<?php foreach($data_list as $data_item) {?>
+						<tr>
+							<td class="col-md-1"><?=$data_item->id;?></td>
+							<td class="col-md-6">
+								<?php 
+									$url = $this->url('sc/logbook/actions', ['action' => 'view', 'id' => $data_item->id]);
+									$title = zlessChars(strip_tags(htmlspecialchars_decode($data_item->text)), 100);
+								?>
+								<?php if (isset($title) && $title): ?>
+									<a href="<?=$url;?>" target="_blank">
+										<?=$title;?>
+									</a>
+								<?php endif ?>
+								
+							</td>
+							<td class="col-md-2">
+								<a href="<?=$this->url('admin/actions', ['controller' => 'content', 'action' => 'logbooks'], ['query' => ['filters' => ['user_id' => $data_item->user]]]);?>">
+									<button type="button" class="btn btn-default btn-xs " aria-label="Filter by User">
+				 						<span class="fa fa-filter" aria-hidden="true"></span>
+									</button>
+								</a>
+								<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'user', 'id' => $data_item->user));?>" target="_blank">
+									<button type="button" class="btn btn-default btn-xs " aria-label="View User">
+				 						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+									</button>
+								</a>
+								<a href="<?=_ADDRESS_.zgetUserLogin($data_item);?>" target="_blank"><?=zgetUserName($data_item);?></a> 
+
+							</td>
+							<td class="col-md-1"> 
+											<a href="<?=$this->url('admin/actions', ['controller' => 'content', 'action' => 'logbooks'], ['query' => ['filters' => ['user_role' => $data_item->role]]]);?>">
+												<button type="button" class="btn btn-default btn-xs " aria-label="Filter by Role">
+							 						<span class="fa fa-filter" aria-hidden="true"></span>
+												</button>
+											</a>
+							<?= $data_item->role;?>
+							</td>
+							<td class="col-md-1"><span class="hidden"><?=$data_item->time;?></span> <?= zformatDateTime($data_item->time);?></td>
+							<td class="col-md-1 text-center">
+								<a data-id="<?=$data_item->id;?>" href="<?=$this->url('admin/actions', array('controller' => 'content', 'action' => 'delete-logbook', 'id' => $data_item->id));?>" > 
+									<span class="glyphicon glyphicon-trash"></span>
+								</a>
+							</td>
+						</tr>
+						
+					<?php }?>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<div class="row">
+	<div class="col-md-12 text-center">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+</div>
+</section>

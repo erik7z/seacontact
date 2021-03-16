@@ -1,0 +1,38 @@
+<?php 
+
+	$type = (isset($type))? $type : 'prev';
+	$total_results = (isset($total_results))? $total_results : 1;
+	$view_limit = (isset($view_limit))? $view_limit : _PAGINATION_VIEW_LIMIT_;
+	$current_result = (isset($current_result))? $current_result : $view_limit;
+	$offset = (isset($offset))? $offset : $total_results - $current_result;
+	$route = (isset($route))? $route : $this->routeMatch()->getRoute();
+	$route_params = (isset($route_params))? $route_params : $this->routeMatch()->getRouteParams();
+	$query_params['query'] = (isset($query_params))? $query_params : $this->routeMatch()->getQuery();
+	if($type == 'prev') {
+		$show_count = ($offset > $view_limit)? $view_limit : $offset;
+		$query_params['query']['_offset'] = ($offset >= $show_count)? $offset - $show_count : 0;
+		$query_params['query']['_limit'] = $show_count;
+		$remain_count = ($offset)? $offset : '';
+		$btn_text = sprintf($this->translate('Previous %s %s '), '<b>'.$remain_count.'</b>', '/ '.$total_results);
+	} else {
+		$show_count = (($total_results - $offset) < $view_limit)?  $total_results - $offset : $view_limit;
+		if($offset + $show_count >= $total_results) $show_count = 0;
+		$query_params['query']['_offset'] = $offset + $current_result;
+		$query_params['query']['_limit'] = $show_count;
+		$remain_count = ($total_results - $current_result - $offset)? $total_results - $current_result - $offset : '';
+		$btn_text = sprintf($this->translate('Next %s %s '), '<b>'.$remain_count.'</b>', '/ '.$total_results);
+	}	
+?>
+
+<?php if ($show_count): ?>
+  <a href="<?=$this->url($route, $route_params,$query_params);?>" class="pagination_btn" data-offset="<?=$offset;?>">
+    <button class="btn btn-default btn-xs form-control" >
+      <?=$btn_text;?>
+    </button>
+  </a>
+<?php endif ?>
+
+
+
+
+

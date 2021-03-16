@@ -1,0 +1,78 @@
+ <?php 
+    $filters_list = (isset($filters_list))? $filters_list : [];
+    $show_all_btn = (isset($show_all_btn))? $show_all_btn : 1;
+    $default_text = (isset($default_text))? $default_text : $this->translate('All');
+    $default_icon = (isset($default_icon))? $default_icon : 'fa fa-list';
+    $default_count = (isset($default_count))? $default_count : '';
+    $default_class = (isset($default_class))? $default_class : '';
+    $menu_data_id = (isset($menu_data_id))? $menu_data_id : '';
+    $main_filters = (isset($main_filters))? $main_filters : null;
+    $custom_buttons = (isset($custom_buttons))? $custom_buttons : [];
+
+    $filters = (isset($filters))? $filters : ((isset($q_options['filters']))? $q_options['filters'] : []);
+
+    $route_name = $this->routeMatch()->getRoute();
+    $route_params = [
+    'controller' => $this->routeMatch()->getController(), 
+    'action' => $this->routeMatch()->getAction(), 
+    ];
+    $query_params = ['query' => [
+    'filters' => $filters,
+    ]];
+
+    if(isset($order)) $query_params['query']['_order'] = $order;
+    if(isset($order_by)) $query_params['query']['order_by'] = $order_by;
+
+ ?>
+
+<ul class="v_filters nav nav-pills nav-stacked" data-id="<?=$menu_data_id;?>">
+  <?php if ($show_all_btn): ?>
+    <?php $query_params['query']['filters'] = [];?>
+    <?php if($main_filters) $query_params['query']['filters'] = array_merge($main_filters, $query_params['query']['filters']);?>
+    <?php $active = ($filters == []) ? 'active' : '';?>
+    <?php 
+      if($main_filters) {
+        $a = 0;
+        foreach ($main_filters as $key => $value) {
+          if (isset($filters[$key]) &&  $filters[$key] == $main_filters[$key]) $a++;
+        }
+        $active = ($a > 0)? 'active' : '';
+      }
+    ;?>
+      <li class="<?=$default_class;?> <?=$active;?>">
+        <a href="<?=$this->url($route_name, $route_params,$query_params);?>" >
+          <span class="<?=$default_icon;?>"></span> <?=$default_text;?> <span class="label label-info pull-right"><?=($default_count)? $default_count : '';?></span>
+        </a>
+      </li>
+  <?php endif ?>
+  <?php foreach ($filters_list as $c_filter): ?>
+    <?php $query_params['query']['filters'] = [$c_filter['name'] => $c_filter['value']];?>
+    <?php if($main_filters) $query_params['query']['filters'] = array_merge($main_filters, $query_params['query']['filters']);?>
+    <?php $active = (isset($filters[$c_filter['name']]) &&  $filters[$c_filter['name']] == $c_filter['value']) ? 'active' : '';?>
+    <?php 
+      if($main_filters) {
+        $a = 0;
+        foreach ($main_filters as $key => $value) {
+          if (isset($filters[$key]) &&  $filters[$key] == $main_filters[$key]) $a++;
+        }
+        $active = ($a > 0 && $active == 'active')? 'active' : '';
+      }
+    ;?>
+      <li class="<?=$active;?>">
+          <a href="<?=$this->url($route_name, $route_params,$query_params);?>" ><span class="<?=(isset($c_filter['icon']))? $c_filter['icon'] : '';?>"></span>
+          <?=$c_filter['title'];?>
+          <span class="label label-info pull-right"><?=(isset($c_filter['count_new']) && $c_filter['count_new'])? $c_filter['count_new'] : '';?></span>
+          <span class="label label-default pull-right"><?=(isset($c_filter['count']) && $c_filter['count'])? $c_filter['count'] : '';?></span>
+          </a>
+      </li>
+  <?php endforeach ?>
+  <?php foreach ($custom_buttons as $custom_button): ?>
+    <li class="<?=$custom_button['class'];?>">
+        <a href="<?=$custom_button['href'];?>" ><span class="<?=(isset($custom_button['icon']))? $custom_button['icon'] : '';?>"></span>
+        <?=$custom_button['title'];?>
+        <span class="label label-info pull-right"><?=(isset($custom_button['count_new']) && $custom_button['count_new'])? $custom_button['count_new'] : '';?></span>
+        <span class="label label-default pull-right"><?=(isset($custom_button['count']) && $custom_button['count'])? $custom_button['count'] : '';?></span>
+        </a>
+    </li>
+  <?php endforeach ?>
+</ul>

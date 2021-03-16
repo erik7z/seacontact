@@ -1,0 +1,468 @@
+<?php 
+	$show_fields = (isset($q_options['show_fields']))? array_flip($q_options['show_fields']) : array_flip([
+		'id', 'name',
+		]);
+	$table_sorting = (isset($q_options['table_sorting']))? $q_options['table_sorting'] : 0;
+
+	$predicat = (isset($q_options['t_options']['predicat']))? $q_options['t_options']['predicat'] : '';
+	$d_module = (isset($q_options['t_options']['d_module']))? $q_options['t_options']['d_module'] : null;
+	$d_controller = (isset($q_options['t_options']['d_controller']))? $q_options['t_options']['d_controller'] : null;
+	$d_action = (isset($q_options['t_options']['d_action']))? $q_options['t_options']['d_action'] : null;
+	$d_id_field = (isset($q_options['t_options']['d_id_field']))? $q_options['t_options']['d_id_field'] : null;
+
+?>
+
+<table class="table table-bordered table-hover table-condensed">
+	<thead>
+	<tr>
+		<?php if (isset($show_fields['item_number'])): ?>
+			<th>#</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['id'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('ID #'), 'field_name' => 'id', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					ID
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['name'])): ?>
+			<th class="text-center">
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => '<i class="fa fa-cog fa-lg"></i>', 'field_name' => 'name', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<i class="fa fa-cog fa-lg"></i>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['online'])): ?>
+			<th class="text-center">
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Online'), 'field_name' => 'online', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Online');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['role'])): ?>
+			<th class="text-center">
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => '<i class="fa fa-user-secret fa-lg"></i>', 'field_name' => 'role', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<i class="fa fa-user-secret fa-lg"></i>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['desired_rank'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Desired Rank'), 'field_name' => 'desired_rank', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Desired Rank');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['office_note'])): ?>
+			<th><?=$this->translate('Last Note');?></th>
+		<?php endif ?>
+		<?php if (isset($show_fields['email'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Email'), 'field_name' => 'email', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Email');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['nationality'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Nationality'), 'field_name' => 'nationality', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Nationality');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['address'])): ?>
+			<th><?=$this->translate('Address');?></th>
+		<?php endif ?>
+		<?php if (isset($show_fields['contact_phone'])): ?>
+			<th><?=$this->translate('Phone');?></th>
+		<?php endif ?>
+		<?php if (isset($show_fields['company_vacancies'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Vacancies') , 'field_name' => 'company_vacancies', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Vacancies');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['vacancies_for_company'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Vacancies for Company') , 'field_name' => 'vacancies_for_company', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Vacancies for Company');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['company_users'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => '<i class="fa fa-users fa-lg"></i>' , 'field_name' => 'company_users', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<i class="fa fa-users fa-lg"></i>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['cv_last_call'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Last Call'), 'field_name' => 'cv_last_call', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Last Call');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['cv_last_update'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Cv Updated'), 'field_name' => 'cv_last_update', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Cv Updated');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['last_activity'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Last activity'), 'field_name' => 'last_activity', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Last activity');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['reg_date'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Registration Date'), 'field_name' => 'reg_date', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Registration Date');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['fav_time'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Added To Favorites'), 'field_name' => 'fav_time', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Added To Favorites');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['vacancy_title'])): ?>
+			<th class="col-md-2">
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Vacancy'), 'field_name' => 'vacancy_title', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Vacancy');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['subscribed_time'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Subscribed'), 'field_name' => 'subscribed_time', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Subscribed');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['assigned_time'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Assigned'), 'field_name' => 'assigned_time', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Assigned');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['assigned_by'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Assigned By'), 'field_name' => 'admin_id', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Assigned By');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['unlocked_time'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Added'), 'field_name' => 'unlocked_time', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Added');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['status'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Status'), 'field_name' => 'status', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Status');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+
+		<?php if (isset($show_fields['period_activity'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Period Activity'), 'field_name' => 'period_activity', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Period Activity');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['total_activity'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Total Activity'), 'field_name' => 'total_activity', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Total Activity');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['period_online'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Period Online'), 'field_name' => 'period_online', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Period Online');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['total_online'])): ?>
+			<th>
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Total Online'), 'field_name' => 'total_online', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<?=$this->translate('Total Online');?>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['messages'])): ?>
+			<th class="text-center">
+				<?php if ($table_sorting): ?>
+					<?=$this->partial('application/partial/custom_sorting', ['field_title' => '<i class="text-info fa fa-comments-o"></i>', 'field_name' => 'total_messages', 'q_options' => $q_options]);?>
+				<?php else: ?>
+					<i class="text-info fa fa-comments-o"></i>
+				<?php endif ?>
+			</th>
+		<?php endif ?>
+		<?php if (isset($show_fields['remove'])): ?>
+			<th><?=$this->translate('Remove');?></th>
+		<?php endif ?>
+		<?php if (isset($show_fields['remove_favorites'])): ?>
+			<th class="no-sort"><?=$this->translate('Remove');?></th>
+		<?php endif ?>
+	</tr>
+
+	</thead>
+	<?php $i = 0;?>
+	<?php foreach($data_list as $user) {?>
+		<?php $user_id = (isset($user->{$predicat.'user_id'}))? $user->{$predicat.'user_id'} : (isset($user->{$predicat.'id'})? $user->{$predicat.'id'} : 0);?>
+		<tr>
+			<?php if (isset($show_fields['item_number'])): ?>
+				<td><?php $i++; echo $i;?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['id'])): ?>
+				<td><?=$user_id;?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['name'])): ?>
+				<td class="text-center">
+					<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'user', 'id' => $user_id));?>">
+						<img src="<?=zgetUserAvatar($user, $predicat);?>" alt="<?=$this->translate('View Profile');?>" width="30px" height="30px">
+					</a>
+					<br />
+					<a href="<?=_ADDRESS_.zgetUserLogin($user, $predicat);?>"><?=zgetUserName($user, $predicat);?></a>
+					<?php if (isset($user->{$predicat.'login'}) && $user->{$predicat.'login'}): ?>
+						<br />
+						<?=zgetUserLogin($user, $predicat);?>
+					<?php endif ?>
+				</td>
+			<?php endif ?>
+			<?php if (isset($show_fields['online'])): ?>
+				<td class="text-center"><?=($user->{$predicat.'online'})? '<span class="fa fa-circle text-success"></span>' : '';?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['role'])): ?>
+				<td class="text-center"><?=$user->{$predicat.'role'};?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['desired_rank'])): ?>
+				<td><?=$user->{$predicat.'desired_rank'};?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['office_note'])): ?>
+				<td>
+					<?php if (isset($user->{$predicat.'office_note'})): ?>
+						<dl>
+							<dt><span class="text-success"><?=zformatDateTimeYear($user->{$predicat.'office_note_time'});?></span></dt>
+							<dd><?=$user->{$predicat.'office_note'};?></dd>
+						</dl>
+					<?php endif ?>
+				</td>
+			<?php endif ?>
+			<?php if (isset($show_fields['email'])): ?>
+				<td>
+					<?=$user->{$predicat.'email'};?> 
+					<?= (!isset($user->{$predicat.'contact_email'})) ? ''  : (($user->{$predicat.'contact_email'} == $user->{$predicat.'email'}) ? '' : ', '.$user->{$predicat.'contact_email'});?>
+				</td>
+			<?php endif ?>
+			<?php if (isset($show_fields['nationality'])): ?>
+				<td><?=$user->{$predicat.'nationality'};?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['address'])): ?>
+				<td><?=$user->{$predicat.'home_city'};?>, <?=$user->{$predicat.'home_country'};?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['contact_phone'])): ?>
+				<td><?=$user->{$predicat.'contact_phone'};?> <?= (!isset($user->{$predicat.'contact_mobile'})) ? ''  : (($user->{$predicat.'contact_mobile'} == $user->{$predicat.'contact_phone'}) ? '' : ', '.$user->{$predicat.'contact_mobile'});?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['company_vacancies'])): ?>
+				<td><?php if($user->{$predicat.'company_vacancies'}) echo $user->{$predicat.'company_vacancies'};?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['vacancies_for_company'])): ?>
+				<td><?php if($user->{$predicat.'vacancies_for_company'}) echo $user->{$predicat.'vacancies_for_company'};?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['company_users'])): ?>
+				<td><?php if($user->{$predicat.'company_users'}) echo $user->{$predicat.'company_users'};?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['cv_last_call'])): ?>
+				<td><?php if($user->{$predicat.'cv_last_call'} != 0) echo zgetTimePosted($user->{$predicat.'cv_last_call'});?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['cv_last_update'])): ?>
+				<td><?php if($user->{$predicat.'cv_last_update'} != 0) echo zgetTimePosted($user->{$predicat.'cv_last_update'});?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['last_activity'])): ?>
+				<td><?php if($user->{$predicat.'last_activity'} != 0) echo zgetTimePosted($user->{$predicat.'last_activity'});?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['reg_date'])): ?>
+				<td><?php if ($user->{$predicat.'reg_date'}): ?><?=zgetTimePosted($user->{$predicat.'reg_date'});?><?php endif ?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['fav_time'])): ?>
+				<td><?= zformatDateTime($user->{$predicat.'fav_time'});?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['vacancy_title'])): ?>
+				<td>
+					<a href="<?=$this->url('admin/actions', ['controller' => 'vacancies', 'action' => 'vacancy' , 'id' => $user->{$predicat.'vacancy_id'}]);?>"><?=$user->{$predicat.'vacancy_title'};?></a>
+					<br /><?=$user->{$predicat.'vacancy_rank'};?> / <?=$user->{$predicat.'vacancy_salary'};?>
+				</td>
+			<?php endif ?>
+			<?php if (isset($show_fields['subscribed_time'])): ?>
+				<td><?=zformatDateTimeYear($user->{$predicat.'subscribed_time'});?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['assigned_time'])): ?>
+				<td><?=zformatDateTimeYear($user->{$predicat.'assigned_time'});?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['assigned_by'])): ?>
+				<td>
+					<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'user', 'id' => $user->{$predicat.'admin_id'}));?>">
+						<?=zgetUserName($user, 'admin_');?>
+					</a>
+				</td>
+			<?php endif ?>
+			<?php if (isset($show_fields['unlocked_time'])): ?>
+				<td><?=zformatDateTimeYear($user->{$predicat.'unlocked_time'});?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['status'])): ?>
+				<td>
+					<span class="hidden"><?=$user->{$predicat.'status'};?></span>
+					<?php 
+						$user_vacancy = isset($vacancy_id)? $vacancy_id : ((isset($user->{$predicat.'vacancy_id'}))? $user->{$predicat.'vacancy_id'} : null);
+					?>
+					<select data-user="<?=$user_id;?>" data-vacancy="<?=$user_vacancy;?>" name="vacancy_candidates[status]" id="candidate_status" class="form-control" >
+						<?php $status_list = \Application\Model\VacancyCandidatesTable::getCandidateStatusList(); ?>
+						<?php foreach($status_list as $key => $status) :?>
+							<option value="<?=$key;?>" <?php if($key == $user->{$predicat.'status'}):?> selected="selected" <?php endif?>><?=$status;?></option>
+						<?php endforeach ?>
+					</select>
+				</td>
+			<?php endif ?>
+			<?php if (isset($show_fields['period_activity'])): ?>
+				<td class="text-info small">
+					<?php if (isset($user->{$predicat.'period_likes'}) && $user->{$predicat.'period_likes'}): ?>
+						<i class="fa fa-heart-o"></i> <?=$user->{$predicat.'period_likes'};?>
+					<?php endif ?>
+					<?php if (isset($user->{$predicat.'period_votes'}) && $user->{$predicat.'period_votes'}): ?>
+						/
+						<i class="fa fa-bar-chart"></i> <?=$user->{$predicat.'period_votes'};?>
+					<?php endif ?>
+					<?php if (isset($user->{$predicat.'period_views'}) && $user->{$predicat.'period_views'}): ?>
+						/
+						<i class="fa fa-eye"></i> <?=$user->{$predicat.'period_views'};?>
+					<?php endif ?>
+					<?php if (isset($user->{$predicat.'period_mails'}) && $user->{$predicat.'period_mails'}): ?>
+						/
+						<i class="fa fa-envelope"></i> <?=$user->{$predicat.'period_mails'};?>
+					<?php endif ?>
+				</td>
+			<?php endif ?>
+			<?php if (isset($show_fields['total_activity'])): ?>
+				<td class="text-info small">
+					<?php if (isset($user->{$predicat.'total_likes'}) && $user->{$predicat.'total_likes'}): ?>
+						<i class="fa fa-heart-o"></i> <?=$user->{$predicat.'total_likes'};?>
+					<?php endif ?>
+					<?php if (isset($user->{$predicat.'total_votes'}) && $user->{$predicat.'total_votes'}): ?>
+						/
+						<i class="fa fa-bar-chart"></i> <?=$user->{$predicat.'total_votes'};?>
+					<?php endif ?>
+					<?php if (isset($user->{$predicat.'total_views'}) && $user->{$predicat.'total_views'}): ?>
+						/
+						<i class="fa fa-eye"></i> <?=$user->{$predicat.'total_views'};?>
+					<?php endif ?>
+					<?php if (isset($user->{$predicat.'total_mails'}) && $user->{$predicat.'total_mails'}): ?>
+						/
+						<i class="fa fa-envelope"></i> <?=$user->{$predicat.'total_mails'};?>
+					<?php endif ?>
+				</td>
+			<?php endif ?>
+			<?php if (isset($show_fields['period_online'])): ?>
+				<td><?=($user->{$predicat.'period_online'})? round($user->{$predicat.'period_online'} / 3600) .' hrs ' : '';?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['total_online'])): ?>
+				<td><?=($user->{$predicat.'total_online'})? round($user->{$predicat.'total_online'} / 3600) .' hrs ' : '';?></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['messages'])): ?>
+				<td class="text-center">
+					<?php if (isset($user->{$predicat.'total_messages'}) && $user->{$predicat.'total_messages'}): ?>
+					<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#messagesModal" data-id="<?=$user->id;?>" data-title="<?=$this->translate('Messages');?> ( <?=$this->translate('You writing from the name of');?>: <?=zgetUserName($user, $predicat);?> )">
+						<?php if (isset($user->{$predicat.'new_messages'}) && $user->{$predicat.'new_messages'}): ?>
+							<i class="fa fa-comment"></i> <?=$user->{$predicat.'new_messages'};?>
+						<?php endif ?>
+							<i class="fa fa-comments-o"></i> <?=$user->{$predicat.'total_messages'};?>
+					</button>
+					<?php endif ?>
+				</td>
+			<?php endif ?>
+			<?php if (isset($show_fields['remove'])): ?>
+				<?php 
+					$d_link = '#';
+					$d_id = ($d_id_field)? $user->{$d_id_field}: $user_id;
+					if($d_controller || $d_action) $d_link = $this->url($d_module, ['controller' => $d_controller, 'action' => $d_action, 'id' => $d_id]);
+				?>
+				<td><a href="<?=$d_link;?>" class="delete_item" data-id="<?=$d_id;?>"><i class="fa fa-trash"></i></a></td>
+			<?php endif ?>
+			<?php if (isset($show_fields['remove_favorites'])): ?>
+				<td class="text-center">
+					<a class="remove_favorites" data-id="<?=$user_id;?>" href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'remove-from-favorites', 'id' => $user_id));?>" > 
+						<span class="glyphicon glyphicon-trash"></span>
+					</a>
+				</td>
+			<?php endif ?>
+		</tr>			
+	<?php }?>
+</table>
+
+<?php if (isset($show_fields['status'])): ?>
+	<?=$this->partial('admin/js/candidate_status_script');?>
+<?php endif?>

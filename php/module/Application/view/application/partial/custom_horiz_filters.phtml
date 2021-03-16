@@ -1,0 +1,49 @@
+<?php 
+	$default_text = (isset($default_text))? $default_text : $this->translate('All');
+	$filters_list = (isset($filters_list))? $filters_list : [];
+	$show_all_btn = (isset($show_all_btn))? $show_all_btn : 1;
+	$merge_with_current = (isset($merge_with_current))? $merge_with_current : 0;
+
+
+	$filters = (isset($filters))? $filters : ((isset($q_options['filters']))? $q_options['filters'] : []);
+
+	$route_name = $this->routeMatch()->getRoute();
+	$route_params = [
+	'controller' => $this->routeMatch()->getController(), 
+	'action' => $this->routeMatch()->getAction(), 
+	];
+	$query_params = ['query' => [
+	'filters' => $filters,
+	]];
+
+	if(isset($order)) $query_params['query']['_order'] = $order;
+	if(isset($order_by)) $query_params['query']['order_by'] = $order_by;
+
+?>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="btn-group" role="group" aria-label="<?=$this->translate('Show Only');?>">
+			<?php if ($show_all_btn): ?>
+				<?php $query_params['query']['filters'] = [];?>
+				<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+					<?php $class = ($filters == []) ? 'info' : 'default';?>
+					<button type="button" class="btn btn-sm btn-<?=$class;?>"><?=$default_text;?></button>
+				</a>
+			<?php endif ?>
+			<?php foreach ($filters_list as $c_filter): ?>
+				<?php 
+					if($merge_with_current) $query_params['query']['filters'] = array_merge($query_params['query']['filters'], [$c_filter['name'] => $c_filter['value']]);
+					else $query_params['query']['filters'] = [$c_filter['name'] => $c_filter['value']];
+				?>
+				<?php $class = (isset($filters[$c_filter['name']]) &&  $filters[$c_filter['name']] == $c_filter['value']) ? 'info' : 'default';?>
+				<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+					<button type="button" class="btn btn-sm btn-<?=$class;?>">
+						<span class="<?=(isset($c_filter['icon']))? $c_filter['icon'] : '';?>"></span>
+						<?=$c_filter['title'];?>
+					</button>
+				</a>
+			<?php endforeach ?>
+		</div>
+	</div>
+</div>

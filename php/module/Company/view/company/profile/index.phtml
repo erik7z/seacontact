@@ -1,0 +1,60 @@
+<section id ="company-profile" class="section-company container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('class', 'form-horizontal');
+				$companyFields = $form->get('user');
+				echo $this->form(null)->openTag($form);
+			?>
+			<div class="row">
+				<div class="col-md-10">
+					<h2><?=$this->translate('Company Information');?></h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="cv-avatar col-md-3 pt text-center">
+					<div id="kv-avatar-errors" class="center-block" style="width:200px;display:none"></div>
+					<div class="kv-avatar center-block">
+						<?= $this->formFile($companyFields->get('avatar'));?>
+					</div>
+				</div>
+				<div class="col-md-9">
+					<?=$this->partial('company/partial/profile-form-fields', ['companyFields' => $companyFields]);?>
+					<div class="row">
+						<div class="col-md-3 col-md-offset-9">
+							<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary'));?>
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+								<?=$form->get('submit')->getLabel();?>
+							<?=$this->formButton()->closeTag();?>
+						</div>
+					</div>				
+				</div> <!-- col-md-9 -->
+			</div><!--  row -->
+
+
+
+			<?= $this->form()->closeTag();?>
+
+			<div class="col-md-12">
+				<hr />
+			</div>
+		</div> <!-- col-md-12 -->
+	</div> <!-- row -->
+</section>
+<?=$this->partial('application/js/file_upload');?>
+<?php //d($this->identity());?>
+<script>
+	var previewImg = '<img src="<?=zgetUserAvatar($this->identity());?>" class="img-responsive" alt="<?=(isset($alt))? $alt : '';?>">';
+	var btnCust = '<?=$this->formButton()->openTag($form->get("submit")->setAttribute("class", "btn btn-primary btn-sm"));?>'+
+	             '<span class="glyphicon glyphicon-floppy-disk"></span>'+
+	             '<?=$this->formButton()->closeTag();?>';
+	cv_avatar_upload_settings.layoutTemplates = {main2: '{preview} ' + '{browse}  {remove} '+ btnCust};
+	cv_avatar_upload_settings.defaultPreviewContent = previewImg;
+
+	$(document).on('ready', function() {
+	    $("#avatar_upload").fileinput(cv_avatar_upload_settings);
+	});
+
+</script>

@@ -1,0 +1,68 @@
+<?php
+	$user_id = (isset($this->user['user_id'])) ? $this->user['user_id'] : null;
+?>
+
+<div class="user_row  row">
+	<div class="user-avatar col-md-3">
+		<span class="fa fa-circle online_status <?=zgetOnlineStatus($this->user['last_activity']);?>"></span>
+		<a href="<?= $this->url('sc/userinfo', array('user' => zgetUserLogin($this->user), 'controller' => null)); ?>">
+				<img src="<?=zgetUserAvatar($this->vars()->user);?>" />
+		</a>
+	</div>
+	<div class="user-info col-md-5">
+		<h5 class="position"><?=$this->user['desired_rank']?></h5>
+		
+			<h4 class="user-name">
+				<a href="<?= $this->url('sc/userinfo', array('user' => zgetUserLogin($this->user), 'controller' => null)); ?>">
+				<?=zhashUserName(zgetUserName($this->user), 0, $this->isPermitted('_user_fields\full_name', $user_id));?>
+				</a>
+			</h4>
+		
+		<?php if(isset($this->user['worked_on']) && !empty($this->user['worked_on'])) {?>
+			<span class="worked_together"><?=$this->translate('Worked on');?>:</span>
+			<ul class="list-unstyled">
+				<li class="list-unstyled"><span class="fa fa-anchor ship-icon"></span>
+						<?php 
+							if($this->identity() && $this->identity()->type != \Application\Model\UserTable::TYPE_COMPANY) $search_link = $this->url('sc/contacts/actions', ['action' => 'search'], ['query' => ['filters' => ['ship_name' => $this->user['worked_on']]]]);
+							else $search_link = $this->url('sc/seamansdb', [], ['query' => ['filters' => ['ship_name' => $this->user['worked_on']]]]);
+						?>
+						<a href="<?=$search_link;?>">
+							<?=$this->user['worked_on'];?>
+						</a>
+						<?php if ($user->worked_together): ?>
+							<li>
+							<span class="small"><?=$this->translate('Together with you');?> : (<?=date('M-y', $user->worked_together_from);?> <i class="fa fa-caret-right"></i> <?=date('M-y', $user->worked_together_to);?>)</span>
+							</li>
+						<?php endif ?>
+					
+				</li>
+			</ul>
+		<?php }?>
+	</div>
+	<div class="user-actions col-md-4">
+		<?= ($this->isPermitted('my\controller\messages.pm', $user_id))? $this->partial('my/partial/contacts-btn-msg', ['user_id' => $user_id]) : ''; ?>
+		
+		<?php switch ($this->user['relations']) {
+			case \Application\Model\UserContactsTable::RELATION_FRIENDS:
+				if($this->isPermitted('my\controller\contacts.delete', $user_id)) echo $this->partial('my/partial/contacts-btn-delete', ['user_id' => $user_id]);
+				break;
+			case \Application\Model\UserContactsTable::RELATION_RCVD:
+				if($this->isPermitted('my\controller\contacts.add', $user_id)) echo $this->partial('my/partial/contacts-btn-add', ['user_id' => $user_id]);
+				if($this->isPermitted('my\controller\contacts.tosub', $user_id)) echo $this->partial('my/partial/contacts-btn-tosub', ['user_id' => $user_id]);
+			case \Application\Model\UserContactsTable::RELATION_SENT:
+				if($this->isPermitted('my\controller\contacts.remove', $user_id)) echo $this->partial('my/partial/contacts-btn-remove', ['user_id' => $user_id]);				break;
+				break;
+			case \Application\Model\UserContactsTable::RELATION_FOLLOWING:
+				if($this->isPermitted('my\controller\contacts.remove', $user_id)) echo $this->partial('my/partial/contacts-btn-remove', ['user_id' => $user_id]);				break;
+				break;
+			case \Application\Model\UserContactsTable::RELATION_FOLLOWER:
+				if($this->isPermitted('my\controller\contacts.add', $user_id)) echo $this->partial('my/partial/contacts-btn-add', ['user_id' => $user_id]);
+				break;
+			default:
+				if($this->isPermitted('my\controller\contacts.add', $user_id)) echo $this->partial('my/partial/contacts-btn-add', ['user_id' => $user_id]);
+				break;
+		}
+		?>
+
+	</div> <!-- user-info col-md-3 -->
+</div> <!-- user_row row -->

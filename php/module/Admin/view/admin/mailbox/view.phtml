@@ -1,0 +1,22 @@
+<section class="container-fluid">
+	<div class="row">
+		<?php $mail->mail_accounts = $mail_accounts;?>
+		<?php $mail->q_options = $q_options;?>
+		<?=$this->partial('admin/partial/view-mail.phtml', $mail);?>
+	</div>
+	<hr />
+	<?php if ($this->isPermitted('admin\controller\mailbox.index')): ?>
+		<div class="row">
+			<?php if($data_list && count($data_list) > 0) :?>
+				<h3 class="bg-warning"><?=$this->translate('Previous Mails');?></h3>
+				<?php foreach ($data_list as $mail_item) :?>
+					<?php $mail_item->collapsed = true;?>
+					<?=$this->partial('admin/partial/view-mail.phtml', $mail_item);?>
+				<?php endforeach;?> 
+			<?php endif; ?>
+			<div class="col-md-12 text-center custom_pagination">
+				<?=$this->partial('application/partial/custom_pagination');?>
+			</div>
+		</div>
+	<?php endif;?>
+</section>

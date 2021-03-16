@@ -1,0 +1,39 @@
+<?php
+    $form = (isset($this->form) && $this->form)? $this->form : new \Application\Form\AuthForm;
+    $form->prepare();
+    $action = (isset($action)) ? $action : '/auth';
+    $form->setAttribute('action', $action);
+    $form->setAttribute('name', 'auth_form');
+    echo $this->form()->openTag($form);
+?>
+    <div class="form-group">   
+        <div class="col-md-8">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <?=$this->formElement($form->get('user')->get('login_or_email')->setAttributes(array('class' => 'form-control fEmail input-sm'))); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <?=$this->formElement($form->get('user')->get('password')->setAttributes(array('class' => 'fEmail form-control input-sm'))); ?>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <?=$this->formSubmit($form->get('submit')->setAttribute('class', 'form-control subS btn-sm')->setValue($this->translate('Enter'))); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php if($form->has('captcha')) {?>
+        <div id="captcha-field" class="form-group">
+            <div class="col-md-12">
+                <?= $this->formElement($form->get('captcha'));?>
+            </div>
+        </div>
+    <?php }?>
+           
+<?=$this->form()->closeTag();?>

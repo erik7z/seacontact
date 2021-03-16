@@ -1,0 +1,24 @@
+<div class="row data-list" data-limit="<?=$q_options['_limit'];?>" data-offset="<?=$q_options['_offset'];?>">
+	<?php if (count($later_news) > 0): ?>
+		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		  <div class="panel panel-default ">
+		    <div class="panel-heading" role="tab" id="headingOne">
+		      <h3 class="panel-title text-center text-blue text-uppercase">
+		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+		          <strong><?=$this->translate('Postponed Publications');?> : <?=count($later_news);?> </strong>
+		        </a>
+		      </h3>
+		    </div>
+		    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+		      <div class="panel-body">
+		      		<?=$this->partial('application/partial/news-list.phtml', ['data_list' => $later_news]);?>
+		      </div>
+		    </div>
+		  </div>
+
+		</div>
+	<?php endif ?>
+	<div class="col-md-12">
+		<?=$this->partial('application/partial/news-list.phtml', ['data_list' => $curr_news]);?>
+	</div>
+</div><!--  row logbook-list -->

@@ -1,0 +1,38 @@
+<div class="content-fluid">
+<?php
+	$form = $this->form;
+	$form->prepare();
+	$fieldset = $form->get('admin_roles');
+	echo $this->form()->openTag($form);
+?>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group">
+				<?php if ($fieldset->has('roles')): ?>
+					<div class="col-md-12">
+						<?=$this->formLabel($fieldset->get('roles'));?>
+						<?=$this->formElement($fieldset->get('roles')->setAttribute('class', 'form-control input-sm '));?>
+						<?=$this->formElementErrors($fieldset->get('roles'));?>
+					</div>
+				<?php endif ?>
+				<?php if ($fieldset->has('new_role')): ?>
+					<div class="col-md-12">
+						<?=$this->formLabel($fieldset->get('new_role'));?>
+						<?=$this->formElement($fieldset->get('new_role')->setAttribute('class', 'form-control input-sm '));?>
+						<?=$this->formElementErrors($fieldset->get('new_role'));?>
+					</div>
+				<?php endif ?>
+			</div>
+			<div class="form-group">
+				<div class="col-md-12">
+					<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control input-sm'));?>
+						<span class="fa fa-user-plus"></span> 
+			 			 <?=$form->get('submit')->getLabel();?> 
+					<?=$this->formButton()->closeTag();?>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<?= $this->form()->closeTag();?>
+</div>

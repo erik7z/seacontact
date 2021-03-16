@@ -1,0 +1,540 @@
+<!--home start-->
+<div id="home">
+    <div class="headerLine">
+        <?= $this->partial('landing-menu');?>
+        <div class="container">
+            <div class="row wrap">
+                <div class="col-md-12 gallery"> 
+                    <div class="camera_wrap camera_white_skin" id="camera_wrap_1">
+                        <div data-thumb="" data-src="img/landing/slides/blank.gif">
+                            <div class="img-responsive camera_caption fadeFromBottom">
+                                <h2 class="text-bg"><?=$this->translate('We connect');?></h2>
+                            </div>
+                        </div>
+                        <div data-thumb="" data-src="img/landing/slides/blank.gif">
+                            <div class="img-responsive camera_caption fadeFromBottom">
+                                <h2 class="text-bg"><?=$this->translate('We share experience');?></h2>
+                            </div>
+                        </div>
+                        <div data-thumb="" data-src="img/landing/slides/blank.gif">
+                            <div class="img-responsive camera_caption fadeFromBottom">
+                                <h2 class="text-bg"><?=$this->translate('We help to find job');?></h2>
+                            </div>
+                        </div>
+                    </div><!-- #camera_wrap_1 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--about start-->    
+<div id="about">
+
+    <div class="container">
+        <br />
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-md-4 project">
+                <a href="<?=$this->url('sc/vacancies');?>">
+                    <h3 id="counter"><?=$vacancies_count;?></h3>
+                    <h4><?=$this->translate('Vacancies');?></h4>
+                </a>
+                <p><?=$this->translate('Only latest and actual vacancies from the best shipowners and crewing agencies');?></p>
+            </div>
+            <div class="col-md-4 project">
+                <a href="<?=$this->url('sc/seamansdb');?>">
+                    <h3 id="counter1"><?=$users_count;?></h3>
+                    <h4><?=$this->translate('Seamans');?></h4>
+                </a>
+                <p><?=$this->translate('Large database and social network of profesional seafarers which is constantly growing. You can find your collegues and friends from the ships you worked on');?></p>
+            </div>
+            <div class="col-md-4 project">
+            <a href="<?=$this->url('sc/companiesdb');?>">
+                <h3 id="counter2" style="margin-left: 20px;"><?=$companies_count;?></h3>
+                <h4 style="margin-left: 20px;"><?=$this->translate('Companies');?></h4>
+            </a>
+                <p><?=$this->translate('Top shipowners and crewing agencies, which are actively posting their vacancies on our resource. Feel free to contact with them directly, send messages and apply for job');?></p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="line2">
+        <div class="container">
+            <div class="row Fresh">
+                <h1 class="text-bg"><?=$this->translate('How it works ?');?></h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <br />
+        <br />
+        <div class="row text-center">
+            <div class="col-md-4 Des">
+                <a href="<?=$this->url('sc/home', array(), array('fragment' => 'registration'));?>">
+                    <span class="fa-stack fa-2x">
+                      <i class="fa fa-circle-thin fa-stack-2x"></i>
+                      <i class="fa fa-hand-pointer-o fa-stack-1x"></i>
+                    </span>
+                    <h4 class="text-primary pt pb"><?=$this->translate('Register on our site');?></h4>
+                </a>
+                <p><?=$this->translate('Just provide your email address, most probably you are already in our database! Your CV could be already filled up, only latest update is required !');?> </p>
+            </div>
+            <div class="col-md-4 Ver">
+                <a href="<?=$this->url('sc/home', array(), array('fragment' => 'registration'));?>">
+                    <span class="fa-stack fa-2x">
+                      <i class="fa fa-circle-thin fa-stack-2x"></i>
+                      <i class="fa fa-file-text-o fa-stack-1x"></i>
+                    </span>
+                    <h4  class="text-primary pt pb"><?=$this->translate('Fill your experience');?></h4>
+                </a>
+                <p>
+                    <?=sprintf($this->translate('Write name of ships you have worked on, and we will find your old friends and collegues. Your cv will be available for more than %s companies and crewing agencies'), $companies_count);?>
+                </p>
+            </div>
+            <div class="col-md-4 Fully">
+                <a href="<?=$this->url('sc/home', array(), array('fragment' => 'registration'));?>">
+                    <span class="fa-stack fa-2x">
+                      <i class="fa fa-circle-thin fa-stack-2x"></i>
+                      <i class="fa fa-users fa-stack-1x"></i>
+                    </span>
+                    <h4 class="text-primary pt pb"><?= sprintf($this->translate("Use all power of %s"), '<strong><span style="color:#246faf">SEA</span>CONTACT!</strong>');?></h4>
+                </a>
+                <p><?=$this->translate('Hot job vacancies, news and answers on profesional questions. Keep your cv updated, and stay in touch with old friends and collegues. That is what SEACONTACT means! ');?></p>
+            </div>  
+        </div>
+    </div>
+ 
+
+</div>
+
+<!--project start-->    
+<div id="vacancies">      
+    <div class="line3">
+        <div class="container">
+            <div id="project1" ></div>
+            <div class="row Ama">
+                <div class="col-md-12">
+                    <span name="projects" id="projectss"></span>
+                    <h3 class="text-bg"><?=$this->translate('Latest vacancies');?></h3>
+                    <p><span class="description"><?=$this->translate('Job proposals from shipowners and crewing agencies');?></span></p>
+                </div>
+            </div>
+        </div>
+    </div>          
+
+
+    <div class="container">
+
+        <div class="row">
+            <!-- filter_block -->
+            <div id="options" class="col-md-12" style="text-align: center;">    
+                <ul id="filter" class="option-set" data-option-key="filter">
+                    <li><a class="selected" href="#filter" data-option-value="*" class="current"><?=$this->translate('All fleet');?></a></li>
+                    <?php foreach ($fleet_type as $fleet) {?>
+                        <?php 
+                            $type = str_replace(array(' ', '(', ')','/'),array('','_','','_'), $fleet['ship_type']);
+                        ?>
+                        <li><a href="#filter" data-option-value=".<?=$type;?>"><?=$fleet['ship_type'];?></a></li>
+                    <?php }?>
+                </ul>
+            </div><!-- //filter_block -->
+
+
+
+            <div class="portfolio_block columns3 pretty" data-animated="fadeIn">
+                <?php foreach ($vacancies as $vacancy) {?>
+                    <?php $type = str_replace(array(' ', '(', ')','/'),array('','_','','_'), $vacancy->ship_type);?>
+                    <div class="element col-sm-4 gall <?=$type;?>">
+                        <div class="row text-center">
+                            <div class="col-md-9">
+                                <h4>
+                                    <a href="<?=$this->url('sc/vacancies/actions', 
+                                                                array('action' => 'view', 'id' => $vacancy->id)
+                                                            );?>"><?=$vacancy->title;?>
+                                    </a>
+
+                                    <?php if($vacancy->urgent) {?><small class="text-danger"> - <i class="li_fire pe-1x"></i>URGENT </small><?php }?>
+                                </h4>
+                            </div>
+                            <div class="col-md-3 header-icons">
+                                <?php if($vacancy->views) {?><span><i class="fa fa-eye"></i><?=$vacancy->views;?></span> <?php }?>
+                               <?php if($vacancy->subscribers) {?> / <span><i class="fa fa-user"></i> <?=$vacancy->subscribers;?></span> <?php }?>
+                            </div>
+                        </div>
+                        
+                        <div class="vacancy_text row">
+                            <div class="col-md-4 company-logo">
+                                <a href="<?=$this->url('sc').zgetUserLogin($vacancy);?>">
+                                    <img src="<?=zgetVacancyAvatar($vacancy->avatar);?>" width="90px" />
+                                </a>
+                                <h5 class="text-center">
+                                    <a href="<?=$this->url('sc').zgetUserLogin($vacancy);?>">
+                                        <?=$vacancy->company_name;?>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><?=zshorterText(htmlspecialchars_decode($vacancy->text));?></p>
+                                    </div>
+                                </div>
+                                <div class="view vacancy_actions row">
+                                    <div class="col-md-12">
+                                        <a href="<?=$this->url('sc/vacancies/actions', 
+                                            array('action' => 'view', 'id' => $vacancy->id)
+                                        );?>" >
+                                            <button class="btn btn-sm btn-default form-control" value="">
+                                                <span class="fa fa-eye"></span>
+                                                <?=$this->translate('View Vacancy');?>
+                                            </button>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <a href="<?=$this->url('sc/fast-reg', array(), array('query' => array('subscribe_vacancy' => $vacancy->id)));?>" data-id="<?=$vacancy->id;?>" data-section="vacancy" class="subscribe_vacancy">
+                                            <button class="btn btn-sm btn-primary form-control" value="">
+                                                <span class="fa fa-user-plus"></span>
+                                                <?=$this->translate('Apply To Job');?>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <?php }?>
+            </div>
+            
+            
+
+            <div class="col-md-12 cBtn  lb" style="text-align: center;">
+                <ul class="load_more_cont ">
+                    <li class="dowbload btn_load_more">
+                        <a href="<?=$this->url('sc/vacancies');?>" >
+                            <i class="fa fa-arrow-down"></i><?=$this->translate('Show more vacancies');?>
+                        </a>
+                    </li>
+                    <li class="buy">
+                        <a href="<?=$this->url('sc/home', array(), array('fragment' => 'registration'));?>">
+                            <i class="fa fa-plus"></i><?=$this->translate('Add new vacancy');?>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+        
+    </div>
+</div>    
+
+<div id="cvs">
+
+    <div class="line3">
+        <div class="container">
+            <div id="project1" ></div>
+            <div class="row Ama">
+                <div class="col-md-12">
+                    <span name="projects" id="projectss"></span>
+                    <h3 class="text-bg"><?=$this->translate('Latest CV\'s');?></h3>
+                    <p><span class="description"><?=$this->translate('New members on our website');?></span></p>
+                </div>
+            </div>
+        </div>
+    </div>          
+    
+    <div style="position: relative;">
+
+        <div class="container">
+            <div class="row about">
+                <?=$this->partialLoop('my/partial/cv-list-item.phtml', $latest_cvs);?>
+                <div class="col-md-12 cBtn  lb" style="text-align: center;">
+                    <ul class="load_more_cont ">
+                        <li class="dowbload btn_load_more">
+                            <a href="<?=$this->url('sc/seamansdb');?>" >
+                                <i class="fa fa-arrow-down"></i><?=sprintf($this->translate('View All %d CV\'s'), $this->escapeHtml($users_count));?>
+                            </a>
+                        </li>
+                        <li class="buy">
+                            <a href="<?=$this->url('sc/fast-reg', array(), array('query' => array('role' => 'seaman')));?>">
+                                <i class="fa fa-plus"></i><?=$this->translate('Add Your CV');?>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+            <?=$this->partial('application/js/unlock_user_info');?>
+        </div>
+
+    </div>
+
+</div>
+
+<!--news start-->
+<div id="news">
+    <div class="line4">     
+        <div class="container">
+            <div class="row Ama">
+                <div class="col-md-12">
+                    <h3 class="text-bg"><?=$this->translate('News');?></h3>
+                    <p><span class="description"><?=$this->translate('Latest News');?></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <?php $this->headScript()->appendFile($this->basePath('vendor/masonry/dist/masonry.pkgd.min.js'));?>
+        <div class="row news grid js-masonry" data-masonry-options='{"itemSelector": ".masonry-grid-item" }'>
+        <?php foreach ($news as $news_item): ?>
+              <div class="masonry-grid-item col-md-4">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="<?= $this->url('sc/userinfo', array('user' => zgetUserLogin($news_item), 'controller' => null)); ?>">
+                                <img src="<?=zgetUserAvatar($news_item);?>" width="50px" height="50px"/>
+                            </a>
+                        </div>
+                        <div class="col-md-10 text-left">
+                            <h5>
+                                <a href="<?= $this->url('sc/userinfo', array('user' => zgetUserLogin($news_item), 'controller' => null)); ?>">
+                                    <?=zgetUserName($news_item);?>
+                                </a>
+                            </h5>
+                           <span><i class="fa fa-calendar"></i> <?=zgetTimePosted($news_item->time);?></span>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <hr class="hrNewsTop">
+                            <?php $text = htmlspecialchars_decode($news_item->text);?>
+                            <p>
+                                <?=zshorterText($text, 80);?>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row data-video">
+                        <?php if (isset($news_item->video) && $news_item->video): ?>
+                            <div class="col-md-12">
+                                <div class="embed-responsive embed-responsive-4by3">
+                                    <iframe src="<?=$news_item->video;?>" class="embed-responsive-item" allowfullscreen="1"></iframe>
+                                </div>
+                            </div>
+                        <?php endif ?>
+                        <?php if(isset($news_item->videos)) :?>
+                            <?php 
+                                $videos_obj = json_decode($news_item->videos);
+                                $v_count = count($videos_obj);
+                                $v_cols = ($v_count > 2)? 4 : (($v_count < 2)? 12 : 6);
+                            ?>
+                            <?php for ($i=0; $i < $v_count; $i++) : ?>
+                                <div class="col-md-<?=$v_cols;?>">
+                                    <?=$this->partial('application/partial/video-item', $videos_obj[$i]);?>
+                                </div>
+                            <?php endfor ?>
+                        <?php endif ?>
+                    </div>
+                    <?php if(isset($news_item->pics)) :?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <?php $pics = json_decode($news_item->pics);?>
+                                <?php for ($i=0; $i < count($pics); $i++) {?>
+                                    <?php if (file_exists(_PICSROOT_.$pics[$i]->thumb)): ?>
+                                        <a href="<?=$this->basePath('/'._PICSWWW_.$pics[$i]->img);?>" title="<?=$pics[$i]->alt;?>" data-gallery="#logbook_<?=$news_item->id;?>">
+                                                    
+                                            <?php 
+                                                $img_size = getimagesize(_PICSROOT_.$pics[$i]->thumb); 
+                                                $q = (count($pics) > 1) ? 2 : 1;
+                                                $width = $img_size[0] / $q;
+                                                $height = $img_size[1] / $q;
+                                            ?>
+
+                                            <img src="<?=$this->basePath('/'._PICSWWW_.$pics[$i]->thumb);?>" width="<?=$width;?>" height="<?=$height;?>" style="float: left;" alt="<?=$pics[$i]->alt;?>" />
+                                        </a>
+                                    <?php endif ?>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    <?php endif ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br />
+                            <a href="<?=$this->url('sc/logbook/actions', array('action' => 'view', 'id'=>$news_item->id));?>">
+                                <b><?=$this->translate('Read more');?></b>
+                            </a> 
+                            <hr class="hrNews">
+                        </div>
+                    </div>
+                    
+                    <!-- <h3><a href="<?=$this->url('sc/logbook/actions', array('action' => 'view', 'id'=>$news_item->id));?>"><?=$title;?></a></h3>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-comments"></i>17 comments</a></li>
+                    </ul> -->
+                </div>
+        <?php endforeach ?>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row cBtn">
+            <div class="col-md-12" style="text-align: center; margin-bottom: -90px; z-index: 10;">
+                <ul class="mNews">
+                    <li class="dowbload bhide2"><a href="<?=$this->url('sc/news');?>"><i class="fa fa-arrow-down"></i><?=$this->translate('Show more News');?></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--contact start-->
+<div id="registration" class="line5">
+    <div class="container-fluid">
+        <div class="row footer">
+            <div class="col-md-12">
+                <h3 style="margin-top: 180px;"><?=$this->translate('You are still not with us ? Register now !');?></h3>
+                <div class="fr">
+                    <div style="display: inline-block;">
+                        <?php
+                        $form = $this->form;
+                        $form->prepare();
+                        echo $this->form()->openTag($form);
+                            // echo $this->formElement($this->form->get('csrf'));
+                        ?>
+                        <?=$this->formElement($this->form->get('user')->get('email')->setAttributes(array('id' => 'reg_email', 'class' => 'col-md-6 fEmail'))); ?>
+                        <?=$this->formSubmit($this->form->get('submit')->setAttribute('class', 'subS')->setValue($this->translate('Join'))); ?>
+                        <div id="captcha-field">
+                            <?php if($this->form->has('captcha')) {
+                                echo $this->formCaptcha($this->form->get('captcha'));
+                            }?>
+                        </div>                
+                        <?=$this->form()->closeTag();?>
+                        <div class="system-messages">
+                            <?= $this->msgs();?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-md-offset-5 text-center">
+                <span class="help-block bg-warning pt pb">
+                    <h5 class="mb0 mt0"><a href="<?=$this->url('sc/social_auth');?>"><?=$this->translate('Login with social networks');?></a></h5>
+                    <?=$this->partial('application/partial/auth-social-links');?>
+                </span>
+            </div>
+            <?=$this->partial('landing-social');?>
+        </div>
+    </div>
+</div>
+
+<div id="contacts" class="container">
+    <div class="row">
+        <div class="col-md-12 cBusiness">
+            <div class="row">
+                <div class="col-sm-4 text-center">
+                    <h5><?=$this->translate('Follow us in');?> <b>Vkontakte</b></h5>
+                    <script type="text/javascript" src="//vk.com/js/api/openapi.js?121"></script>
+                    <div id="vk_groups"></div>
+                    <script type="text/javascript">
+                    VK.Widgets.Group("vk_groups", {mode: 0, width: "350", height: "250", color1: 'FFFFFF', color2: '2B587A', color3: '5B7FA6'}, 101763341);
+                    </script>
+                </div>                
+                <div class="col-sm-4 text-center">
+                    <h5><?=$this->translate('Follow us in');?> <b>LinkedIn</b></h5>
+                    <script type="IN/CompanyProfile" data-id="10163464" data-format="inline"></script>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <h5><?=$this->translate('Follow us in');?> <b>Facebook</b></h5>
+                    <div class="fb-page" data-href="https://www.facebook.com/club.seacontact/" data-tabs="timeline" data-width="350" data-height="250" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/club.seacontact/"><a href="https://www.facebook.com/club.seacontact/">Seacontact</a></blockquote></div></div>
+                </div>
+            </div>
+        <br />
+        <br />
+        <br />
+            <h3 class="text-center"><?=$this->translate('Contacts');?> :</h3>
+        </div>
+    </div>
+    <ul class="row fa-ul">
+        <li class="col-md-12 text-center">
+                <h3><small><?=$this->siteInfo()->home_address;?></small></h3>
+        </li>
+        <li class="col-md-12 text-center">
+            <h3><a href="tel:<?=$this->siteInfo()->contact_phone;?>"><?=$this->siteInfo()->contact_phone;?></a></h3>
+        </li>
+        <!-- <li class="col-md-4 text-center">
+            <h3><a href="tel:<?=$this->siteInfo()->contact_mobile;?>"></i><?=$this->siteInfo()->contact_mobile;?></a></h3>
+        </li> -->
+    </ul>
+    <div class="row text-center">
+        <div class="col-md-4 col-md-offset-2">
+        <h3>
+            <small><?=$this->translate('Manning and crew');?></small><br />
+            <a href="mailto:<?=$this->siteInfo()->contact_email;?>"><?=$this->siteInfo()->contact_email;?></a>
+        </h3>
+        </div>
+        <div class="col-md-4">
+        <h3>
+            <small><?=$this->translate('Cooperation and shipowners');?></small><br />
+            <a href="mailto:<?=$this->siteInfo()->email;?>"><?=$this->siteInfo()->email;?></a>
+        </h3>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="line6">
+    <iframe src="https://www.google.com/maps/d/embed?mid=ziGDNOEBCcJo.kZUhvxbrGSI8" width="100%" height="750" frameborder="0" style="border:0"></iframe>
+</div> -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3><b>Ocean Contract</b></h3>
+            <h4><small><?=$this->translate('Seacontact\'s official crewing manager');?></small></h4>
+        </div>
+    </div>
+</div>
+
+<?=$this->partial('application/image-gallery');?>
+<?=$this->partial('application/modal',array(
+                    'modal_name' => 'fast_reg_modal',
+                    'modal_title' => $this->translate('Fast Registration'),
+                    'modal_size' => 'md',
+));?>
+
+<?=$this->partial('application/js/file_upload');?>
+
+<?=$this->partial('application/modal',array(
+                    'modal_name' => 'auth_modal',
+                    'modal_title' => $this->translate('Authorisation'),
+                    'modal_size' => 'md',
+                    'show_header' => 0,
+                    'show_footer' => 0
+));?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#auth_modal']);?>
+<?=$this->partial('application/js/social-auth-scripts', ['modal_name' => '#auth_modal', 'auth_redirect' => $this->url('sc')]);?>
+
+<script type="text/javascript">
+
+    $(document).on('ready', function() {
+
+        $("input#cv_file_upload").fileinput(cv_upload_settings);
+        $('body').on('click', '.subscribe_vacancy', function(e){
+            e.preventDefault();
+            var vacancy_id = $(this).data('id');
+            $('#fast_reg_modal').modal('show');
+            $('#fast_reg_modal .load-content').load('/fast-reg', {terminal: 1, no_json: 1, subscribe_vacancy: vacancy_id}, function() {
+                $('#fast_reg_modal input#cv_file_upload').fileinput(cv_upload_settings);
+            });
+        });
+
+    });
+
+</script>

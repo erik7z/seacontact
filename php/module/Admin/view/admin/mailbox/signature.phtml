@@ -1,0 +1,55 @@
+<div class='container-fluid'>
+	<div class="row">
+		<div class="col-md-8">
+			<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('class', 'form-horizontal');
+				$form->setName('admin_signature_form');
+				echo $this->form()->openTag($form);
+			?>
+				<fieldset class="col-md-12">
+					<div class="form-group">
+						<div class="col-md-12">
+							<?=$this->formLabel($form->get('signature'));?>
+							<?=$this->formElement($form->get('signature')->setAttribute('class', 'form-control'));?>
+							<?=$this->formElementErrors($form->get('signature'));?>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-12">
+							<?=$this->formLabel($form->get('submit'));?>
+							<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control input-md  send_mail'));?>
+								<span class="fa fa-paper-plane-o"></span> 
+					 			 <?=$form->get('submit')->getLabel();?>
+							<?=$this->formButton()->closeTag();?>
+						</div>
+					</div>
+				</fieldset>
+			<?= $this->form()->closeTag();?>
+		</div>
+
+		<div class="col-md-4 mt">
+			<div class="box box-solid mt">
+				<div class="box-header bg-warning text-center with-border">
+					<h3 class="box-title"><?=$this->translate('Personal Signature');?> </h3>
+				</div><!-- /.box-header -->
+				<div class="box-body ">
+					<p>
+						<?=$this->translate('You can edit here your <i>personal</i> signature');?>
+					</p>
+					<p>
+						<?=$this->translate('This signature will be added to the end of every <b>Your</b> mail');?>
+					</p>
+				</div><!-- /.box-body -->
+			</div>
+		</div>
+	</div>
+</div>
+<?php  
+	$this->headScript()->appendFile('/vendor/tinymce/tinymce.min.js')
+	; 
+?>
+<script type="text/javascript">
+	tinyMCE.init(mce_mail_signature);
+</script>

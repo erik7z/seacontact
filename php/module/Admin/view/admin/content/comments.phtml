@@ -1,0 +1,117 @@
+<section class="container-fluid">
+<div class="row">
+	<div class="col-md-12 table-responsive">
+		<div class="box">
+			<div class="box-header bg-info">
+				<div class="row">
+					<div class="col-md-3">
+						<h4><?= $this->translate('Latest Comments');?></h4>
+					</div>
+					<div class="col-md-9">
+						<?php 
+							$filters_list[] = ['name' => 'source', 'value' => 'local', 'title' => 'From Website', 'icon' => 'fa fa-globe']; 
+							$filters_list[] = ['name' => 'source', 'value' => 'vk', 'title' => 'From Vkontakte', 'icon' => 'fa fa-vk text-muted']; 
+							$filters_list[] = ['name' => 'section', 'value' => \Application\Model\NewsTable::SECTION_VACANCY, 'title' => $this->translate('Vacancies')]; 
+							$filters_list[] = ['name' => 'section', 'value' => \Application\Model\NewsTable::SECTION_LOGBOOK, 'title' => $this->translate('Logbooks')]; 
+							$filters_list[] = ['name' => 'section', 'value' => \Application\Model\NewsTable::SECTION_QUESTIONS, 'title' => $this->translate('Questions')]; 
+							$filters_list[] = ['name' => 'section', 'value' => \Application\Model\NewsTable::SECTION_ANSWERS, 'title' => $this->translate('Answers')]; 
+						?>
+						<?=$this->partial('application/partial/custom_horiz_filters', ['filters' => $q_options['filters'], 'filters_list' => $filters_list, 'show_all_btn' => 1]);?>
+					</div>
+				</div>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered table-hover table-condensed table-favorites">
+					<thead>
+						<tr>
+							<th><?=$this->translate('Section');?></th>
+							<th><?=$this->translate('Post Link');?></th>
+							<th><?=$this->translate('Comment');?></th>
+							<th><?=$this->translate('By');?></th>
+							<th><?=$this->translate('Role');?></th>
+							<th><?=$this->translate('Time');?></th>
+							<th class="no-sort"><?=$this->translate('Delete Comment');?></th>
+						</tr>
+					</thead>
+					<?php foreach($data_list as $comment) {?>
+						<tr>
+							<td class="col-md-1"><?=$comment->section;?></td>
+							<td class="col-md-1">
+								<?php 
+									if($comment->section == \Application\Model\NewsTable::SECTION_VACANCY) {
+										$url = $this->url('sc/vacancies/actions', ['action' => 'view', 'id' => $comment->section_id]);
+										$title = ($comment->vacancy_title != '')? zlessChars($comment->vacancy_title, 30) : zlessChars(strip_tags(htmlspecialchars_decode($comment->vacancy_text)), 30);
+									} else if($comment->section == \Application\Model\NewsTable::SECTION_LOGBOOK) {
+										$url = $this->url('sc/logbook/actions', ['action' => 'view', 'id' => $comment->section_id]);
+										$title = zlessChars(strip_tags(htmlspecialchars_decode($comment->logbook_text)), 30);
+									} else if($comment->section == \Application\Model\NewsTable::SECTION_QUESTIONS) {
+										$url = $this->url('sc/questions/actions', ['action' => 'view', 'id' => $comment->section_id]);
+										$title = zlessChars($comment->question_title, 30);
+									} else if($comment->section == \Application\Model\NewsTable::SECTION_ANSWERS) {
+										$url = $this->url('sc/questions/actions', ['action' => 'view', 'id' => $comment->question_id]);
+										$title = zlessChars(strip_tags(htmlspecialchars_decode($comment->answer_text)), 30);
+									}
+								// d($comment);
+								?>
+								<?php if (isset($title)): ?>
+									<a href="<?=$url;?>" target="_blank">
+										<?=$title;?>
+									</a>
+								<?php endif ?>
+								
+							</td>
+							<td class="col-md-4"><?=htmlspecialchars_decode($comment->comment);?></td>
+							<td class="col-md-2">
+								<?php if($comment->source == 'vk') :?>
+									<?php $user_link = $comment->soc_page;?>
+									<i class="fa fa-vk text-muted"></i>&nbsp;
+								<?php else: ?>
+									<a href="<?=$this->url('admin/actions', ['controller' => 'content', 'action' => 'comments'], ['query' => ['filters' => ['user_id' => $comment->user_id]]]);?>">
+										<button type="button" class="btn btn-default btn-xs " aria-label="Filter by User">
+					 						<span class="fa fa-filter" aria-hidden="true"></span>
+										</button>
+									</a>
+									<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'user', 'id' => $comment->user_id));?>" target="_blank">
+										<button type="button" class="btn btn-default btn-xs " aria-label="View User">
+					 						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+										</button>
+									</a>
+									<?php $user_link = _ADDRESS_.zgetUserLogin($comment);?>
+								<?php endif ?>
+								<a href="<?=$user_link;?>" target="_blank"><?=zgetUserName($comment);?></a> 
+							</td>
+							<td class="col-md-1"> 
+								<?php if($comment->source == 'local'): ?>
+									<a href="<?=$this->url('admin/actions', ['controller' => 'content', 'action' => 'comments'], ['query' => ['filters' => ['user_role' => $comment->role]]]);?>">
+										<button type="button" class="btn btn-default btn-xs " aria-label="Filter by Role">
+					 						<span class="fa fa-filter" aria-hidden="true"></span>
+										</button>
+									</a>
+									<?= $comment->role;?>
+								<?php endif ?>
+							</td>
+							<td class="col-md-1"><span class="hidden"><?=$comment->time;?></span> <?= zformatDateTime($comment->time);?></td>
+							<td class="col-md-1 text-center">
+								<?php 
+									if($comment->source == 'vk') $delete_link = $this->url('admin/actions', ['controller' => 'content', 'action' => 'delete-comment', 'id' => $comment->id], ['query' => ['source' => 'vk']]);
+									else $delete_link = $this->url('admin/actions', ['controller' => 'content', 'action' => 'delete-comment', 'id' => $comment->id]);
+								?>
+								<a href="<?=$delete_link;?>" > 
+									<span class="glyphicon glyphicon-trash"></span>
+								</a>
+							</td>
+						</tr>
+					<?php }?>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<div class="row">
+	<div class="col-md-12 text-center">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+</div>
+</section>

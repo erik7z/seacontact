@@ -1,0 +1,508 @@
+<?php 
+	$sl = \ServiceLocatorFactory\ServiceLocatorFactory::getInstance();
+?>
+
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>SEACONTACT.COM API</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="/vendor/api-doc/css/ie/html5shiv.js"></script><![endif]-->
+		<script src="/vendor/api-doc/js/jquery.min.js"></script>
+		<script src="/vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="/vendor/api-doc/js/jquery.scrollzer.min.js"></script>
+		<script src="/vendor/api-doc/js/jquery.scrolly.min.js"></script>
+		<script src="/vendor/api-doc/js/skel.min.js"></script>
+		<script src="/vendor/api-doc/js/skel-layers.min.js"></script>
+		<script src="/vendor/api-doc/js/init.js"></script>
+		
+		<link href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="/vendor/api-doc/css/skel.css" />
+		<link rel="stylesheet" href="/vendor/api-doc/css/style.css<?=_SCRIPTS_VER_;?>" />
+		<link rel="stylesheet" href="/vendor/api-doc/css/style-xlarge.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="/vendor/api-doc/css/ie/v8.css" /><![endif]-->
+	</head>
+	<body>
+		<div id="wrapper">
+
+			<!-- Header -->
+				<section id="header" class="skel-layers-fixed">
+					<header>
+						<span class="image avatar"><img src="/img/logo-main.png" alt="" /></span>
+						<h1 id="logo"><a href="http://api.<?=_SITENAME_;?>">api.seacontact.com</a></h1>
+						<p>Quick notes and usage reference</p>
+					</header>
+					<nav id="nav">
+						<ul>
+							<li><a href="#about" class="active"><?=$this->translate('About API');?></a></li>
+							<li><a href="#methods"><?=$this->translate('Methods');?></a></li>
+							<li><a href="#fields"><?=$this->translate('Standart Fields');?></a></li>
+							<li><a href="#authorization"><?=$this->translate('Authorization');?></a></li>
+							<li><a href="#requests"><?=$this->translate('Requests to the API');?></a></li>
+						</ul>
+					</nav>
+					<footer>
+						<ul class="icons">
+							<li><a href="http://<?=_SITENAME_;?>" class="icon fa-globe"><span class="label">seacontact.com</span></a></li>
+						</ul>
+					</footer>
+				</section>
+
+			<!-- Main -->
+				<div id="main">
+
+					<!-- about -->
+						<section id="about">
+							<div class="container">
+								<header class="major">
+									<h2>API</h2>
+									<p><?=$this->translate('Quick notes and usage reference for');?><br />
+									<a href="http://<?=_SITENAME_;?>">seacontact.com</a> API.</p>
+								</header>
+								<p></p>
+							</div>
+						</section>
+					<!-- methods -->
+						<section id="methods">
+							<div class="container">
+							<header class="major">
+								<h2>Methods</h2>
+							</header>
+							<p> Here you can find current methods supported by the api</p>
+							<div>
+								<?= $this->content; ?>
+							</div>
+						</section>
+					<!-- fields -->
+						<section id="fields">
+							<div class="container">
+								<header class="major">
+									<h2>Standart Fields</h2>
+								</header>
+								<p>
+									In this section you can find list of standart fields, information in this section is dynamicaly taken from the engine 
+									so you can refer to it when querying the api.
+								</p>
+								<p> For each parameter  you can specify coma separated name of fields returned by the request. Acceptable parameters and fields are:</p>
+								
+								<?php $stats_fields = $sl->get('UserTable')->getStatsFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_stats_fields', 'object' => $stats_fields]);?>
+
+								<?php $user_fields = $sl->get('UserTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_user_fields', 'object' => $user_fields]);?>
+						
+								<?php $question_fields = $sl->get('QuestionsTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_question_fields', 'object' => $question_fields]);?>
+						
+								<?php $answer_fields = $sl->get('QuestionAnswersTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_answer_fields', 'object' => $answer_fields]);?>
+						
+
+								<?php $vacancy_fields = $sl->get('VacanciesTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_vacancy_fields', 'object' => $vacancy_fields]);?>
+						
+								<?php $logbook_fields = $sl->get('LogbookTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_logbook_fields', 'object' => $logbook_fields]);?>
+
+								<?php $comments_fields = $sl->get('CommentsTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_comments_fields', 'object' => $comments_fields]);?>
+								
+								<?php $likes_fields = $sl->get('LikesTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_likes_fields', 'object' => $likes_fields]);?>
+								
+								<?php $contacts_fields = $sl->get('ContactsTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_contacts_fields', 'object' => $contacts_fields]);?>
+								
+								<?php $experience_fields = $sl->get('ExperienceTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_experience_fields', 'object' => $experience_fields]);?>
+								
+								<?php $docs_fields = $sl->get('DocumentsTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_docs_fields', 'object' => $docs_fields]);?>
+								
+								<?php $notif_fields = $sl->get('UserNotificationsTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_notif_fields', 'object' => $notif_fields]);?>
+							
+								<?php $_message_fields = $sl->get('MessageTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_message_fields', 'object' => $_message_fields]);?>
+
+								<?php $_pics_fields = $sl->get('PicsTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_pics_fields', 'object' => $_pics_fields]);?>
+
+								<?php $_videos_fields = $sl->get('VideosTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_videos_fields', 'object' => $_videos_fields]);?>
+
+								<?php $_links_fields = $sl->get('LinksTable')->getStandartFields();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_links_fields', 'object' => $_links_fields]);?>
+								
+								<p> For comments, likes, notifications, and some other objects you will need to specify 'section' and 'section_id' parameters. Allowed sections you can find here:</p>
+								<?php $sections = $sl->get('NewsTable')->getSections();?>
+								<?=$this->partial('api/partial/object_fields_list.phtml', ['name' => '_sections_object', 'object' => $sections]);?>
+								
+							</div>
+						</section>
+						<!-- authorization -->
+							<section id="authorization">
+								<div class="container">
+									<header class="major">
+										<h2><?=$this->translate('Authorization');?></h2>
+									</header>
+									<p>
+										<?=$this->translate('Any requests to the API could be done only with token, which can be obtained after successfull authorization by Oauth 2.0 workflow');?>
+									</p>
+<p>If you perform a GET request to users.get method wihtout authorization:</p>
+<blockquote>
+<pre>
+<code>
+GET /users.get HTTP/1.1
+Accept: Application/json
+</code>
+</pre>
+</blockquote>
+<p>This will return an error:</p>
+<blockquote>
+<pre>
+<code>
+HTTP/1.1 403 Forbidden
+WWW-Authenticate: Bearer realm="Service"
+Connection: close
+Content-Type: application/problem+json
+{
+	"type":"http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html",
+	"title":"Forbidden",
+	"status":403,
+	"detail":"Forbidden"
+}
+</code>
+</pre>
+</blockquote>
+									<h3>OAuth2</h3>
+									<p>
+										OAuth2 is an authentication framework used worldwide; for instance Facebook , Github, and Twitter use this protocol to authenticate their APIs.
+										Before introducing the Apigility OAuth2 functionalities, let's briefly look at the core concepts of this authentication system.
+									</p>
+									<p>The use cases covered by the OAuth2 framework are:</p>
+									<ul>
+										<li>Web-server applications</li>
+										<li>Browser-based applications</li>
+										<li>Mobile apps</li>
+										<li>Username and password access (Confidential/Public)</li>
+										<li>Application access</li>
+									</ul>
+									<p>
+										<i>Currently Seacontact API supports only <b>(Confidential Clients) Username and password </b> access</i>
+										<br /> You need application <b>client_id</b> and <b>client_secret</b> to get access to the API,
+										and user <b>email</b> and <b>password</b> to perform requests on behalf of user.
+									</p>
+									<dl>
+										<dt>The authentication mechanism is just 1 step:</dt>
+										<dd>
+											The client application provides the <b>client_id</b> and <b>client_secret</b> as HTTP Basic authentication credentials, and the <b>username</b>,
+											and <b>password</b> values in the request body, in order to obtain an access token
+										</dd>
+									</dl>
+<blockquote>
+<pre>
+<code>
+POST testclient:testpass api.seacontact.com/oauth HTTP/1.1
+Accept: application/json
+Authorization: Basic dGVzdGNsaWVudDp0ZXN0cGFzcw==
+Content-Type: application/json
+{
+	"grant_type": "password",
+	"username": "vasya@mail.ru",
+	"password": "testpass"
+}
+</code>
+</pre>
+</blockquote>									
+									
+									<div class="alert alert-info">
+										Note: The Authorization header above is the HTTP Basic authentication credentials for the <b>client_id</b> <i>"testclient"</i> and the
+										<b>client_secret</b> <i>"testpass"</i>.
+									</div>
+									<p> If authorization is successfull you will receive access token:<p>
+<blockquote>
+<pre>
+<code>
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json
+
+{
+	"access_token":"e8a9f857f0f02bc5d0b066b94d341bedd9dc2646",
+	"expires_in":9999999,
+	"token_type":"Bearer",
+	"scope":null,
+	"refresh_token":"bc83f6830eda81bf79392592a1a0fd6f20fe7dbb"
+}
+</code>
+</pre>
+</blockquote>
+
+									<h3>Refresh OAuth2 token</h3>
+									<p>
+									The OAuth2 protocol gives you the possibility to refresh the access token, generating a new one with a new lifetime. This action can be
+									performed using the refresh_token that the OAuth2 server provides in the response during the authentication step.
+									In Apigility, you can refresh the access token with a POST to the OAuth2 server endpoint. Check the following  example of refreshing token:
+									</p>
+
+<blockquote>
+<pre>
+<code>
+POST api.seacontact.com/oauth HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+{
+"grant_type": "refresh_token",
+"refresh_token": "[the refresh_token]",
+"client_id": "testclient",
+"client_secret": "testpass"
+}
+</code>
+</pre>
+</blockquote>
+
+<p>
+The response will be something like:
+</p>
+
+<blockquote>
+<pre>
+<code>
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+"access_token": "470d9f3c6b0371ff2a88d0c554cbee9cad495e8d",
+"expires_in": 3600,
+"scope": null,
+"token_type": "Bearer"
+}
+</code>
+</pre>
+</blockquote>
+<p> Obtained token can be used for making requests to the API </p>
+								</div>
+							</section>
+
+					<!-- requests -->
+						<section id="requests">
+							<div class="container">
+								<header class="major">
+									<h2>Requests to the API</h2>
+								</header>
+								<h3>HTTP Methods Negotiation</h3>
+<p>Api takes care of HTTP method negotiation for you. This means if a request is made via a method
+you have not allowed, it will report this to the user with a 405 status code, and also report which methods
+are allowed via the Allow response header.</p>
+<blockquote>
+<pre>
+<code>
+HTTP/1.1 405 Method Not Allowed
+Allow: GET
+</code>
+</pre>
+</blockquote>
+
+								<h3>Content Negotiation</h3>
+								<p>
+									Currently API support requests and response in JSON. If you specify a different media type in the Accept header, it reports that it cannot handle it.
+								</p>
+								<p>If you perform a GET request to the service, and specify that you want HTML:</p>
+<blockquote>
+<pre>
+<code>
+GET api.seacontact.com/users.get HTTP/1.1
+Accept: text/html
+</code>
+</pre>
+</blockquote>
+<p>This will return an error:</p>
+<blockquote>
+<pre>
+<code>
+HTTP/1.1 406 Not Acceptable
+Content-Type: application/problem+json
+{
+"detail": "Cannot honor Accept type specified",
+"status": 406,
+"title": "Not Acceptable",
+"type": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html"
+}
+</code>
+</pre>
+</blockquote>
+
+<p>try requesting JSON:</p>
+<blockquote>
+<pre>
+<code>
+GET api.seacontact.com/users.get HTTP/1.1
+Accept: application/json
+</code>
+</pre>
+</blockquote>
+
+<p>This will work!</p>
+<blockquote>
+<pre>
+<code>
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+"data_list":[{
+	"user_id":"39077",
+	"name":"vasya batareykin",
+	"surname":"*******",
+	"full_name":"*******",
+	"email":"*******",
+	"contact_mobile":"*******",
+	"desired_rank":"*******"
+	}],
+"total_results":"38677",
+"_page":1,
+"_limit":"1"
+}
+</code>
+</pre>
+</blockquote>
+
+
+							<h3>Terminology</h3>
+							<dl>
+								<dt>Entity</dt>
+								<dd>An object of information: user, vacancy or question item. Each item can contain <i>fields</i> </dd>
+								<dt>Field</dt>
+								<dd>A property of an Entity, it can be username or likes quantity for the blog post </dd>
+								<dt>Collection</dt>
+								<dd>A addressable set of entities. Typically, all entities contained in the collection are of the same type</dd>
+							</dl>
+							<p>Most of the GET methods of the API returning a <i>collection</i> of <i>entities</i>.</p>
+							<h3>Request</h3>
+							<p>
+							Every request to the collection can contain standart fields:
+							</p>
+							<dl>
+								<dt>_%name of section%_fields</dt>
+								<dd>Comma separated list of entity fields</dd>
+								<dt>_limit</dt>
+								<dd>Quantity of results per page, required for pagination, maximum is 100 </dd>
+								<dt>_page</dt>
+								<dd>Current page of collection</dd>
+								<dt>Filters</dt>
+								<dd>Other parameters to filter the result</dd>
+							</dl>
+							<h3> Response </h3>
+							<p>
+								Every <i>Collection</i> response have a standart fields:
+								<dl>
+									<dt>data_list</dt>
+									<dd>List of entities</dd>
+									<dt>total_results</dt>
+									<dd>Total quantity of entities for that query</dd>
+									<dt>_limit</dt>
+									<dd>Quantity of results per page </dd>
+									<dt>_page</dt>
+									<dd>Current page</dd>
+								</dl>
+
+							</p>
+							<p>
+								When requesting a collection you can specify which fields should be returned in response. 
+								<br/>
+								Usualy every entity has its own fields, lets say, for the <i>question</i> entity it will be <b>id</b>, <b>title</b>, <b>text</b> etc.
+								<br />
+								to specify question fields add comma separated names of them with the <b>_question_fields</b> option in request.
+							</p>
+<blockquote>
+<pre>
+<code>
+GET /questions.get?_question_fields=id,title,text&access_token=e8a9f857f0f02bc5d0b066b94d341bedd9dc2646
+</code>
+</pre>
+</blockquote>
+<p>
+Some collection also have additional fields associated with item, lets say every question also have a user which had posted it.
+<br /> 
+For this collections you can specify <b>_user_fields</b> parameter, with comma separated field names
+</p>
+<blockquote>
+<pre>
+<code>
+GET /questions.get?_question_fields=id,title,text&_user_fields=user_id,login,name,surname&access_token=e8a9f857f0f02bc5d0b066b94d341bedd9dc2646
+</code>
+</pre>
+</blockquote>
+
+<p>For filtering the result you can specify required values for other fields in the request. You can refer this example to see some of the options</p>
+<blockquote>
+<pre>
+<code>
+GET /questions.get?_question_fields=id,title&_user_fields=id,login,name,surname&_stats_fields=answers,likes&unanswered=1&query=море&_limit=2&access_token=38f6aba03e7f969d83fd2ddebd6038039a79cda3
+</code>
+</pre>
+</blockquote>
+
+<p> And typical response will be </p>
+<blockquote>
+<pre>
+<code>
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+{
+	"data_list":[
+		{
+			"question_id":"20",
+			"id":"38901",
+			"title":"\u041c\u0435\u0434\u0438\u0446\u0438\u043d\u0441\u043a\u0438\u0435 \u0441\u0435\u0440\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u044b",
+			"user_id":"38901",
+			"login":"IgorrSidorenko",
+			"name":"Igor",
+			"surname":"*******",
+			"likes":"0",
+			"answers":"3"
+		},
+		{
+			"question_id":"17",
+			"id":"38901",
+			"title":"\u0420\u0430\u0437\u043d\u0438\u0446\u0430 \u0434\u0438\u043f\u043b\u043e\u043c\u043e\u0432",
+			"user_id":"38901",
+			"login":"IgorrSidorenko",
+			"name":"Igor",
+			"surname":"*******",
+			"likes":"0",
+			"answers":"0"
+		}
+	],
+	"total_results":"7",
+	"_page":1,
+	"_limit":"2"
+}
+</code>
+</pre>
+</blockquote>
+					<div class="alert alert-info">
+						<p> 
+							You can see that some fields are hashed with ******, it means that user who request this information dont have access to this fields.
+							<br /> Most of the information hashed is user personal data, and it can be revealed only for user with appropriate rights: companies (if user in their database), user friends etc.
+						</p>
+					</div>
+					<p>For more detailed information please refer to the <a href="#fields">Standart Fields</a> section and <a href ="#methods">Methods section</a></p>
+				</div>
+				</section>
+			</div>
+
+			<!-- Footer -->
+				<section id="footer">
+					<div class="container">
+						<ul class="copyright">
+							<li>&copy; 2016 SEACONTACT.COM. All rights reserved.</li>
+						</ul>
+					</div>
+				</section>
+
+		</div>
+	</body>
+</html>

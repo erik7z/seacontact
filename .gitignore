@@ -1,0 +1,10 @@
+/.env
+/_misc
+/redis/data
+/php/vendor
+/php/data
+/db/data
+/db/dump
+/php/public_html/uploads/pics
+/nginx/ssl
+/php/cron

@@ -1,0 +1,68 @@
+<?php $title = (isset($title))? $title : $this->translate('Users Database'); ?>
+
+<div class="table-responsive">
+	<div class="box">
+		<div class="box-body">
+			<table class="table table-hover table-condensed">
+				<thead>
+					<tr class="col-title">
+						<th class="text-center no-sort">
+							<span class="fa fa-user" aria-hidden="true"></span>
+						</th>
+						<th><?=$this->translate('Country');?></th>
+						<th><?=$this->translate('Desired Rank');?></th>
+						<th><?=$this->translate('Fleet');?></th>
+						<th><?=$this->translate('Experience');?></th>
+						<th><?=$this->translate('CV Updated');?></th>
+						<th><?=$this->translate('Latest Note');?></th>
+						<th class="text-center"><span class="fa fa-unlock"></span></th>
+					</tr>
+				</thead>
+				<?php foreach($users as $user) {?>
+					<?php $user_url = $this->url('sc/userinfo', array('user' =>  zgetUserLogin($user), 'controller' => 'cv'));?>
+
+					<tr class="user-entry">
+						<td class="text-center">
+							<a href="<?=$user_url;?>">
+								<img style="max-height: 50px" alt="<?=zhashUserName(zgetUserName($user), 0, $this->isPermitted('_user_fields\name', $user->id));?>" src="<?=zgetUserAvatar($user);?>">
+							</a>
+							<br />
+							<a href="<?=$user_url;?>" class="user_name">
+								<?=zhashUserName(zgetUserName($user), 0, $this->isPermitted('_user_fields\name', $user->id));?>
+							</a>
+						</td>
+						<td><?=($user->nationality)? $user->nationality : '';?></td>
+						<td><?=($user->desired_rank)? $user->desired_rank : '';?></td>
+						<td><?=($user->ship_type)? $user->ship_type : '';?></td>
+						<td><?=($user->contracts)? $user->contracts.' '.$this->translate('Contract(s)') : '';?></td>
+						<td><?=($user->cv_last_update) ? zformatDateTime($user->cv_last_update) : '' ;?></td>
+						<td>
+							<?php if (isset($user->office_note)): ?>
+								<dl>
+									<dt><span class="text-success"><?=zformatDateTimeYear($user->office_note_time);?></span></dt>
+									<dd><?=$user->office_note;?></dd>
+								</dl>
+							<?php endif ?>
+						</td>
+						<td>
+							<?php if (isset($user->userinfo_unlocked) && $user->userinfo_unlocked == true): ?>
+						        <button class="btn btn-success btn-xs">
+						            <span class="glyphicon glyphicon-ok"></span>
+						            <?=$this->translate('In Db');?>
+						        </button>
+						    <?php else: ?>
+						        <a  class="unlock_info" data-user="<?=$user->id;?>" href="<?=$this->url('sc/seamansdb/actions', array('controller' => 'cvs', 'action' => 'unlock-user-info', 'id' => $user->id));?>">
+						            <button class="btn btn-warning btn-xs" >
+						                <span class="fa fa-unlock"></span>
+						                <?=$this->translate('Unlock');?>
+						            </button>
+						        </a>
+						    <?php endif ?>
+						</td>
+					</tr>			
+				<?php }?>
+			</table>
+		</div>
+	</div>
+
+</div>

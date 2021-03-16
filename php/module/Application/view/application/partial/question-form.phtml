@@ -1,0 +1,147 @@
+<div class="row">
+	<div class="col-md-8">
+		<?php
+			$form = $this->form;
+			$form->prepare();
+			$form->setAttribute('action', $this->url(null, [], [], true));
+			$form->setAttribute('class', 'form-horizontal');
+			$fieldset = $form->get('questions');
+			echo $this->form()->openTag($form);
+		?>
+  		<div class="row">
+  			<?php $question_id = $fieldset->get('id')->getValue(); ?>
+			<?= $this->formRow($fieldset->get('id')); ?>
+			<fieldset class="col-md-12">
+				<div class="form-group">
+					<div class="col-md-12">
+						<div class="form-group">
+						<?php $t_width = ($fieldset->has('post_vk')) ? 8 : 12;?>
+							<div class="col-md-<?=$t_width;?>">
+								<?=$this->formElement($fieldset->get('title')->setAttribute('class','form-control'));?>
+								<?=$this->formElementErrors($fieldset->get('title'));?>
+							</div>
+							<?php if ($fieldset->has('post_vk')): ?>
+								<div class="col-md-4">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<?=$fieldset->get('post_vk')->getLabel();?>
+										</span>
+										<?=$this->formElement($fieldset->get('post_vk')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('post_vk'));?>
+									</div>
+								</div>
+							<?php endif ?>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-12">
+										<?=$this->formElement($fieldset->get('text')->setAttributes(array('class' => 'form-control', 'rows' => 10)));?>
+										<?=$this->formElementErrors($fieldset->get('text'));?>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php if ($form->has('old_pics')): ?>
+							<div class="form-group">
+								<?php $old_pics = $form->get('old_pics')->getElements(); ?>
+								<?php if (count($old_pics) > 0): ?>
+									<label><?=$this->translate('Attached Pictures');?></label>
+									<div class="col-md-10 file-preview">
+
+											<?php foreach ($old_pics as $pic): ?>
+												<div class="col-md-2 col-sm-1 col-xs-4 text-right bg-thumb" style="background-image: url(<?= '/'._PICSWWW_.$pic->getAttribute('data-thumb'); ?>)">
+													<?=$this->formElement($pic);?>
+												</div>
+											<?php endforeach ?>
+											<div class="col-md-12">
+												<?=$this->formElementErrors($pic);?>
+											</div>
+
+									</div>
+								<?php endif ?>
+							</div>
+						<?php endif ?>
+						<div class="form-group">
+							<div class="col-md-12">
+								<div class="input-group">
+									<span class="input-group-addon"><?=$fieldset->get('tags')->getLabel();?></span>
+									<?=$this->formElement($fieldset->get('tags')->setAttribute('class', 'form-control'));?>
+									<?=$this->formElementErrors($fieldset->get('tags'));?>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<?=$this->formFile($form->get('pics')->setAttribute('class','form-control'));?>
+								<?=$this->formElementErrors($form->get('pics'));?>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-4">
+								<div class="input-group">
+									<span class="input-group-addon"><?=$fieldset->get('anonym')->getLabel();?></span>
+									<?=$this->formElement($fieldset->get('anonym')->setAttribute('class', 'form-control'));?>
+									<?=$this->formElementErrors($fieldset->get('anonym'));?>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control'));?>
+									<?=$form->get('submit')->getLabel();?>
+									<span class="fa fa-bolt"></span> 
+								<?=$this->formButton()->closeTag();?>			
+								<?= $this->form()->closeTag(); ?>	
+							</div>
+
+						</div>
+						<?php if ($question_id): ?>
+							<div class="form-group pt">
+								<div class="col-md-12 text-center">
+									<a href="<?=$this->url('sc/questions/actions', array('action' => 'view', 'id' => $question_id));?>" target="_blank">
+										<span class="fa fa-external-link"></span> <?=$this->translate('View question page on website');?>
+									</a>
+								</div>
+							</div>
+						<?php endif ?>
+
+					</div>
+
+				</div>
+
+			</fieldset>								      		
+  		</div><!-- row -->
+  		<div class="row">
+  			<div class="col-md-12">
+  				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  				  <div class="panel panel-warning">
+  				    <div class="panel-heading" role="tab" id="headingOne">
+  				      <h4 class="panel-title text-center">
+  				        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+  				         <?=$this->translate('How to ask questions');?>
+  				        </a>
+  				      </h4>
+  				    </div>
+  				    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+  				      <div class="panel-body">
+  					    <ul class="text-muted">
+  				      		<li class="pb"><b><?=$this->translate('Add more #tags, they are help to categorize your question and make it more easy find answer');?></b></li>
+  				      		<li class="pb"><?=$this->translate('We trying to make usefull source of information for all seamans. Use examples from your real seamans life');?></li>
+  				      		<li class="pb"><?=$this->translate('Provide details for your question. Share your research and efforts in finding the answer.');?></li>
+  				      	</ul>
+  				      </div>
+  				    </div>
+  				  </div>
+  				</div>
+  			</div>
+  		</div>
+
+	</div>
+	<div class="col-md-4">
+		<div class="row">
+			<?php if (isset($tags_map) && $tags_map): ?>
+				<?=$this->partial('application/partial/tags-list.phtml');?>
+			<?php endif ?>
+		</div>
+	</div>
+
+</div>

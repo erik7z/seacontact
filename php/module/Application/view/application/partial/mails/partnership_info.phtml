@@ -1,0 +1,25 @@
+<div style="width: 100%;">
+	<div style="position: relative; float: left;text-align: center;">
+		<a href="<?=_ADDRESS_.zgetUserLogin($partner_info);?>">
+			<img src="<?=zgetUserAvatar($partner_info);?>" style="height: 150px; padding-top: 1em;" />
+			<h4><?=zgetUserName($partner_info);?></h4>
+		</a>
+	</div>
+	<?php if (count($partnership_info) > 0): ?>
+		<div style="position: relative; float: left; padding-left: 1em;">
+			<h4 style="text-align: center;"><?=$this->translate('Worked together on');?>:</h4>
+			<ul>
+				<?php foreach ($partnership_info as $contract): ?>
+					<li style="position:relative; float:left; padding-right: 2em;">
+						<h4>"<?=$contract->ship_name;?>" </h4>
+						<?=$this->translate('From');?> : <?=date('d-M-y', $contract->worked_together_from);?><br />
+						<?=$this->translate('To');?> : <?=date('d-M-y', $contract->worked_together_to);?><br />
+						<?=$this->translate('Position');?> : <b><?=$contract->rank;?></b><br />
+					</li>
+				<?php endforeach ?>
+			</ul>
+		</div>
+	<?php endif ?>
+</div>
+<div style="clear:both;">
+</div>

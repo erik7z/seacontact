@@ -1,0 +1,86 @@
+<div class="row">
+	<div class="col-md-3">
+		<div class="box">
+			<div class="box-header bg-info">
+				<?=$this->translate('Resources - Tree');?>
+			</div>
+			<div class="box-body">
+				<div id="tree"></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-9 table-responsive">
+		<div class="box">
+			<div class="box-header bg-info">
+				<?=$this->translate('Resources');?>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered table-hover table-condensed table-favorites">
+					<thead>
+						<tr>
+							<th>ID #</th>
+							<th><?=$this->translate('Name');?></th>
+							<th><?=$this->translate('Resource');?></th>
+							<th><?=$this->translate('Allowed To');?></th>
+						</tr>
+					</thead>
+					<?php foreach($resources as $id => $resource) {?>
+						<tr>
+							<td><?=$id;?></td>
+							<td>
+								<?php 
+									$container = $this->navigation('navigation')->findOneByResource($resource);
+								?>
+								<?php if ($container): ?>
+								 	<?=strtoupper($container->getLabel());?>
+								<?php endif ?>
+							</td>
+							<td>
+								<a href="<?=$this->url('admin/actions', ['controller' => 'access', 'action' => 'resource'], ['query' => ['resource' => $resource]]);?>">
+									<?=$resource;?>
+								</a>
+							</td>
+							<td>
+								<?php $k = 0; ?>
+									<?php for ($i=0; $i < count($roles); $i++) : ?>
+									 <?php if($this->access->isAllowed($roles[$i], $resource)) :?>
+										<?php if($k > 0) echo ', ';?>
+											<a href="<?=$this->url('admin/actions', ['controller' => 'access', 'action' => 'roles'], ['query' => ['filter' => $roles[$i]]]);?>">
+												<?=$roles[$i];?>
+											</a>
+										<?php $k++;?>
+									<?php endif ?>
+								<?php endfor ?>
+							</td>
+							
+						</tr>			
+					<?php }?>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+<?php	
+	$this->headScript()
+		->appendFile($this->basePath('vendor/bootstrap-treeview/src/js/bootstrap-treeview.js'))
+		;
+	$this->headLink()
+		->appendStylesheet($this->basePath('vendor/bootstrap-treeview/src/css/bootstrap-treeview.css'))
+		;
+?>
+<script type="text/javascript">
+	var tree = <?=$tree;?>;
+	$(document).ready(function(){
+		$('#tree').treeview({
+			data: tree,
+			levels: 1,
+			showTags: true,
+			showCheckbox: false,
+			enableLinks: true
+
+		});
+	});
+</script>

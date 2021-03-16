@@ -1,0 +1,100 @@
+<?php
+	$controller =  $this->routeMatch()->getParam('controller');
+	if(strpos(strtolower($controller), 'messages') !== false) {
+		$route = 'sc/messages/actions';
+		$controller = 'messages';
+		$query_params = [];
+	} else {
+		$route = 'admin/actions';
+		$controller = 'userdb';
+		$query_params = ['from_id' => $from_id];
+	}
+?>
+<section id="messages" class="section-messages container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<h1> <?=$this->translate('Messages');?> </h1>
+			<?php if (count($data_list) < 1): ?>
+				<div class="row">
+					<div class="col-md-12 text-center">
+		 				<h4>
+			 				<?php if ($this->identity()->type == 'company'): ?>
+			 					<?=$this->translate('No messages, please write to somebody from ');?>
+								<b><a href="<?=$this->url('sc/seamansdb');?>"><?=$this->translate('Seamans Database');?></a></b>
+			 				<?php else: ?>
+			 					<?=$this->translate('No messages, please write to somebody from your  ');?>
+								<b><a href="<?=$this->url('sc/contacts/actions', array('action' => 'collegues'));?>"><?=$this->translate('Contacts');?></a></b>
+			 				<?php endif ?>
+		 				</h4> 
+					</div>
+				</div>
+			<?php endif ?>
+			<div class="row data-list" data-limit="<?=$q_options['_limit'];?>" data-offset="<?=$q_options['_offset'];?>">
+				<div class="col-md-12">
+				<?php foreach ($data_list as $message) : ?>
+					<?php $from_name = ($message['from_id'] == $this->identity()->id) ? '> '.$this->translate('Me') : $message['last_msg_name']; ?>
+					<div class="message row">
+						<div class="msg-avatar col-md-2 col-sm-12">
+							<?php 
+								$login = ($message['chat_with_login']) ? $message['chat_with_login'] : 'id'.$message['member_id'];
+								$user_url = $this->url('sc/userinfo', array('user' => $login, 'controller' => null));
+							?>
+							<a href="<?=$user_url;?>">
+								<img src="<?=zgetUserAvatar($message, 'chat_with_');?>" />
+							</a>
+							<a href="<?=$user_url;?>">
+								<h6 class="name"><?=zhashUserName(zgetUserName($message, 'chat_with_'), 0, $this->isPermitted('_user_fields\name', $message['member_id']));?></h6>
+							</a>						
+						</div>
+						<div class="msg-text col-md-8 col-sm-12">
+							<?php $not_readed = (1 != $message['readed'])? 'not_readed' : '';?>
+							<?php if ($message['from_id'] == $this->identity()->id) {?>
+								<div class="<?= $not_readed; ?> reply row">
+									<div class="col-md-2 col-sm-3 reply-avatar">
+										<img src="<?=zgetUserAvatar($this->identity());?>" >
+									</div>
+									<a class="follow_link" href="<?= $this->url($route, ['controller' => $controller, 'action' => 'pm', 'id' => $message['chat_id']],['query' => $query_params]); ?>">
+									<div class="col-md-10 col-sm-9 text reply-text">
+										<p>
+										<?= zshorterText(html_entity_decode($message['text']), 25); ?>
+										</p>
+									</div>
+									</a>									
+								</div>
+								<?php } else { ?>							
+								<div class="<?= $not_readed; ?> row">
+								<a class="follow_link" href="<?= $this->url($route, ['controller' => $controller, 'action' => 'pm', 'id' => $message['chat_id']],['query' => $query_params]); ?>">
+									<div class="col-md-12 col-sm-9 text">
+										<p>
+										<?= zshorterText(html_entity_decode($message['text']), 25); ?>
+										</p>
+									</div>
+								</a>
+								</div>
+							<?php } ?>
+						</div>
+						<div class="msg-time col-md-2 col-sm-8">
+							<span><?= zformatDateTime($message['time']); ?></span>
+							<?php if( 0 != $message['unreaded_count']) {?>
+								<span class="notification notification-message"><?= $message['unreaded_count'];?></span>
+							<?php }?>
+						</div>
+					</div>
+				<?php endforeach  ?>
+				</div>
+			</div> <!-- data-list -->
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<?=$this->partial('application/partial/custom_pagination');?>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script type="text/javascript">
+	$('[data-name=custom_pagination]').hide();
+	$(window).scroll(function(){
+		preload($(this), '.data-list', window.location.href);
+	});
+</script>

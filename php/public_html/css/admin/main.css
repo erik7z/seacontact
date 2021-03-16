@@ -1,0 +1,241 @@
+.breadcrumb {
+	margin:0;
+}
+
+.bg-thumb {
+	background-size: cover;
+	background-position: center;
+	border: 3px solid white;
+	height:90px;
+	padding: 3px;
+}
+
+
+.bg-white {
+	background-color: #fff;
+}
+
+.no-mt {
+	margin-top: 0;
+}
+
+.no-pt {
+	padding-top: 0;
+}
+
+.pt5 {
+	padding-top: 5px;
+}
+
+.pt10 {
+	padding-top: 10px;
+}
+
+
+.mt {
+	margin-top: 1em;
+}
+
+.mb {
+	margin-bottom: 1em;
+}
+
+.pt {
+	padding-top: 1em;
+}
+
+.pb {
+	padding-bottom: 1em;
+}
+
+.pl {
+	padding-left: 1em;
+}
+
+.pr {
+	padding-right: 1em;
+}
+
+.no-margin {
+	margin: 0;
+}
+
+#tree ul .badge {
+    display: inline-block;
+    font-weight: normal; 
+    color: #4A4848;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+
+#tree ul .list-group-item {
+    overflow: auto;
+}
+
+
+.loading-thumb {
+	position: relative;
+	margin: auto;
+	width:180px;
+	height:120px;
+	display: block;
+	opacity: 0.7;
+	background: url('../../img/icons/loader.gif') no-repeat center center;
+}
+
+
+
+
+/* --------- MESSAGES --------------*/
+
+section h1 {
+	margin-top: 10px;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+	margin-bottom: 15px;
+	font-size: 1.5em;
+	text-transform: uppercase;
+	color: #32538C;
+	font-family: 'Roboto', 'sans-serif';
+}
+
+section#messages .message {
+	/*height: 100px;*/
+	margin-bottom: 1em;
+	box-shadow: 0 0 20px rgba(20, 52, 79, 0.1);
+}
+
+section#messages .message:hover {
+	background-color: rgba(137, 172, 210, 0.1);
+	cursor: pointer;
+}
+
+section#messages .message .msg-avatar {
+	padding-top: 10px;
+	text-align: center;
+}
+
+section#messages .message .msg-avatar img,
+section#messages .message .reply-avatar img
+{
+	width: 30px;
+	height: 30px;
+	border-radius: 45px;
+}
+
+section#messages .message .msg-avatar .name {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+section#messages .message .msg-name h4 {
+	text-transform: uppercase;
+}
+
+section#messages .message .msg-text {
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+}
+
+section#messages .message .reply-avatar,
+section#messages .message .text
+{
+	padding-top: 1em;
+	padding-bottom: 1.5em;
+	height:75px;
+	overflow: hidden;
+}
+
+section#messages .message .not_readed {
+	background-color: #e8edf4;
+	min-height: 80px;
+}
+
+section#messages .message .msg-time {
+	padding-top: 2em;
+	font-family: 'agency-fb-regular';
+	color: #828487;
+}
+
+
+section#messages-pm iframe {
+	border: 0;
+	min-height: 450px;
+	max-height: 600px;
+	overflow: hidden;
+	padding: 0;
+	margin-bottom: 10px;
+}
+
+section#messages-pm .message-text {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+section#messages-pm .message-button {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+section#messages-pm textarea {
+	height: 80px;
+}
+
+section#messages-pm button[type=submit]{
+	height: 80px;
+}
+
+body#frame-body {
+	background: none;
+}
+
+
+section#pm-flow .msg-user img{
+	width: 50px;
+	height: 50px;
+	border-radius: 50px;
+}
+
+
+section#pm-flow .msg-text{
+	padding: 1em 0;
+	box-shadow: 0 0 20px rgba(20, 52, 79, 0.1);
+	border-radius: 5px;
+}
+
+section#pm-flow .msg {
+	margin-top: 0.5em;
+	margin-bottom: 0.2em;
+}
+
+
+section#pm-flow .msg-delete {
+	padding-top: 1em;
+	opacity: 0.1;
+}
+
+section#pm-flow .msg-delete:hover {
+	opacity: 1;
+}
+
+
+section#pm-flow .msg-time {
+	box-shadow: 0 1px 3px rgba(20, 52, 79, 0.1);
+	font-family: 'agency-fb-regular';
+	color: #828487;
+	white-space: nowrap;
+}
+
+
+section#pm-flow div.msg-user span.msg-user-name{
+	/*margin: 1em 0 0 5px;*/
+	/*float: left;*/
+	color: #246faf;
+	font-size: 12px;
+	font-family: 'agency-fb-regular';
+}
+
+
+
+

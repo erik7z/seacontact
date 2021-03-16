@@ -1,0 +1,129 @@
+<section id ="company-profile" class="section-company container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('class', 'form-horizontal');
+				$companyFields = $form->get('user');
+				echo $this->form(null)->openTag($form);
+			?>
+			<div class="row">
+				<div class="col-md-3 text-center">
+					<?=$this->partial('admin/partial/user-profile-statistics.phtml', [
+						'user' => $company,
+						'userFields' => $companyFields,
+						'cv_notes' => $cv_notes,
+						'last_note' => $last_note,
+						'mails_count' => $mails_count,
+						'in_favorites' => $in_favorites,
+						'is_banned' => $is_banned,
+						'messages_count' => $messages_count,
+						'fields' => ['avatar', 'cv_last_update', 'cv_last_call', 'show_favorites'],
+					]);?>
+				</div>
+				<div class="col-md-9">
+					<div class="box">
+						<div class="box-header bg-info">
+							<h5><?=$this->translate('Company Profile');?></h5>
+						</div>
+						<div class="box-body">
+							<?=$this->partial('company/partial/profile-form-fields', ['companyFields' => $companyFields]);?>
+							<div class="row">
+								<div class="col-md-12">
+									<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'form-control btn btn-success'));?>
+										<span class="glyphicon glyphicon-floppy-disk"></span>
+										<?=$form->get('submit')->getLabel();?>
+									<?=$this->formButton()->closeTag();?>
+								</div>
+							</div>	
+						</div>
+					</div>		
+				</div> <!-- col-md-9 -->
+			</div><!--  row -->
+			<div class="row mt pt">
+				<?=$this->partial('admin/partial/vacancy-table',array(
+					'vacancies' => $vacancies,
+					'modal_button_id' => 'add_vacancy_modal',
+					'title' => $this->translate('Company Vacancies'),
+				));?>
+			</div>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<?=$this->partial('application/partial/custom_pagination', ['total_results' => $v_total_results, 'q_options' => $v_options, 'predicat' => 'v_']);?>
+				</div>
+			</div>
+
+			<div class="row mt pt">
+				<?=$this->partial('admin/partial/vacancy-table',array(
+					'vacancies' => $vacancies_for_company,
+					'title' => $this->translate('Vacancies for Company'),
+				));?>
+			</div>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<?=$this->partial('application/partial/custom_pagination', ['total_results' => $vf_total_results, 'q_options' => $vf_options, 'predicat' => 'vf_']);?>
+				</div>
+			</div>
+
+			<div class="row mt pt">
+				<div class="col-md-12 table-responsive">
+					<div class="box">
+						<div class="box-header bg-info">
+							<div class="row">
+								<div class="col-md-12">
+									<h4><?= $this->translate('Users In Company DB');?> : <small><b><?=$cu_total_results;?></b></small></h4>
+								</div>
+							</div>
+						</div>
+						<div class="box-body">
+							<?php $q_options['show_fields'] = ['id', 'office_note', 'name', 'email', 'desired_rank', 'nationality', 'unlocked_time'];?>
+							<?=$this->partial('admin/partial/users-table', [
+								'data_list' => $company_users,
+								'q_options' => $q_options,
+							]);?>
+						</div>
+						<div class="box-footer">
+							<div class="row">
+								<div class="col-md-12 text-center">
+									<?=$this->partial('application/partial/custom_pagination', ['total_results' => $cu_total_results, 'q_options' => $cu_options, 'predicat' => 'cu_']);?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?= $this->form()->closeTag();?>
+
+			<div class="col-md-12">
+				<hr />
+			</div>
+		</div> <!-- col-md-12 -->
+	</div> <!-- row -->
+</section>
+
+<?php  
+	$this->headScript()->appendFile('/vendor/tinymce/tinymce.min.js')
+	->appendFile('/vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js')
+	; 
+	$this->headLink()
+	->appendStylesheet('/vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css')
+	;
+?>
+<?=$this->partial('application/modal',array(
+	'modal_name' => 'add_vacancy_modal',
+	'modal_title' => $this->translate('Add New Vacancy'),
+	'modal_content' => $this->partial('application/partial/vacancy-form', array('form' => $vacancy_form)),
+));?>
+<?=$this->partial('application/modal',array('modal_name' => 'myModal',));?>
+
+<?=$this->partial('my/partial/datepicker-scripts');?>
+
+<?=$this->partial('application/js/file_upload');?>
+<?=$this->partial('admin/js/cv_avatar_upload_init_script', ['user' => $company, 'form' => $form, 'avatar_type' => 'avatar']);?>
+<?=$this->partial('admin/js/user_profile_delete_add_items_scripts', ['user_email' => $company->email]);?>
+<?=$this->partial('admin/js/user_profile_modal_scripts', ['user_id' => $company->id, 'user_email' => $company->email, 'mailbox' => _MBOFFICE_]);?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#myModal']);?>
+
+
+<?=$this->partial('application/js/cv_notes_scripts', ['modal_name' => '#myModal']);?>

@@ -1,0 +1,77 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    # command: --default-authentication-plugin=mysql_native_password
+    command: --init-file /data/application/init.sql
+    restart: always
+    environment:
+      MYSQL_ROOT_USER: ${_MYSQL_USER_}
+      MYSQL_ROOT_PASSWORD: ${_MYSQL_PASSWORD_}
+      MYSQL_USER: ${_MYSQL_USER_}
+      MYSQL_PASSWORD: ${_MYSQL_PASSWORD_}
+      MYSQL_DATABASE: ${_MYSQL_DB_NAME_}
+    ports:
+      - 3306:3306
+    volumes:
+      - c:/users/ezlife/www/seacontact/db/data:/var/lib/mysql
+      - c:/users/ezlife/www/seacontact/db/init.sql:/data/application/init.sql
+      - c:/users/ezlife/www/seacontact/db/dump:/docker-entrypoint-initdb.d
+
+  php:
+    build: ./php
+    volumes:
+      - c:/users/ezlife/www/seacontact/:/home/seacontact/
+      - c:/users/ezlife/www/seacontact/conf/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      - SEA_DOMAIN=${SEA_DOMAIN}
+      - _MYSQL_HOST_=${_MYSQL_HOST_}
+      - _MYSQL_DB_NAME_=${_MYSQL_DB_NAME_}
+      - _MYSQL_USER_=${_MYSQL_USER_}
+      - _MYSQL_PASSWORD_=${_MYSQL_PASSWORD_}
+      - _REDIS_IP_=${_REDIS_IP_}
+      - _REDIS_PORT_=${_REDIS_PORT_}
+      - _GMAPS_KEY_=${_GMAPS_KEY_}
+      - _DKIM_DOMAIN_=${_DKIM_DOMAIN_}
+      - _DKIM_KEY_=${_DKIM_KEY_}
+      - _MBOFFICE_=${_MBOFFICE_}
+      - _MBOFFICEPWD_=${_MBOFFICEPWD_}
+      - _MBCREW_=${_MBCREW_}
+      - _MBCREWPWD_=${_MBCREWPWD_}
+      - _IN_APP_ID_=${_IN_APP_ID_}
+      - _IN_APP_SECRET_=${_IN_APP_SECRET_}
+      - _FB_APP_ID_=${_FB_APP_ID_}
+      - _FB_APP_SECRET_=${_FB_APP_SECRET_}
+      - _VK_APP_ID_=${_VK_APP_ID_}
+      - _VK_APP_SECR_KEY_=${_VK_APP_SECR_KEY_}
+      - _VK_APP_CODE_=${_VK_APP_CODE_}
+      - _VK_2APP_ID_=${_VK_2APP_ID_}
+      - _VK_2APPSECR_KEY_=${_VK_2APPSECR_KEY_}
+      - _VK_USER_=${_VK_USER_}
+      - _VK_USER_SECRET_=${_VK_USER_SECRET_}
+      - _VK_USER_TOKEN_=${_VK_USER_TOKEN_}
+      - _VK_GROUP_=${_VK_GROUP_}
+    links:
+      - db
+    depends_on:
+      - db
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - NGINX_HOST=${NGINX_HOST}
+      - SSL_CERT_HOST=${SSL_CERT_HOST}
+    volumes:
+      - c:/users/ezlife/www/seacontact/:/home/seacontact/
+      - c:/users/ezlife/www/seacontact/nginx/ssl/:/etc/nginx/ssl/
+
+  scredis:
+    image: redis:6.0-alpine
+    restart: unless-stopped
+    volumes:
+      - c:/users/ezlife/www/seacontact/redis/data:/data
+    expose:
+      - ${_REDIS_PORT_}

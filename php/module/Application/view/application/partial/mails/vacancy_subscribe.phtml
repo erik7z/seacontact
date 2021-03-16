@@ -1,0 +1,14 @@
+<?php
+
+$header = $this->translate('Subscription to vacancy: ').' '.$this->vacancy_title;
+$text1 = array( 
+				$this->translate('Dear , sir').' '.$this->name,
+				$this->translate('You are subscribed to vacancy: ').' '.$this->vacancy_title.', <br />'.$this->translate('you can check vacancy status on : ')
+			);
+$btn_link = $this->vacancy_page;
+$btn_text = $this->vacancy_title;
+
+$footer = $this->translate('If you didn\'t attempt to subscribe on').' '._ADDRESS_NO_SLASH_.' '.$this->translate('please ignore this email');
+
+?>
+<?=$this->partial('application/partial/mails/default_template', array('header' => $header, 'text1' => $text1, 'btn_link' => $btn_link, 'btn_text' => $btn_text, 'footer' => $footer ));?>

@@ -1,0 +1,34 @@
+<?php 
+	if(!isset($type) || !isset($subs_link) || !isset($id)) throw new \Application\Exception\Exception("Variables should be supplied to btn subscribe partial", 1);
+
+	if($type == 'question') {
+		$subs_section = 'question';
+		$subs_text = (isset($subs_text))? $subs_text : $this->translate('Subscribe For Question');
+		$unsubs_text =  (isset($unsubs_text))? $unsubs_text : $this->translate('Unsubscribe From Question');
+	} elseif($type == 'vacancy') {
+		$subs_section = 'vacancy';
+		$subs_text = (isset($subs_text))? $subs_text : $this->translate('Subscribe For Vacancy');
+		$unsubs_text =  (isset($unsubs_text))? $unsubs_text : $this->translate('Unsubscribe From Vacancy');
+	}
+
+	$form_control = (isset($form_control))? $form_control : 1;
+	$show_text = (isset($show_text))? $show_text : 1;
+	$responsive = (isset($responsive))? $responsive : 1;
+	$size = (isset($size))? $size : 'xs';
+?>
+
+<?php if (isset($subscribe_status) && $subscribe_status): ?>
+	<a href="<?=$subs_link;?>" data-section="<?=$subs_section;?>" data-id="<?=$id;?>" class="action_button">
+		<button class="btn btn-warning btn-<?=$size;?> <?php if ($form_control): ?>form-control<?php endif ?> <?php if ($responsive): ?>btn-responsive<?php endif ?> " title="<?=$unsubs_text;?>">
+			<span class="fa fa-user-times"></span>
+			<?php if ($show_text): ?><?=$unsubs_text;?><?php endif ?>
+		</button>
+	</a>
+<?php else: ?>
+	<a href="<?=$subs_link;?>" data-section="<?=$subs_section;?>" data-id="<?=$id;?>" class="action_button">
+		<button class="btn btn-info btn-<?=$size;?> <?php if ($form_control): ?>form-control<?php endif ?> <?php if ($responsive): ?>btn-responsive<?php endif ?>" title="<?=$subs_text;?>">
+			<span class="fa fa-user-plus"></span>
+			<?php if ($show_text): ?><?=$subs_text;?><?php endif ?>
+		</button>
+	</a>
+<?php endif ?>

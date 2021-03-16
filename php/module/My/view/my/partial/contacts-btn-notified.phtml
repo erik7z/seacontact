@@ -1,0 +1,9 @@
+<?php if(!isset($text)) $text = $this->translate('Cannot Remember');?>
+<?php if(!isset($user_id)) $user_id = $user['user_id'];?>
+<?php if(!isset($class)) $class = '';?>
+<a href="<?= $this->url('sc/contacts/actions', array(
+						'action' => 'notified-about-contact',
+						'id' => $user_id
+						)); ?>" data-action="contacts">
+	<button type="button" class="btn btn-xs btn-default <?=$class;?>" ><span class="glyphicon glyphicon-remove"></span> <?=$text;?></button>
+</a>

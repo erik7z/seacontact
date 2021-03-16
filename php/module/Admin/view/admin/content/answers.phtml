@@ -1,0 +1,86 @@
+<section class="container-fluid">
+<div class="row">
+	<div class="col-md-12 table-responsive">
+		<div class="box">
+			<div class="box-header bg-info">
+				<h4><?=$this->translate('Latest Answers');?></h4>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered table-hover table-condensed table-favorites">
+					<thead>
+						<tr>
+							<th><?=$this->translate('Question Link');?></th>
+							<th><?=$this->translate('Answer');?></th>
+							<th><?=$this->translate('By');?></th>
+							<th><?=$this->translate('Role');?></th>
+							<th><?=$this->translate('Time');?></th>
+							<th class="no-sort"><?=$this->translate('Delete Answer');?></th>
+						</tr>
+					</thead>
+					<?php foreach($data_list as $data_item) {?>
+						<tr>
+							<td class="col-md-3">
+								<?php 
+									$url = $this->url('sc/questions/actions', ['action' => 'view', 'id' => $data_item->question_id]);
+									$title = zlessChars(strip_tags(htmlspecialchars_decode($data_item->q_text)), 50);
+								?>
+								<?php if (isset($title) && $title): ?>
+									<a href="<?=$url;?>" target="_blank">
+										<?=$title;?>
+									</a>
+								<?php endif ?>
+								
+							</td>
+							<td class="col-md-4"><?=zlessChars(strip_tags(htmlspecialchars_decode($data_item->text)), 200);?></td>
+							<td class="col-md-2">
+								<?php if($data_item->soc_answer_id) :?>
+									<?php $user_link = $data_item->soc_page;?>
+									<i class="fa fa-vk text-muted"></i>&nbsp;
+								<?php else: ?>
+									<a href="<?=$this->url('admin/actions', ['controller' => 'content', 'action' => 'answers'], ['query' => ['filters' => ['owner_id' => $data_item->user_id]]]);?>">
+										<button type="button" class="btn btn-default btn-xs " aria-label="Filter by User">
+					 						<span class="fa fa-filter" aria-hidden="true"></span>
+										</button>
+									</a>
+									<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'user', 'id' => $data_item->user_id));?>" target="_blank">
+										<button type="button" class="btn btn-default btn-xs " aria-label="View User">
+					 						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+										</button>
+									</a>
+									<?php $user_link = _ADDRESS_.zgetUserLogin($data_item);?>
+								<?php endif ?>
+								<a href="<?=$user_link;?>" target="_blank"><?=zgetUserName($data_item);?></a> 
+
+							</td>
+							<td class="col-md-1">
+								<?php if(!$data_item->soc_answer_id): ?>
+									<a href="<?=$this->url('admin/actions', ['controller' => 'content', 'action' => 'answers'], ['query' => ['filters' => ['user_role' => $data_item->role]]]);?>">
+										<button type="button" class="btn btn-default btn-xs " aria-label="Filter by Role">
+					 						<span class="fa fa-filter" aria-hidden="true"></span>
+										</button>
+									</a>
+									<?= $data_item->role;?>
+								<?php endif ;?>
+							</td>
+							<td class="col-md-1"><span class="hidden"><?=$data_item->time;?></span> <?= zformatDateTime($data_item->time);?></td>
+							<td class="col-md-1 text-center">
+								<a data-id="<?=$data_item->id;?>" href="<?=$this->url('admin/actions', array('controller' => 'content', 'action' => 'answer-delete', 'id' => $data_item->id));?>" > 
+									<span class="glyphicon glyphicon-trash"></span>
+								</a>
+							</td>
+						</tr>
+						
+					<?php }?>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<div class="row">
+	<div class="col-md-12 text-center">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+</div>
+</section>

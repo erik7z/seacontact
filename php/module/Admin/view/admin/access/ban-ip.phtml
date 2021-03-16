@@ -1,0 +1,28 @@
+<div class="content-fluid">
+<?php
+	$form = $this->form;
+	$form->prepare();
+	echo $this->form()->openTag($form);
+?>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group">
+				<div class="col-md-12">
+					<?=$this->formLabel($form->get('user_ip'));?>
+					<?=$this->formElement($form->get('user_ip')->setAttribute('class', 'form-control input-sm '));?>
+					<?=$this->formElementErrors($form->get('user_ip'));?>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-md-12">
+					<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-warning form-control input-sm'));?>
+						<span class="glyphicon glyphicon-ban-circle"></span> 
+			 			 <?=$form->get('submit')->getLabel();?> 
+					<?=$this->formButton()->closeTag();?>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<?= $this->form()->closeTag();?>
+</div>

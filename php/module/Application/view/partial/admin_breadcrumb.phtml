@@ -1,0 +1,13 @@
+<ol class="breadcrumb">
+	<?php foreach ($this->pages as $key => $page) :?>
+		<li>
+			<?php if($key < count($this->pages) - 1): ?>
+			<a href="<?php echo $page->getHref(); ?>">
+				<i class="fa fa-chevron-right"></i> <?php echo $page->getLabel(); ?> 
+			</a>
+			<?php else : ?>
+				<i class="fa fa-angle-right"></i> <?php echo $page->getLabel(); ?>
+			<?php endif; ?>
+		</li>
+	<?php endforeach; ?>
+</ol>

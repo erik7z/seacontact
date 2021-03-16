@@ -1,0 +1,128 @@
+<section id="info" class="container-fluid">
+	<div class="row section-content">
+		<div class="col-md-3 col-md-push-9 user-info pt mt">
+			<h5><?=$this->translate('Avatar');?> :</h5>
+			<div class="row item-block drop-shadow">
+				<div class="col-md-12">
+					<div class="row user-avatar-big">
+						<div  class="col-md-12">
+						
+							<img src="<?=zgetUserAvatar($user);?>" />
+							<span class="fa fa-circle online_status <?=zgetOnlineStatus($user['last_activity']);?>"></span>
+						</div>
+							
+					</div> <!-- user-avatar-big -->
+					<div class="row">
+						<?php if($this->isPermitted('my\controller\messages.pm', $user->id)) {?>
+							<?=$this->partial('my/partial/contacts-btn-msg', array('class' => 'form-control', 'user' => $user));?>
+						<?php } ?>
+
+						<?php 
+							if ($relations == \Application\Model\UserContactsTable::RELATION_FRIENDS) {
+								if($this->isPermitted('my\controller\contacts.remove', $user->id)) echo $this->partial('my/partial/contacts-btn-delete', array('class' => 'form-control', 'user' => $user));
+							} elseif($relations == \Application\Model\UserContactsTable::RELATION_SENT){
+								if($this->isPermitted('my\controller\contacts.remove', $user->id)) echo $this->partial('my/partial/contacts-btn-remove', array('class' => 'form-control', 'user' => $user));
+							} elseif($relations == \Application\Model\UserContactsTable::RELATION_RCVD){
+								if($this->isPermitted('my\controller\contacts.add', $user->id)) echo $this->partial('my/partial/contacts-btn-confirm', array('class' => 'form-control', 'user' => $user));
+							} else {
+								if($this->isPermitted('my\controller\contacts.add', $user->id)) echo $this->partial('my/partial/contacts-btn-add', array('class' => 'form-control', 'user' => $user));
+							}
+						?>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<dl>
+								<dt><?=$this->translate('Name');?> </dt>
+								<dd><?=zhashUserName(zgetUserName($user), 0 , $this->isPermitted('_user_fields\name', $user->id));?></dd>
+								<dt><?=$this->translate('Rank');?></dt>
+								<dd>
+									<?php if($user->desired_rank) {?>
+										<?=$user->desired_rank;?>
+									<?php } ?>
+								</dd>
+								<dt><?=$this->translate('Nationality');?></dt>
+								<dd><?=$user->nationality;?></dd>
+								<dt><?=$this->translate('Contacts');?></dt>
+								<dd>
+								  	<address class="small">
+								  	  <?php if($user->contact_phone) {?>
+											<abbr title="Phone">M:</abbr> <?=zhashInfo($user->contact_phone, 2, $this->isPermitted('_user_fields\contact_phone', $user->id));?>
+								  	  <?php }?>
+								  	  <?php if($user->contact_mobile) {?>
+											<abbr title="Mobile">M:</abbr> <?=zhashInfo($user->contact_mobile, 2, $this->isPermitted('_user_fields\contact_mobile', $user->id));?>
+								  	  <?php }?>
+								  	</address>
+								</dd>
+								<dt><?=$this->translate('Email');?></dt>
+								<dd>
+									<address class="small">
+									  <?php $email = ($user->contact_email) ? $user->contact_email : $user->email; ?>
+									  <a href="mailto:<?=zhashInfo($email, 2, $this->isPermitted('_user_fields\email', $user->id));?>"><?=zhashInfo($email, 2, $this->isPermitted('_user_fields\email', $user->id));?></a>
+									</address>
+								</dd>
+							</dl>
+						</div>
+						<?php if ($user->social_vk_domain): ?>
+							<div class="col-md-12 small pb">
+								<span class="fa fa-vk bg-primary p02"></span> 
+								<?php if ($this->isPermitted('_user_fields\social_vk_domain', $user->id)): ?>
+									<a href="http://vk.com/<?=$user->social_vk_domain;?>" target="_blank">
+										vk.com/<?=$user->social_vk_domain;?>
+									</a>
+								<?php else: ?>
+									<span class="text-info">vk.com/*******</span>
+								<?php endif ?>
+							</div>
+						<?php endif ?>
+
+					</div>
+				</div>
+			</div> <!-- row item-block drop-shadow -->
+
+		</div> <!-- user-info -->
+		<div class="col-md-9 col-md-pull-3 user-content">
+			<h5><?=$this->translate('Worked Together');?> :</h5>
+			<div class="new-connections row drop-shadow">
+				<div class="col-md-12">
+					<div class="row connections-list">
+						<?php if($partners->count() == 0) { ?>
+							<div class="col-md-12">
+								<h6> <?=$this->translate('No user connections found');?></h6>
+							</div>
+						<?php } ?>
+						<?=$this->partialLoop('my/partial/partners-list-item.phtml', $partners);?>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<blockquote >
+								<a href="<?=$this->url('sc/userinfo', array('controller' => 'contacts', 'user' => zgetUserLogin($user)));?>">
+									<button type="button" class="btn btn-success btn-sm" >
+										<span class="glyphicon glyphicon-link"></span> <?=$this->translate('See More User Connections...');?>
+									</button>
+								</a>
+							</blockquote>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<h5><?=$this->translate('Users Logbook');?></h5>
+			<div class="row data-list" data-limit="<?=$q_options['_limit'];?>" data-offset="<?=$q_options['_offset'];?>">
+				<div class="col-md-12">
+					<?=$this->partial('application/partial/news-list.phtml');?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<?=$this->partial('application/partial/custom_pagination');?>
+				</div>
+			</div>
+		</div> <!-- user-content -->
+
+	</div> <!-- row section-content -->
+
+
+</section>
+<?=$this->partial('application/image-gallery');?>
+<?=$this->headScript()->appendFile($this->basePath('vendor/masonry/dist/masonry.pkgd.min.js'));?>

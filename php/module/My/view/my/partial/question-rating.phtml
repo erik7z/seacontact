@@ -1,0 +1,23 @@
+<?php if($this->isPermitted('application\controller\questions.change-rating', $user_id, $id) && $vote_status != 'up') :?>
+	<li title="<?=$this->translate('Rate up');?>">
+		<small>
+		<a href="<?=$this->url('sc/questions/actions', ['action' => 'change-rating','id' => $id], ['query' => ['rating' => 'up']]);?>" 
+		data-xhrtoggle="change_rating" data-xhrtarg="question_rating_<?=$this->id;?>" data-contenturl="<?=$this->url('sc/questions/actions', ['action' => 'view', 'id' => $id]);?>">
+			<span class="fa fa-arrow-up text-muted"></span>
+		</a>
+		</small>
+	</li>
+<?php endif?>
+	<li class="text-center rating" title="<?=$this->translate('Rating');?>">
+		<b class="text-<?=($total_rating > 0)? 'success' : 'danger';?>"><?=$total_rating;?></b>
+	</li>
+<?php if($this->isPermitted('application\controller\questions.change-rating', $user_id, $id) && $vote_status != 'down') :?>
+	<li title="<?=$this->translate('Rate down');?>">
+		<small>
+			<a href="<?= $this->url('sc/questions/actions', ['action' => 'change-rating','id' => $id], ['query' => ['rating' => 'down']]); ?>" 
+			data-xhrtoggle="change_rating" data-xhrtarg="question_rating_<?=$this->id;?>" data-contenturl="<?=$this->url('sc/questions/actions', ['action' => 'view', 'id' => $id]);?>">
+				<span class="fa fa-arrow-down  text-muted"></span>
+			</a>
+		</small>
+	</li>
+<?php endif?>	

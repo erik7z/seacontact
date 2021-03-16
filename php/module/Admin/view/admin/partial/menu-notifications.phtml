@@ -1,0 +1,33 @@
+<li class="dropdown notifications-menu" id="<?=$this->section_id;?>" data-section="<?=$section;?>">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <i class="<?=$menu_icon;?>"></i>
+    <?php if (count($section_notifications) > 0): ?>
+      <span class="label label-warning not_label">
+        <?=count($section_notifications);?>
+      </span>
+    <?php endif ?>
+  </a>
+  <ul class="dropdown-menu">
+    <li class="header"><?=$this->translate('You have');?>
+      <span class="not_count">
+        <?=count($section_notifications);?>
+      </span> 
+      <?=$section_comment;?>
+    </li>
+    <li>
+      <ul class="menu">
+       <?=$this->partialLoop('admin/partial/menu-notifications-item.phtml', $sub_sections);?>
+      </ul>
+    </li>
+    <?php if (count($section_notifications) > 0): ?>
+      <li class="footer clear_notif">
+        <a href="#">
+          <button class="btn btn-success btn-xs">
+            <i class="glyphicon glyphicon-ok"></i>
+            <?=$this->translate('Clear Notifications');?>
+          </button>
+        </a>
+      </li>
+    <?php endif ?>
+  </ul>
+</li>

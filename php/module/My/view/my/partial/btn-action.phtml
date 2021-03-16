@@ -1,0 +1,49 @@
+<?php 
+
+	if(!isset($type) || !isset($link) || !isset($id)) throw new \Application\Exception\Exception("Variables should be supplied to btn report partial", 1);
+
+	$form_control = (isset($form_control))? $form_control : 1;
+	$show_text = (isset($show_text))? $show_text : 1;
+	$responsive = (isset($responsive))? $responsive : 1;
+	$size = (isset($size))? $size : 'xs';
+	$action_color = (isset($action_color))? $action_color : 'info';
+	$cancel_color = (isset($cancel_color))? $cancel_color : 'warning';
+	$action_icon = (isset($action_icon))? $action_icon : 'fa fa-user-plus';
+	$cancel_icon = (isset($cancel_icon))? $cancel_icon : 'fa fa-user-times';
+	$action_class = (isset($action_class))? $action_class : 'action_button';
+	$count_class = (isset($count_class))? $count_class : 'subscribers_count';
+
+	if($type == 'question') {
+		$section = 'question';
+		$action_text = (isset($action_text))? $action_text : $this->translate('Subscribe');
+		$cancel_text =  (isset($cancel_text))? $cancel_text : $this->translate('Unsubscribe');
+	} elseif($type == 'vacancy') {
+		$section = 'vacancy';
+		$action_text = (isset($action_text))? $action_text : $this->translate('Send my CV');
+		$cancel_text =  (isset($cancel_text))? $cancel_text : $this->translate('Unsubscribe From Vacancy');
+	} else if($type == 'report_vacancy') {
+		$section = 'vacancy';
+		$action_text = (isset($action_text))? $action_text : $this->translate('Report that vacancy closed');
+		$cancel_text =  (isset($cancel_text))? $cancel_text : $this->translate('Remove report');
+		$action_icon = 'fa fa-bell-slash-o text-danger';
+		$cancel_icon = 'fa fa-bell-slash';
+		$action_color = 'default';
+		$count_class = 'reports_count';
+	}
+?>
+
+<?php if (isset($status) && $status): ?>
+	<a href="<?=$link;?>" data-section="<?=$section;?>" data-id="<?=$id;?>" class="<?=$action_class;?>" >
+		<button class="btn btn-<?=$cancel_color;?> btn-<?=$size;?>  <?php if ($form_control): ?>form-control<?php endif ?> <?php if ($responsive): ?>btn-responsive<?php endif ?> " data-aicon="<?=$action_icon;?>" data-cicon="<?=$cancel_icon;?>" data-acolor="btn-<?=$action_color;?>" data-ccolor="btn-<?=$cancel_color;?>" title="<?=$cancel_text;?>" data-cclass="<?=$count_class;?>" data-atext=" <?=$action_text;?>" data-ctext=" <?=$cancel_text;?>">
+			<i class="<?=$cancel_icon;?>"></i>
+			<?=($show_text)? $cancel_text : '';?>
+		</button>
+	</a>
+<?php else: ?>
+	<a href="<?=$link;?>" data-section="<?=$section;?>" data-id="<?=$id;?>" class="<?=$action_class;?>" >
+		<button class="btn btn-<?=$action_color;?> btn-<?=$size;?> <?php if ($form_control): ?>form-control<?php endif ?> <?php if ($responsive): ?>btn-responsive<?php endif ?>"  data-aicon="<?=$action_icon;?>" data-cicon="<?=$cancel_icon;?>" data-acolor="btn-<?=$action_color;?>" data-ccolor="btn-<?=$cancel_color;?>"  title="<?=$action_text;?>" data-cclass="<?=$count_class;?>" data-atext=" <?=$action_text;?>" data-ctext=" <?=$cancel_text;?>">
+			<i class="<?=$action_icon;?>"></i>
+			<?=($show_text)? $action_text : '';?>
+		</button>
+	</a>
+<?php endif ?>

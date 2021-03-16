@@ -1,0 +1,64 @@
+<script type="text/javascript">
+	
+	function add_education(){
+		var currentCount = $('form fieldset.user_education .insert_template fieldset').length + edu_count;
+		var template = $('form fieldset.user_education span[data-template]').data('template');
+		template = template.replace(/__placeholder__/g, currentCount);
+		$('form fieldset.user_education .insert_template').append(template);
+		$('form fieldset.user_education .insert_template').append('<hr />');
+		return false;
+	}
+
+	var edu_count = 0;
+	$('.delete-education-entry').click(function(e){
+		var id = $(this).data('id');
+		$(this).closest('fieldset').remove();
+		$('<input></input>', {
+			type: 'hidden',
+			name: 'remove['+edu_count+'][school]',
+			value: id,
+		}).appendTo('form');
+		edu_count++;
+	});
+
+	$('.delete_contract').click(function(e){
+		e.preventDefault();
+		var delete_id = $(this).data('id');
+		var section = $(this).data('section');
+		if(confirm('Are you sure want to delete this contract ?')) {
+			var url = '/index/delete?section=contract&id='+delete_id;
+			$.post(url, {delete: 'delete', json: 'json'}, function(response) {
+				window.location.reload();
+			}, 'html');
+
+		}
+	});
+
+	$('.delete_document').click(function(e){
+		e.preventDefault();
+		var delete_id = $(this).data('id');
+		if(confirm('Are you sure want to delete this document ?')) {
+			var url = '/index/delete?section=document&id='+delete_id;
+			$.post(url, {delete: 'delete', json: 'json'}, function(response) {
+				window.location.reload();
+			}, 'html');
+
+		}
+	});
+
+	// user email should be provided !!!
+	
+	<?php if(isset($user_email)) :?>
+		$('.load-content').on('click', '.delete_mail_template', function(e){
+			e.preventDefault();
+			var delete_id = $(this).data('id');
+			if(confirm('Are you sure want to delete this template ?')) {
+				var url = '/index/delete?section=mailtemplate&id='+delete_id;
+				$.post(url, {delete: 'delete', json: 'json'}, function(response) {
+					loadContent('/mailbox/newmail?mail_to='+'<?=$user_email;?>');
+				}, 'html');
+
+			}
+		});
+	<?php endif;?>
+</script>

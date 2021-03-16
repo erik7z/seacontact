@@ -1,0 +1,108 @@
+<div class="row">
+	<div class="col-md-12 table-responsive">
+		<div class="box">
+			<div class="box-header bg-info">
+				<div class="row">
+					<div class="col-md-9">
+						<h4><?=$this->translate('Mail Box Accounts');?></h4>
+					</div>
+					<div class="col-md-3 text-right">
+						<button type="button" class="btn btn-success" aria-label="<?=$this->translate('Add Mailbox');?>" data-action="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'add-account']);?>" data-toggle="modal" data-target="#mail_accounts_modal">
+						  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> <?=$this->translate('Add Mailbox');?>
+						</button>	
+					</div>
+				</div>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered table-hover table-condensed table-favorites">
+					<thead>
+						<tr>
+							<th >#</th>
+							<th class="col-md-2"><?=$this->translate('Mail Box');?></th>
+							<th class="col-md-2"><?=$this->translate('IMAP');?></th>
+							<th class="col-md-2"><?=$this->translate('SMTP');?></th>
+							<th class="col-md-3"><?=$this->translate('Credentials');?></th>
+							<th class="col-md-1"><?=$this->translate('Access Level');?></th>
+							<th class="col-md-1"><?=$this->translate('Send Via');?></th>
+							<th class="text-center col-md-1"><i class="fa fa-cog"></i></th>
+						</tr>
+					</thead>
+					<?php foreach($data_list as $data_item) {?>
+						<tr>
+							<td><?=$data_item->id;?></td>
+							<td>
+								<?=$data_item->title;?> <br />
+								<a target="_blank" href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'index'], ['query' => ['filters' => ['mail_box' => $data_item->mail_box]]]);?>">
+									<?=$data_item->mail_box;?>
+								</a>
+							</td>
+							<td class="small">
+								<dl>
+									<dd>HOST: <?=$data_item->imap_host;?></dd>
+									<dd>PORT: <?=$data_item->imap_port;?></dd>
+									<dd>SSL: <?=$data_item->imap_ssl;?></dd>
+								</dl>
+							</td>
+							<td class="small">
+								<dl>
+									<dd>HOST: <?=$data_item->smtp_host;?></dd>
+									<dd>PORT: <?=$data_item->smtp_port;?></dd>
+									<dd>SSL: <?=$data_item->smtp_ssl;?></dd>
+								</dl>
+							</td>
+							<td class="small">
+								<dl>
+									<dt>LOGIN</dt>
+									<dd><?=$data_item->user_name;?></dd>
+									<dt>Password</dt>
+									<dd>******</dd>
+								</dl>
+							</td>
+							<td>
+								<?=$data_item->access_level;?>
+							</td>
+							<td>
+								<?=$data_item->transport;?>
+							</td>
+							<td class="text-center">
+								<button class="btn btn-default btn-xs form-control" aria-label="<?=$this->translate('Edit Mailbox');?>" data-action="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'edit-account', 'id' => $data_item->id]);?>" data-toggle="modal" data-target="#mail_accounts_modal">
+									<i class="fa fa-cog"></i>
+								</button>
+								<a href="<?=$this->url('admin/actions', array('controller' => 'index', 'action' => 'delete'), 
+													array('query' => array('id' => $data_item->id, 'section' => 'mail_box'))
+												);?>">
+									<i class="fa fa-trash"></i>
+								</a>
+							</td>
+						</tr>
+						
+					<?php }?>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<div class="row">
+	<div class="col-md-12 text-center">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+</div>
+
+<?=$this->partial('application/modal',array(
+	'modal_name' => 'mail_accounts_modal',
+	'modal_title' => $this->translate('Mail Box'),
+));?>
+
+<script type="text/javascript">
+	$('#mail_accounts_modal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget);
+		var action = button.data('action');
+		var modal = $(this);
+
+		loadContent(action);
+	});
+</script>
+
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#mail_accounts_modal']);?>

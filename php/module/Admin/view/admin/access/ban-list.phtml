@@ -1,0 +1,98 @@
+<?php if($ban_list) { ?>
+	<div class="row">
+		<div class="col-md-12 table-responsive">
+			<div class="box">
+				<div class="box-header bg-info">
+					<div class="row">
+						<div class="col-md-10">
+							<h4><?=$this->translate('Ban List');?></h4>
+						</div>
+						<div class="col-md-2 text-right">
+							<button type="button" class="btn btn-warning" aria-label="<?=$this->translate('Ban IP');?>" data-toggle="modal" data-target="#ban_ip_modal">
+							  <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> <?=$this->translate('Ban IP');?>
+							</button>	
+						</div>
+					</div>
+				</div>
+				<div class="box-body">
+					<table class="table table-bordered table-hover table-condensed table-favorites">
+						<thead>
+							<tr>
+								<th>ID #</th>
+								<th class="text-center no-sort">
+									<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+								</th>
+								<th><?=$this->translate('Login');?></th>
+								<th><?=$this->translate('Full Name');?></th>
+								<th><?=$this->translate('Last Note');?></th>
+								<th><?=$this->translate('Banned ID');?></th>
+								<th><?=$this->translate('Banned IP');?></th>
+								<th><?=$this->translate('Banned Time');?></th>
+								<th><?=$this->translate('Last Activity');?></th>
+								<th><?=$this->translate('Last IP');?></th>
+								<th class="no-sort"><?=$this->translate('Remove');?></th>
+							</tr>
+						</thead>
+						<?php foreach($ban_list as $user) {?>
+							<tr>
+								<td><?=$user->ban_id;?></td>
+								<td>
+									<?php if ($user->user_id): ?>
+										<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'user', 'id' => $user->user_id));?>">
+											<button type="button" class="btn btn-default btn-sm form-control" aria-label="View User">
+						 						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+											</button>
+										</a>
+									<?php endif ?>
+								</td>
+								<td>
+									<?php if ($user->login): ?>
+										<a href="<?=_ADDRESS_.$user->login;?>"><?=$user->login;?></a>
+									<?php endif ?>
+								</td>
+								<td><?=zgetUserName($user);?><td>
+									<?php if ($user->office_note): ?>
+										<dl>
+											<dt><span class="text-success"><?=zformatDateTimeYear($user->office_note_time);?></span></dt>
+											<dd><?=$user->office_note;?></dd>
+										</dl>
+									<?php endif ?>
+								</td>
+								<td><?=$user->user_id;?></td>
+								<td><?=$user->user_ip;?></td>
+								<td><?=zformatDateTime($user->banned_time);?></td>
+								<td><?=($user->last_activity) ? zformatDateTime($user->last_activity) : '';?></td>
+								<td><?=$user->last_ip;?></td>
+								<td class="text-center">
+									<a class="remove_ban" data-id="<?=$user->ban_id;?>" href="<?=$this->url('admin/actions', array('controller' => 'access', 'action' => 'remove-ban', 'id' => $user->ban_id));?>" > 
+										<span class="fa fa-unlock"></span>
+									</a>
+								</td>
+							</tr>			
+						<?php }?>
+					</table>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+<?php }?>
+
+<?=$this->partial('application/modal',array(
+	'modal_name' => 'ban_ip_modal',
+	'modal_size' => 'sm',
+	'modal_title' => $this->translate('Ban User by IP'),
+));?>
+<div class="row">
+	<div class="col-md-12 text-center custom_pagination">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+</div>
+<script type="text/javascript">
+
+	$('#ban_ip_modal').on('shown.bs.modal', function () {
+		$('#ban_ip_modal .load-content').load('/access/ban-ip?response=terminal');
+	});
+
+</script>

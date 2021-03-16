@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><?=$this->translate('Vkontakte Authorisation');?></title>
+</head>
+<body>
+	<div style="width: 100%; text-align: center">
+		<?php if ($message): ?>
+			<h4><?=$message;?></h4>	
+		<?php endif ?>
+
+		<p><?=sprintf($this->translate('This window will close in %s seconds'), 5);?></p>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+	opener.focus();	
+	<?php if($success): ?>
+		opener.setTimeout(function(){
+			opener.popupSuccess('<?=$message;?>', '<?=$code;?>');
+		}, 2000);
+	<?php else: ?>
+		opener.setTimeout(function(){
+			opener.popupFail('<?=$message;?>', '<?=$code;?>');
+		}, 2000);
+	<?php endif?>
+	setTimeout(function(){
+		window.close();
+	}, 3000);
+</script>

@@ -1,0 +1,136 @@
+<?php
+	$small_view = (isset($small_view))? $small_view : 0;
+	$s_width = ($small_view)? 2 : 3;
+	$xs_width = ($small_view)? 3 : 4;
+	$activity_social = (isset($activity_social))? $activity_social : 0;
+	if($activity_social) {
+		$s_width = 2;
+		$xs_width = 3;
+	}
+	$slide_comments = (isset($slide_comments))? $slide_comments : 0;
+
+	$total_comments = isset($total_comments)? $total_comments : 0;
+	$page_url = isset($page_url)? $page_url : null;
+
+	$loc_cmts = isset($comments_list)? (array) json_decode($comments_list) : [];
+	$soc_cmts = isset($soc_comments_list)? (array) json_decode($soc_comments_list) : [];
+	$comments_list = array_merge($soc_cmts, $loc_cmts);
+	usort($comments_list, function($a, $b){
+		return ($a->time > $b->time) ? 1 : -1;
+	});
+
+	$likes = isset($likes)? $likes : 0;
+	$soc_likes = isset($soc_likes)? $soc_likes : 0;
+	$likes_count = $likes + $soc_likes;
+
+	$likers = isset($likers)? (array) json_decode($likers) : [];
+	$soc_likers = isset($soc_likers)? (array) json_decode($soc_likers) : [];
+	$likers = array_merge($likers, $soc_likers);
+
+?>
+
+<div class="row">
+	<?php if ($small_view || $activity_social): ?>
+		<ul class="col-md-1  labels-block labels-button activity-social list-unstyled">
+			<li class="share_facebook"><i class="pe-so-facebook pe-bg pe-hover pe-1x" data-url="#"></i></li>
+		</ul>
+		<ul class="col-md-1  labels-block labels-button activity-social list-unstyled">
+			<a href="http://vk.com/share.php?url=<?=$page_url;?>" target="_blank">
+				<li><i class="pe-so-vk pe-bg pe-hover pe-1x" data-url="<?=$page_url;?>"></i></li>
+			</a>
+		</ul>
+		<ul class="col-md-1  labels-block labels-button activity-social list-unstyled">
+			<li class="share_linkedin"><i class="pe-so-linkedin pe-bg pe-hover pe-1x" data-url="<?=$page_url;?>"></i></li>
+		</ul>		
+	<?php endif ?>
+		<div class="col-md-3 time labels-block labels-button">
+			<?php if (isset($time) && $time): ?>
+				<span class="date"><?=zgetTimePosted($time);?></span>
+			<?php endif ?>
+		</div>
+		<div class="col-md-<?=$s_width;?> col-xs-<?=$xs_width;?> labels-block labels-button text-center">
+			<?php if (isset($answers)): ?>
+				<a href="<?=$page_url;?>" data-section="<?=$this->section;?>" data-id="<?=$id;?>">
+					<span class="fa fa-bolt"></span>
+					<span class="count"> 
+						<span class="hidden-xs hidden-sm"><?=($small_view)? '' : $this->translate('Answers');?></span>
+						<?php if ($answers > 0): ?>(<span class="count_int"><?=$answers;?></span>)<?php endif ?>
+					</span>
+				</a>
+			<?php endif ?>
+		</div>
+		<div class="col-md-<?=$s_width;?> col-xs-<?=$xs_width;?> labels-block labels-button text-center">
+			<?php if (isset($total_comments)): ?>
+				<a href="<?=$page_url;?>" data-section="<?=$this->section;?>" data-id="<?=$id;?>" <?php if (!$small_view || $slide_comments): ?>  data-action="show-comments" <?php endif ?> >
+					<span class="fa fa-comments-o"></span>
+					<span class="count"> 
+						<span class="hidden-xs hidden-sm"><?=($small_view)? '' : $this->translate('Comments');?></span>
+						<?php if ($total_comments > 0): ?>(<span class="count_int"><?=$total_comments;?></span>)<?php endif ?>
+					</span>
+				</a>
+			<?php endif ?>
+		</div>
+		<div class="col-md-<?=$s_width;?> col-xs-<?=$xs_width;?> labels-block labels-button likes">
+			<?php if (isset($likes) || isset($soc_likes)): ?>
+				<a href="<?=$this->url('sc/like/actions',['section' => $this->section, 'id' => $id]);?>" 
+					class="like_btn" 
+					data-section="<?=$this->section;?>" 
+					data-id="<?=$id;?>"
+					data-toggle="likers" 
+					data-placement="top"
+					<?php $c = count($likers); ?>
+					<?php if($c) :?>
+						data-content="
+						<?php for($i = 0; $i < $c; $i++) :?>
+							<?=$this->partial('my/partial/liker-item', ['liker' => (array) $likers[$i]]);?>
+						<?php endfor?>
+						"
+					<?php endif?>
+				>
+					<span class="count"><?=($likes_count)? $likes_count : '';?></span>
+					<span class="change-icon">
+					<?php if ($like_status): ?>
+						<span class="fa fa-heart"></span>
+						<span class="fa fa-heart-o"></span>
+					<?php else : ?>
+						<span class="fa fa-heart-o"></span>
+						<span class="fa fa-heart"></span>
+					<?php endif ?>
+					</span>
+				</a>
+			<?php endif?>
+		</div>
+</div>
+<div class="row">
+	<div class="col-md-12 col-xs-12 comments-block">
+	<?php if (!$small_view): ?>
+		<section class="row">
+			<div class="col-md-12">
+				<?php if (count($comments_list) > 0): ?>
+					<div class="row comments_pagination">
+						<?=$this->partial('application/partial/button_pagination', [
+							'total_results' => $total_comments,
+							'current_result' => count($comments_list),
+							'view_limit' => _VIEW_COMMENT_LIMIT_,
+							'route' => 'sc/comments/actions',
+							'route_params' => [
+								'section' => $this->section,
+								'action' => 'get',
+								'id' => $this->id
+							]
+						]);?>
+					</div>
+				<?php endif ?>
+				<?php $action = $this->url('sc/comments/actions', ['action' => 'get', 'section' => $this->section, 'id' => $this->id]);?>
+				<?php if (count($comments_list) > 0): ?>
+					<?=$this->partialLoop('my/partial/comments-item', $comments_list);?>
+					<?=$this->partial('my/partial/comments-form', ['action' => $action]);?>
+				<?php endif ?>
+			</div>
+		</section>
+	<?php endif ?>
+		
+
+		
+	</div>
+</div>

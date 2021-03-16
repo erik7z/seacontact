@@ -1,0 +1,11 @@
+#grid-workspace{
+	margin-left: 3%;
+}
+.grid-item{
+	float: left;
+	position: relative;
+	background-position: center;
+	background-size: 100% 100%;
+	background-color: #fff;
+	padding: 2px;
+}

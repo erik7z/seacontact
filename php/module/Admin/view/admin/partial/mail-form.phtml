@@ -1,0 +1,159 @@
+<div class="new-mail-content">
+	<?php
+		$form = $this->form;
+		$form->prepare();
+		$form->setAttribute('class', 'form-horizontal');
+		$form->setName('admin_mails_form');
+		echo $this->form()->openTag($form);
+	?>
+	<fieldset class="col-md-12">
+		<div class="row pb05">
+			<div class="col-md-9">
+				<?php if ($form->has('title')): ?>
+					<?=$this->formElement($form->get('title')->setAttribute('class', 'form-control input-sm '));?>
+					<?=$this->formElementErrors($form->get('title'));?>
+				<?php endif ?>
+			</div>
+			<div class="col-md-3">
+			<?php if ($form->has('mail_from')): ?>
+				<?=$this->formElement($form->get('mail_from')->setAttribute('class', 'form-control input-sm '));?>
+				<?=$this->formElementErrors($form->get('mail_from'));?>
+			<?php endif ?>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-9">
+			<?php if ($form->has('mail_to')): ?>
+				<div class="row pb05">
+					<div class="col-md-12">
+						<?=$this->formElement($form->get('mail_to')->setAttribute('class', 'form-control input-sm '));?>
+						<?=$this->formElementErrors($form->get('mail_to'));?>
+					</div>
+				</div>
+			<?php endif ?>
+			<?php if ($form->has('mail_cc')): ?>
+				<div class="row pb05">
+					<div class="col-md-12">
+						<?=$this->formElement($form->get('mail_cc')->setAttribute('class', 'form-control input-sm '));?>
+						<?=$this->formElementErrors($form->get('mail_cc'));?>
+					</div>
+				</div>
+			<?php endif ?>
+			</div>
+			<div class="col-md-3">
+
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-9">
+				<?=$this->formElement($form->get('text')->setAttribute('class', 'form-control input-sm '));?>
+				<?=$this->formElementErrors($form->get('text'));?>
+			</div>
+			<div class="col-md-3">
+				<?php if ($form->has('mail_template')): ?>
+					<div class="row">
+						<div class="col-md-12">
+							<?=$this->formLabel($form->get('mail_template'));?>
+							<div class="input-group mail_template">
+								<?=$this->formElement($form->get('mail_template')->setAttribute('class', 'form-control input-sm '));?>
+								<div class="input-group-btn">
+									<a href="<?=$this->url('admin/actions', array('controller' => 'index', 'action' => 'delete'), 
+													array('query' => array('id' => $template_id, 'section' => 'mailtemplate'))
+												);?>">
+										<button type="button" data-id="<?=$template_id;?>" class="delete_mail_template btn btn-warning btn-sm form-control input-sm " aria-label="Delete Template" >
+										  <span class="fa fa-trash-o" aria-hidden="true"></span>
+										</button>
+									</a>
+								</div>
+							</div>
+							<?=$this->formElementErrors($form->get('mail_template'));?>
+						</div>
+						<?php if ($form->has('template_name')): ?>
+							<div class="col-md-12 pt">
+								<?=$this->formLabel($form->get('template_name'));?>
+								<?=$this->formElement($form->get('template_name')->setAttribute('class', 'form-control input-sm '));?>
+								<?=$this->formElementErrors($form->get('template_name'));?>
+							</div>
+						<?php endif ?>
+					</div>
+				<?php endif ?>
+				<?php if ($form->has('attachments')): ?>
+					<div class="form-group">
+						<div class="col-md-12 pt mt">
+							<?=$this->formLabel($form->get('attachments'));?>
+							<?=$this->formElement($form->get('attachments')->setAttribute('class', 'form-control input-sm '));?>
+							<?=$this->formElementErrors($form->get('attachments'));?>
+						</div>
+					</div>
+				<?php endif ?>
+				<?php if ($form->has('old_attachments')): ?>
+					<div class="form-group">
+						<div class="col-md-12">
+							<?=$this->formLabel($form->get('old_attachments'));?>
+							<?=$this->formElement($form->get('old_attachments')->setAttribute('class', 'form-control input-sm '));?>
+							<?=$this->formElementErrors($form->get('old_attachments'));?>
+						</div>
+					</div>
+				<?php endif ?>
+				<div class="form-group">
+					<div class="col-md-12 pt mt">
+						<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control input-md  send_mail'));?>
+							<span class="fa fa-paper-plane-o"></span> 
+				 			 <?=$form->get('submit')->getLabel();?>
+						<?=$this->formButton()->closeTag();?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+	<?= $this->form()->closeTag();?>
+	<?php if ($this->isPermitted('admin\controller\mailbox.index')): ?>
+		<?php if(isset($mails_flow) && count($mails_flow) > 0) :?>
+			<h4 class="text-center"><?=$this->translate('Previous Mails:');?></h4>
+			<?php foreach ($mails_flow as $mail_item) :?>
+				<?php $mail_item->collapsed = true;?>
+				<?=$this->partial('admin/partial/view-mail.phtml', $mail_item);?>
+			<?php endforeach;?> 
+		<?php endif; ?>
+	<?php endif; ?>
+</div>
+
+<?php  
+	$this->headScript()->appendFile('/vendor/tinymce/tinymce.min.js')
+	->appendFile('/vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js')
+	; 
+	$this->headLink()
+		->appendStylesheet('/vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css')
+		;
+?>
+<script type="text/javascript">
+	$('input[name=mail_to],input[name=mail_cc]').tokenfield({createTokensOnBlur: true});
+	tinyMCE.init(mce_mail_text);
+	var basepath = '<?=_ADMINADRESS_;?>';
+	$('body').on('change','.new-mail-content #mail_template_select', function(e) {
+		tinyMCE.EditorManager.execCommand('mceRemoveEditor', true, 'text');
+		var template = this.value;
+		var url = $(this).parents('form').attr('action');
+		var getData = {
+			template: template
+			}
+			
+		<?php if(isset($mail_to) && $mail_to) :?>
+			getData.mail_to = '<?=$mail_to;?>';
+		<?php endif ?>
+		<?php if(isset($reply_on_id) && $reply_on_id) :?>
+			getData.reply_on_id = '<?=$reply_on_id;?>';
+		<?php endif ?>
+
+		$.get(url,getData, function(response){
+			if(response.success) {
+				var $container = $(response.data).find('.new-mail-content');
+				$('.new-mail-content input[name=title]').val($container.find('input[name=title]').val());
+				$('.new-mail-content textarea[name=text]').val($container.find('textarea[name=text]').val());
+				$('.new-mail-content .mail_template').replaceWith($container.find('.mail_template'));
+				tinyMCE.EditorManager.execCommand('mceAddEditor', true, 'text');
+			} else $.notify({message: response.message },notify_error_settings);
+		}, 'json');
+	});
+</script>

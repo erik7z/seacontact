@@ -1,0 +1,33 @@
+<div class="mail_accounts_form">
+	<?php
+		$form = $this->form;
+		$form->prepare();
+		$form->setAttribute('class', 'form-horizontal');
+		echo $this->form()->openTag($form);
+	?>
+	<?=$this->formElement($form->get('id'));?>
+
+	<div class="form-group">
+		<div class="col-md-8">
+			<?=$this->formLabel($form->get('folder'));?>
+			<?=$this->formElement($form->get('folder')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('folder'));?>
+		</div>
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('priority'));?>
+			<?=$this->formElement($form->get('priority')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('priority'));?>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control input-sm'));?>
+				<span class="fa fa-save"></span> 
+	 			 <?=$form->get('submit')->getLabel();?>
+			<?=$this->formButton()->closeTag();?>
+		</div>
+	</div>
+
+	<?= $this->form()->closeTag();?>
+</div>
+

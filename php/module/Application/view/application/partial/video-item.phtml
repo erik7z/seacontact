@@ -1,0 +1,36 @@
+<?php 
+
+	$url = isset($url)? $url : null;
+	$title = isset($title)? $title : null;
+	$thumb = isset($thumb)? $thumb : null;
+	$description = isset($description)? $description : null;
+	$embed_url = isset($embed_url)? $embed_url : null;
+	
+	if(isset($form_element)) {
+		$thumb = $form_element->getAttribute('data-thumb');
+		$description = $form_element->getAttribute('data-description');
+		$title = $form_element->getAttribute('data-title');
+		$url = $form_element->getAttribute('data-url');
+		$embed_url = $form_element->getAttribute('data-embed');
+	}
+?>
+<hr class="mb05 mt05" />
+<div class="row">
+	<?php if (isset($form_element)): ?>
+		<div class="col-md-1">
+			<button type="button" class="btn btn-default"><?=$this->formElement($form_element);?></button>
+		</div>
+	<?php endif ?>
+	<div class="col-md-<?=isset($form_element)? 11 : 12;?>">
+		<?php if ($title): ?>
+			<h4 class="small"><?=$title;?></h4>
+		<?php endif ?>
+		<div class="embed-responsive embed-responsive-4by3">
+			<iframe src="<?=$embed_url;?>" class="embed-responsive-item" allowfullscreen="1"></iframe>
+		</div>
+		<?php if ($description): ?>
+			<p class="small muted pt05"><?=htmlspecialchars_decode($description);?></p>
+		<?php endif ?>
+	</div>
+</div>
+

@@ -1,0 +1,69 @@
+<?php $this->headScript()->appendFile($this->basePath('vendor/tinymce/tinymce.min.js')); ?>
+<?php	
+
+	$this->headScript()
+		->appendFile($this->basePath('vendor/moment/moment-with-locales.js'))
+		->appendFile($this->basePath('vendor/twbs/bootstrap/js/transition.js'))
+		->appendFile($this->basePath('vendor/twbs/bootstrap/js/collapse.js'))
+		->appendFile($this->basePath('vendor/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js'))
+		->appendFile($this->basePath('vendor/bootstrap-switch/dist/js/bootstrap-switch.min.js'))
+		->appendFile($this->basePath('vendor/typeahead/typeahead.bundle.js'))
+		->appendFile($this->basePath('vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'))
+		;
+
+	$this->headLink()
+		->appendStylesheet($this->basePath('vendor/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'))
+		->appendStylesheet($this->basePath('vendor/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css'))
+		->appendStylesheet($this->basePath('vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css'))
+		->appendStylesheet($this->basePath('vendor/typeahead/typeahead.css'._SCRIPTS_VER_))
+		;
+?>
+
+<?=$this->partial('application/js/tinymce-scripts');?>
+
+<script type="text/javascript">
+
+	$(document).on('ready', function() {
+
+		<?php if (isset($edit_logbook) && $edit_logbook): ?>
+			tinyMCE.init(tinymce_settings);
+		<?php endif ?>
+
+	    var list = ['seacontact', 'odessa'];
+	    var tags = new Bloodhound({
+	      datumTokenizer: Bloodhound.tokenizers.whitespace,
+	      queryTokenizer: Bloodhound.tokenizers.whitespace,
+	      local: list,
+	      remote: {
+	        url: '/tags?q=%QUERY',
+	        wildcard: '%QUERY'
+	      }
+	    });
+
+		$('input[name=tags]').tokenfield({
+		  typeahead: [{hint: true,highlight: true,minLength: 1}, { source: tags }],
+		  createTokensOnBlur: true
+		});
+
+
+		$('#datetimepicker1').hide();
+		$.fn.bootstrapSwitch.defaults.size = 'small';
+		$.fn.bootstrapSwitch.defaults.handleWidth = 'auto';
+		$.fn.bootstrapSwitch.defaults.labelWidth = 'auto';
+		$("#switch-publish").bootstrapSwitch();
+		$('body').on('switchChange.bootstrapSwitch', '#switch-publish', function(event, state) {
+			if(state) {
+				$('#datetimepicker1').show('slow').css('overflow', 'auto')
+				$('#datetimepicker1').datetimepicker({
+				                    locale: 'ru',
+				                    minDate:  "<?=date('M/d/Y', time());?>",
+				                    sideBySide: true,
+				                    <?php if(isset($next_pub_time)):?> defaultDate: "<?=date('M/d/Y H:i', $next_pub_time);?>", <?php endif;?>
+				                }).datetimepicker().data("DateTimePicker").enable();
+			} else {
+				$('#datetimepicker1').hide('slow').datetimepicker().data("DateTimePicker").disable();
+			}
+		});
+
+	});
+</script>

@@ -1,0 +1,15 @@
+<?php
+	$this->layout()->show_breadcrumbs = true;
+?>
+<section class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<?=$this->partial('my/partial/logbook-form.phtml');?>
+		</div>
+	</div>
+</section>
+<!-- LOG BOOK FORM SCRIPTS  -->
+<?=$this->partial('application/js/logbook-form-scripts');?>
+<?=$this->partial('application/js/link-preview-scripts');?>
+<?=$this->partial('application/js/file_upload');?>
+<!-- /LOG BOOK FORM SCRIPTS -->

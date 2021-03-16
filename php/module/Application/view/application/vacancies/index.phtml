@@ -1,0 +1,70 @@
+<section id ="all-vacancies" class="section-vacancies container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row mt05">
+				<div class="col-md-2">
+					<button type="button" class="btn btn-info btn-sm form-control" aria-label="<?=$this->translate('Search');?>" data-toggle="modal" data-target="#vacanciesModal">
+					  <span class="glyphicon glyphicon-search" aria-hidden="true"></span> <?=$this->translate('Search');?>
+					</button>
+				</div>
+				<div class="col-md-8 text-center" data-name="results_count">
+					<h4>
+						<?=(count($q_options['filters']) > 0)? $this->translate('Vacancies in this request') : $this->translate('Active Vacancies');?>:
+						<span class="text-danger"><?=$total_results;?></span>
+					</h4>
+				</div>
+				<div class="col-md-2 text-center">
+					<?=$this->partial('application/partial/custom_layout_switch');?>
+				</div>
+			</div>
+			<?=$this->partial('application/partial/active-form-filters-list');?>
+			<div class="row">
+
+			
+				<div class="col-md-12">
+						<?php if($total_results != 0) {?>
+							<?php if ($q_options['layout'] == 'thumb'): ?>
+								<div class="row">
+									<div class="col-md-4 col-md-push-8" id="content-filters">
+										<?=$this->partial('my/partial/vacancies-filter-form', ['form' => $form, 'q_options' => $q_options, 'vertical' => 1]);?>
+									</div>
+									<div class="col-md-8 col-md-pull-4 data-list" 
+									data-limit="<?=$q_options['_limit'];?>" data-offset="<?=$q_options['_offset'];?>"
+									data-name="page_content_list">
+										<?php foreach ($data_list as $vacancy): ?>
+											<?php $vacancy->small_view = 1;?>
+											<?= $this->partial('my/partial/vacancies-list-item.phtml', $vacancy);?>
+										<?php endforeach ?>
+									</div>
+								</div>
+							<?php else :?>
+								<div class="row">
+									<?=$this->partial('application/partial/vacancies-list-table.phtml');?>
+								</div>
+							<?php endif ?>
+						<?php } else { ?>
+							<h3><?=$this->translate('There is no any vacancies matching request');?></h3>
+						<?php }?>
+				</div> 
+			</div>
+			
+			<?=$this->partial('application/partial/custom_pagination');?>
+		</div>
+	</div> 
+</section>
+
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'vacanciesModal',
+					'modal_title' => $this->translate('Search Vacancy'),
+					'modal_content' => $this->partial('my/partial/vacancies-filter-form.phtml'),
+));?>
+<?php if ($q_options['layout'] == 'thumb'): ?>
+	<?=$this->partial('application/js/page_content_list_scripts', ['show_low_priority' => 1, 'hide_submit' => 0]);?>
+<?php endif ?>
+
+<script type="text/javascript">
+	$('[data-name=custom_pagination]').hide();
+	$(window).scroll(function(){
+		preload($(this), '.data-list', window.location.href);
+	});
+</script>

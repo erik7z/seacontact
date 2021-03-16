@@ -1,0 +1,28 @@
+<?php 
+	$small_view = (isset($this->small_view))? $this->small_view : 0;
+	$show_question = (isset($this->show_question))? $this->show_question : 1;
+?>
+
+<?php foreach ($data_list as $news_item): ?>
+	<?php if ($news_item['post_type'] == 'logbook'): ?>
+		<?=$this->partial('my/partial/logbook-item.phtml', $news_item);?>
+	<?php elseif ($news_item['post_type'] == 'vacancy'): ?>
+		<?=$this->partial('my/partial/vacancies-list-item.phtml', $news_item);?>
+	<?php elseif ($news_item['post_type'] == 'questions'): ?>
+		<?php $news_item['small_view'] = $small_view; ?>
+		<?=$this->partial('my/partial/question-list-item.phtml', $news_item);?>
+	<?php elseif ($news_item['post_type'] == 'answer'): ?>
+		<?php 
+			$news_item['small_view'] = $small_view;
+			$news_item['show_question'] = $show_question;
+		?>
+		<?=$this->partial('my/partial/answer-list-item', $news_item);?>
+	<?php endif ?>
+<?php endforeach ?>
+
+<script type="text/javascript">
+	$('[data-name=custom_pagination]').hide();
+	$(window).scroll(function(){
+		preload($(this), '.data-list', window.location.href);
+	});
+</script>

@@ -1,0 +1,9 @@
+<section id ="company-vacancies" class="section-company container-fluid pt">
+	<?=$this->partial('application/partial/vacancy-form', array('form' => $form));?>
+</section>
+<?=$this->partial('my/partial/datepicker-scripts.phtml');?>
+<?=$this->partial('application/js/file_upload');?>
+
+<script type="text/javascript">
+	$("input#pics_upload").fileinput(images_upload_settings);
+</script>

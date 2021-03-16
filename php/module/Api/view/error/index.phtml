@@ -1,0 +1,26 @@
+<?php 
+    $reasonMessage= '';
+    $additional_info = '';
+    $code = null;
+    if(isset($this->exception) && $this->exception instanceof Exception) {
+        $additional_info = get_class($this->exception).' '
+            .$this->translate('File').' '
+            .$this->exception->getFile().' '
+            .$this->exception->getLine() .' '
+            .$this->translate('Message').' '
+            .$this->exception->getMessage();
+            $code = $this->exception->getCode();
+    }
+
+    $response = [
+        'type' => $this->translate('Unknown error'),
+        'title' => $this->message,
+        'status' => 400,
+        'code' => $code,
+        'detail' => $reasonMessage,
+        'additional_info' => $additional_info
+            
+    ]
+?>
+
+<?php echo json_encode($response) ?>

@@ -1,0 +1,55 @@
+<form class="form-inline">
+	<div class="form-group">
+		<label><?=$this->translate('Show Only');?></label>
+		<?php if (isset($q_options['filters']['tag'])): ?>
+			<div class="input-group">
+					<a href="<?=$this->url('sc/news');?>">
+						<button type="button" class="btn btn-xs btn-primary" aria-label="<?=$label;?>" >
+						  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  <?=$q_options['filters']['tag'];?>
+						</button>
+					</a>
+			</div>
+		<?php endif ?>
+		<div class="input-group">
+		    	<a href="<?=$this->url('sc/news', array(),
+											array('query' => 
+												array( 
+												'filters' => array('section' => 'vacancies')
+												)
+											)
+										);?>
+				">
+					<?php $btn_v = (isset($q_options['filters']['section']) && $q_options['filters']['section'] == 'vacancies')? 'info' : 'default';?>
+			    	<button type="button" class="btn btn-<?=$btn_v;?> btn-sm"><?=$this->translate('Job Proposal');?></button>
+			    </a>
+			    <span class="input-group-addon">
+			    	<span class="li_fire"></span>
+			    </span>
+	    </div><!-- /input-group -->
+	    <div class="input-group">
+        	<a href="<?=$this->url('sc/news', array(),
+    									array('query' => 
+    										array( 
+    										'filters' => array('section' => 'logbook')
+    										)
+    									)
+    								);?>
+    		">
+    			<?php $btn_lb = (isset($q_options['filters']['section']) && $q_options['filters']['section'] == 'logbook')? 'info' : 'default';?>
+		    	<button type="button" class="btn btn-<?=$btn_lb;?> btn-sm"><?=$this->translate('Logbook Entries');?></button>
+		    </a>
+		    <span class="input-group-addon">
+		    	<span class="linea-ecommerce-megaphone"></span>
+		    </span>
+	    </div><!-- /input-group -->
+	    <?php if (!empty($q_options['filters'])): ?>
+		    <div class="input-group">
+	        	<a href="<?=$this->url('sc/news');?>
+	    		">
+			    	<button type="button" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>  <?=$this->translate('Clean');?></button>
+			    </a>
+		    </div><!-- /input-group -->	    	
+	    <?php endif ?>
+
+	 </div><!-- /.col-lg-6 -->
+</form>

@@ -1,0 +1,51 @@
+<section class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-12">
+			<?=$this->partial('admin/partial/task-item', ['task' => $task, 'full_view' => 1]);?>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8 col-md-offset-1">
+			<ul class="timeline">
+				<?php foreach ($task_activity as $activity): ?>
+					<li class="time-label">
+					    <span class="bg-green">
+					        <?=zformatDateTime($activity->time);?>
+					    </span>
+					</li>
+					<li>
+					    <i class="fa fa-cog bg-blue"></i>
+					    <div class="timeline-item">
+					        <span class="time"><i class="fa fa-clock-o"></i> <?=zformatDateTime($activity->time);?></span>
+					        <h3 class="timeline-header"><a href="<?=_ADDRESS_.zgetUserLogin($activity);?>"><?=zgetUserName($activity);?></a></h3>
+					        <div class="timeline-body">
+					        	<div class="row">
+					        		<div class="col-md-1">
+					        			<a href="<?=_ADDRESS_.zgetUserLogin($activity);?>">
+					        				<img class="media-object" src="<?=zgetUserAvatar($activity);?>" height="50px" width="50px" alt="<?=zgetUserName($activity);?>" >
+					        			</a>
+					        		</div>
+					        		<div class="col-md-11 text-left">
+					        			<p><?=htmlspecialchars_decode($activity->text);?></p>
+					        		</div>
+					        	</div>
+					        </div>
+					        <div class='timeline-footer'>
+					        </div>
+					    </div>
+					</li>
+				<?php endforeach ?>
+			</ul>
+		</div>
+	</div>
+
+
+</section>
+
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'task_modal',
+					'modal_title' => $this->translate('Task Management')
+));?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#task_modal']);?>
+<?=$this->partial('admin/js/tasks_scripts');?>

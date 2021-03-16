@@ -1,0 +1,183 @@
+<div class="row">
+	<div class="col-md-4">
+		<div class="box">
+			<div class="box-header bg-info">
+				<?=$this->translate('Roles');?>
+			</div>
+			<div class="box-body">
+				<div id="roles_tree"></div>
+			</div>
+				<div class="box-footer text-center">
+				<?php if ($this->isPermitted('admin\controller\access.add-role')): ?>
+					<button type="button" id="delete-role" class="btn btn-sm btn-danger" aria-label="<?=$this->translate('Delete Role');?>" >
+					  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <?=$this->translate('Delete Role');?>
+					</button>
+				<?php endif ?>
+				<?php if ($this->isPermitted('admin\controller\access.delete-role')): ?>
+					<button type="button" id="add-role" class="btn btn-sm btn-success" aria-label="<?=$this->translate('Add Role');?>" >
+					  <span class="fa fa-user-plus" aria-hidden="true"></span> <?=$this->translate('Add Role');?>
+					</button>
+				<?php endif ?>
+				</div>
+		</div>
+	</div>
+	<div class="col-md-8 table-responsive">
+		<div class="box">
+			<div class="box-header bg-info">
+			<div class="row">
+				<div class="col-sm-6">
+				  <!-- <form> -->
+				  <div class="form-inline">
+				  	<div class="form-group">
+				  		<label><?=$this->translate('Resources');?></label>
+				  		<input type="input" class="form-control input-sm" id="input-search" placeholder="Type to search..." value="">
+				  	</div>
+				  	<div class="form-group">
+					  	<input type="checkbox" class="checkbox" id="chk-reveal-results" value="false">
+					  	<label for="chk-reveal-results">
+					  	    <?=$this->translate('Reveal Results');?>
+					  	</label>
+				  	</div>
+				  </div>
+
+				  <!-- </form> -->
+				</div>
+				<div class="col-sm-6">
+				  <div id="search-output"></div>
+				</div>
+				</div>
+			</div>
+			<div class="box-body">
+				<div class="resources_tree"></div>
+			</div>
+			<?php if ($role): ?>
+				<div class="box-footer text-right">
+				<?php if ($this->isPermitted('admin\controller\access.reset-access-list')): ?>
+					<a href="<?=$this->url('admin/actions', array('controller' => 'access', 'action' => 'reset-access-list'));?>">
+						<button type="button" class="btn btn-xs btn-danger" aria-label="<?=$this->translate('Reset Defaults');?>" >
+						  <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span> <?=$this->translate('Reset Defaults');?>
+						</button>
+					</a>
+				<?php endif ?>
+				</div>
+			<?php endif ?>
+		</div>
+
+	</div>
+
+</div>
+
+
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'manage_role_modal',
+					'modal_title' => $this->translate('Add Role'),
+					'modal_size' => 'sm',
+));?>
+
+
+<?php	
+	$this->headScript()
+		->appendFile($this->basePath('vendor/bootstrap-treeview/src/js/bootstrap-treeview.js'))
+		;
+	$this->headLink()
+		->appendStylesheet($this->basePath('vendor/bootstrap-treeview/src/css/bootstrap-treeview.css'))
+		;
+?>
+<script type="text/javascript">
+	var roles_tree = <?=$roles_tree;?>;
+	var resources_tree = <?=$resources_tree;?>;
+	var role = '<?=$role;?>';
+	var show_res_checkbox = (role == '')? false : true;
+
+	$(document).ready(function(){
+		$('#roles_tree').treeview({
+			data: roles_tree,
+			levels: 1,
+			showTags: true,
+			showCheckbox: false,
+			enableLinks: true
+
+		});
+
+		var res_settings = {
+			data: resources_tree,
+			levels: 1,
+			showTags: true,
+			showCheckbox: show_res_checkbox,
+			enableLinks: true,
+			onNodeChecked: function(event, data) {
+			   updateTree('check', data);
+			},
+			onNodeUnchecked: function(event, data) {
+			   updateTree('uncheck', data);
+			},
+
+		}
+		$('.resources_tree').treeview(res_settings);
+
+		function updateTree(action,data)
+		{
+			if(data) {
+				var postData = {
+					role: role,
+					action: action,
+					resource: data.resource,
+					denied: data.status.denied,
+					inherit: data.status.inherit,
+				};
+			} else {
+				var postData = {
+					role: role,
+					action: action,
+				};
+			}
+
+			$.post('/access/edit-access-rights', postData, function(response) {
+				if(response.success == true) {
+					res_settings.data = response.data;
+					$('.resources_tree').treeview(res_settings);
+				} else {
+					alert(response.data);
+					if(action == 'check') $('.resources_tree').treeview('uncheckNode', [ data.nodeId, { silent: true } ]);
+					else if(action == 'uncheck') $('.resources_tree').treeview('checkNode', [ data.nodeId, { silent: true } ]);
+				}
+
+			}, 'json');
+		}
+
+		var search = function(e) {
+		  var pattern = $('#input-search').val();
+		  var options = {
+		    ignoreCase: true,
+		    exactMatch: false,
+		    revealResults: $('#chk-reveal-results').is(':checked')
+		  };
+		  var results = $('.resources_tree').treeview('search', [ pattern, options ]);
+
+		  var output = '<p>' + results.length + '<?=$this->translate("matches found");?>' + '</p>';
+		  // $.each(results, function (index, result) {
+		  //   output += '<p>- ' + result.text + '</p>';
+		  // });
+		  $('#search-output').html(output);
+		}
+
+		$('#input-search').on('keyup', search);
+
+	    $('#add-role').click(function(e){
+	    	e.preventDefault();
+	    	$('#manage_role_modal').modal('show');
+	    	$('#manage_role_modal .modal-title').text('<?=$this->translate("Add Role");?>')
+	    	$('#manage_role_modal .load-content').load('/access/add-role?response=terminal');
+	    });
+	    $('#delete-role').click(function(e){
+	    	e.preventDefault();
+	    	$('#manage_role_modal').modal('show');
+	    	$('#manage_role_modal .modal-title').text('<?=$this->translate("Delete Role");?>');
+
+	    	$('#manage_role_modal .load-content').load('/access/delete-role?response=terminal');
+	    });
+	});
+
+
+
+</script>

@@ -1,0 +1,246 @@
+<?php
+	$user_id = (isset($user_id)) ? $user_id : $user;
+	// $this->id = $this->vacancy_id;
+	$this->section = \Application\Model\NewsTable::SECTION_VACANCY;
+	$this->page_url = $this->url('sc/vacancies/actions', 
+		array('controller' => 'vacancy', 'action' => 'view', 'id' => $this->id)
+	);
+	$page_url = $this->page_url;
+	$subscribe_status = (isset($subscribe_status))? $subscribe_status : null;
+	$report_status = (isset($report_status))? $report_status : null;
+	$small_view = (isset($small_view))? $small_view : 0;
+?>
+<div class="row data-block news-entry vacancy-entry" data-xhrctr="vacancy_<?=$this->id;?>">
+	<?php if (!$small_view): ?>
+		<ul class="pe-social col-md-1 col-xs-12 social-labels text-right">
+			<li class="share share_facebook" title="<?=$this->translate('share in');?> Facebook">
+				<i class="pe-so-facebook pe-bg pe-hover pe-2x" data-url="<?=$page_url;?>"></i>
+			</li>
+			<li class="share" title="<?=$this->translate('share in');?> Vkontakte">
+				<a href="http://vk.com/share.php?url=<?=$page_url;?>" target="_blank">
+					<i class="pe-so-vk pe-bg pe-hover pe-1x" data-url="<?=$page_url;?>"></i>
+				</a>
+			</li>
+			<li class="share share_linkedin" title="<?=$this->translate('share in');?> LinkedIn">
+				<i class="pe-so-linkedin pe-bg pe-hover pe-2x" data-url="<?=$page_url;?>"></i>
+			</li>
+		</ul>
+	<?php endif ?>
+	<div class="col-md-<?=($small_view)? '12' : '10';?> col-xs-10">
+		<div class="row">
+			<?php $bg = ($time <= time() && $active == 1)? '' : 'style="background-color: #EFF5FB;"';?>
+			<div class="drop-shadow col-md-12" <?=$bg;?>>
+				<div class="row">
+					<div class="col-md-2 data-avatar">
+                        <a href="<?=$this->basePath(zgetUserLogin($this->vars()));?>">
+							<img src="<?=zgetUserAvatar($this->vars());?>" />
+							<h3><?=zgetUserName($this->vars());?></h3>
+						</a>
+					</div>
+					<div class="col-md-10">
+						<div class="row">
+							<div class="col-md-8">
+								<a href="<?=$this->url('sc/vacancies/actions', 
+										array('action' => 'view', 'id' => $this->id)
+									);?>" >
+									<h3><?=$title;?></h3>
+								</a>
+							</div>
+							<div class="col-md-4 text-center pt05">
+								<?=$this->partial('application/partial/counters_block');?>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-<?=($small_view)? '12' : '8';?>">
+								<?php if($tags) $tags = explode(',', $tags);?>
+								<?php if (count($tags) > 0): ?>
+									<div class="row">
+										<div class="col-md-12 pt pb tags">
+												<?php for ($i=0; $i < count($tags); $i++) :?>
+													<a href="<?=$this->url('sc/news', array(),
+														array('query' => array( 'filters' => array('tag' => str_replace(' ', '_', trim($tags[$i])))))
+													);?>"
+													>
+													#<?=zlessChars(trim($tags[$i]), 30);?>
+													</a>
+												<?php endfor ?>
+										</div>
+									</div>
+								<?php endif ?>
+								<div class="row">
+									<div class="col-md-12"><p><?=htmlspecialchars_decode($text);?></p></div>
+								</div>
+								<?php if(isset($pics)) :?>
+									<div class="row data-pics">
+										<div class="col-md-12">
+											<?php $pics = json_decode($pics);?>
+											<?php $grid = ($time > time()) ? '-postponed' : '';?>
+											<?=$this->partial('application/partial/pics-grid', ['pics' => $pics, 'grid_id' => $grid, 'gallery_id' => '#vacancy_'.$this->id]);?>
+										</div>	
+									</div>
+								<?php endif	?>
+								<?php if (isset($email) || isset($contact_email)): ?>
+									<div class="row company_contacts">
+										<div class="col-md-12">
+											<label class="text-success"><?=$this->translate('Contacts');?>:</label>
+											<div class="row">
+												<div class="col-md-6">
+													<small>
+														<ul class="fa-ul">
+															<?php if (isset($contact_email) && $contact_email != ''): ?>
+																<li><i class="fa-li fa fa-envelope-o"></i><a href="mailto:<?=$contact_email;?>"><?=$contact_email;?></a></li>
+															<?php elseif(isset($email) && $contact_email != $email): ?>
+																<li><i class="fa-li fa fa-envelope-o"></i><a href="mailto:<?=$email;?>"><?=$email;?></a></li>
+															<?php endif ?>
+														</ul>
+													</small>
+												</div>
+												<div class="col-md-6">
+													<ul class="fa-ul">
+														<?php if (isset($contact_phone) && $contact_phone != ''): ?><li><i class="fa-li fa fa-phone"></i><a href="tel:<?=$contact_phone;?>"><?=$contact_phone;?></a></li><?php endif ?>
+														<?php if (isset($contact_phone_2) && $contact_phone_2 != ''): ?><li><i class="fa-li fa fa-phone"></i><a href="tel:<?=$contact_phone_2;?>"><?=$contact_phone_2;?></a></li><?php endif ?>
+														<?php if (isset($contact_mobile) && $contact_mobile != ''): ?><li><i class="fa-li fa fa-mobile"></i><a href="tel:<?=$contact_mobile;?>"><?=$contact_mobile;?></li></a><?php endif ?>
+														<?php if (isset($contact_mobile_2) && $contact_mobile_2 != ''): ?><li><i class="fa-li fa fa-mobile"></i><a href="tel:<?=$contact_mobile_2;?>"><?=$contact_mobile_2;?></li></a><?php endif ?>
+													</ul>
+												</div>
+											</div>
+											<?php if($this->isPermitted('application\controller\vacancies.edit', $company_id)) : ?>
+												<div class="row">
+													<div class="col-md-12">
+														<?php if($comments) { ?>
+															<label class="text-warning"><?=$this->translate('Additional Information (Visible only for your company)');?>:</label>
+															<p><?=$comments;?></p> 
+														<?php } ?>	
+													</div>
+												</div>
+											<?php endif?>
+											
+										</div>
+									</div>
+								<?php endif ?>
+							</div>
+							<?php if (!$small_view): ?>
+								<div class="col-md-4">
+									<div class="row">
+										<ul class="list-unstyled col-md-12">
+											<?php if(isset($rank) && $rank) { ?><li><span class="text-blue"><?=$this->translate('RANK');?>:</span> <?=$rank;?></li> <?php } ?>
+											<?php if(isset($salary) && $salary) { ?><li><span class="text-blue"><?=$this->translate('SALARY');?>:</span> <?=$salary.' '.$salary_unit;?></li> <?php } ?>
+											<?php if(isset($ship_name) && $ship_name) { ?><li><span class="text-blue"><?=$this->translate('SHIP NAME');?>:</span> <?=$ship_name;?></li> <?php } ?>
+											<?php if(isset($ship_type) && $ship_type) { ?><li><span class="text-blue"><?=$this->translate('FLEET');?>:</span> <?=$ship_type;?></li> <?php } ?>
+											<?php if(isset($ship_built) && $ship_built) { ?><li><span class="text-blue"><?=$this->translate('SHIP BUILT');?>:</span> <?=$ship_built;?></li> <?php } ?>
+											<?php if(isset($contract_length) && $contract_length) { ?><li><span class="text-blue"><?=$this->translate('CONTRACT');?>:</span> <?=zdaysToMonths($contract_length);?></li> <?php } ?>
+											<?php if(isset($date_join) && $date_join) { ?><li><span class="text-blue"><?=$this->translate('JOIN DATE');?>:</span> <?=zformatDate($date_join);?></li> <?php } ?>
+											<?php if(isset($crew_nationality) && $crew_nationality) { ?><li><span class="text-blue"><?=$this->translate('CREW');?>:</span> <?=$crew_nationality;?></li> <?php } ?>
+											<?php if(isset($english) && $english) { ?><li><span class="text-blue"><?=$this->translate('ENGLISH');?>:</span> <?=zenglishLevel($english);?></li> <?php } ?>
+										</ul>
+									</div>
+
+									<div class="row">
+										<div class="col-md-12 text-center">
+											<?php if ($this->active == 0): ?>
+												<div class="alert alert-danger" role="alert">
+												  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+												  <span class="sr-only"><?=$this->translate('Status');?> :</span>
+												  <?=$this->translate('Not Active');?>
+												</div>
+											<?php endif ?>
+											<?php if ($this->active == 1): ?>
+												<div class="alert alert-success" role="alert">
+												  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+												  <span class="sr-only"><?=$this->translate('Status');?> :</span>
+												  <?=$this->translate('Active');?>
+												</div>
+											<?php endif ?>
+											<?php if ($this->time > time()): ?>
+												<div class="alert alert-warning" role="alert">
+												  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+												  <span class="sr-only"><?=$this->translate('Status');?> :</span>
+												  <?=$this->translate('Postponed ');?> 
+												  <h6><?=zgetTimePosted($time);?></h6>	
+												</div>
+											<?php endif ?>
+
+										</div>
+									</div>
+								</div>
+							<?php endif ?>
+							
+						</div>
+						<div class="row data-actions">
+							<div class="col-md-12">
+								<div class="row">
+									<?php if($this->isPermitted('application\controller\vacancies.toggle-report')) :?>
+										<div class="col-md-<?=($small_view)? 6 : 4;?>">
+											<?php $rep_link = $this->url('sc/vacancies/actions', array('action' => 'toggle-report', 'id' => $this->id));?>
+											<?=$this->partial('my/partial/btn-action', ['type' => 'report_vacancy', 'size' => 'sm', 'link' => $rep_link, 'id' => $this->id, 'status' => $report_status]);?>
+										</div>
+									<?php endif ?>
+									<?php if($this->isPermitted('application\controller\vacancies.toggle-subscribe')) :?>
+										<div class="col-md-<?=($small_view)? 6 : 4;?>">
+												<?php $subs_link = $this->url('sc/vacancies/actions', array('action' => 'toggle-subscribe', 'id' => $this->id));?>
+												<?=$this->partial('my/partial/btn-action', ['type' => 'vacancy', 'size' => 'sm', 'link' => $subs_link, 'id' => $this->id, 'status' => $subscribe_status]);?>
+												
+										</div>			
+									<?php endif ?>
+									
+								</div>
+								<?php 
+									$can_edit = $this->isPermitted('application\controller\vacancies.edit', $user_id);
+									$can_delete = $this->isPermitted('_admin_\delete\vacancy');
+								?>
+								<?php if ($can_edit || $can_delete): ?>
+									<div class="row pt">
+										<div class="col-md-12 text-center">
+											<?php  if($can_edit): ?>
+													<a href="<?=$this->url('sc/vacancies/actions', 
+														['action' => 'edit', 'id' => $this->id]
+													);?>" >
+														<button class="btn btn-primary btn-xs" value="">
+															<span class="fa fa-edit"></span>
+															<?=$this->translate('Edit');?>
+														</button>
+													</a>
+											<?php endif ?>
+											<?php  if($can_delete): ?>
+													<a href="<?=$this->url('sc/vacancies/actions', 
+														array('action' => 'delete', 'id' => $this->id)
+													);?>" data-xhrdelete="delete_vacancy" data-xhrtarg="vacancy_<?=$this->id;?>">
+														<button class="btn btn-danger btn-xs" value="">
+															<span class="fa fa-trash-o"></span>
+															<?=$this->translate('Delete');?>
+														</button>
+													</a>
+											<?php endif ?>
+										</div>
+									</div>
+								<?php endif ?>
+
+
+							</div>
+							<?php if (!isset($full_view) || !$full_view): ?>
+								<span class="pull-right">
+									<a href="<?=$page_url;?>" class="read_more_link" data-section="vacancy" data-id="<?=$this->id;?>">
+										<i class="fa fa-angle-double-right"></i> <strong class="small"><?=$this->translate('Read more');?></strong>
+									</a>
+								</span>
+							<?php endif ?>
+						</div>	 <!-- row data-actions -->	
+					</div>
+				</div>
+			</div> <!-- -->
+			<div class="activity-block col-md-12">
+				<?=$this->partial('my/partial/activity-block');?>
+			</div> 				
+		</div> <!-- row  -->
+	</div>
+	<?php if (!$small_view): ?>
+		<ul class="col-md-1 col-xs-2 pe-social data-type">
+		<?php if(isset($urgent) && $urgent) {?>
+			<li class="vacancy-type">
+				<i class="li_fire pe-2x"></i>
+			</li>
+		<?php }?>
+		</ul>	
+	<?php endif ?>
+			
+</div> <!-- row vacancy-entry -->

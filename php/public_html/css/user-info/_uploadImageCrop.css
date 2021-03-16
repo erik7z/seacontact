@@ -1,0 +1,60 @@
+
+h3.header {
+	margin-bottom: 1em;
+	font-size: 1em;
+	color: #aaf;
+}
+
+div#upload_area {
+	border: 3px dashed #ccc;
+	width: 855px;
+	height: 570px;
+	cursor: pointer;
+	background: url('../../img/icons/plus_gray.png') no-repeat center center;
+}
+
+
+div#upload_area:hover {
+	border-color: #ccf;
+	background: url('../../img/icons/plus_blue.png') no-repeat center center;
+}
+
+.loading {
+	width:180px;
+	height:120px;
+}
+
+.loading-thumb {
+	position: relative;
+	margin: auto;
+	width:180px;
+	height:120px;
+	display: block;
+	opacity: 0.7;
+	background: url('../../img/icons/loader.gif') no-repeat center center;
+}
+
+div#upload_form {
+	margin-left: 2em;
+}
+	div#upload_form form{
+		margin-top: 2em;
+	}
+
+div#uploads_list {
+	width: 99%;
+	clear: both;
+	padding-top: 1em;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+div#uploaded_items {
+	border: 3px solid #eee;
+	margin-top: 0.5em;
+	height: 121px;
+	white-space: nowrap;
+}
+	div#uploaded_items img{
+		margin-right: 5px;
+	}

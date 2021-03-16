@@ -1,0 +1,27 @@
+
+div#photo_upload {
+	margin: 0 2em 2em 0;
+}
+
+div#upload_area {
+	position: relative;
+	width: 180px;
+	height: 270px;
+	margin: 0 1em 2em 0;
+	border: 3px dashed #ccc;
+}
+
+div#preview {
+	position: relative;
+	border: 3px dashed #ccc;
+}
+
+div#edit_window {
+	width: 95%;
+	margin: auto;
+}
+
+.loading-thumb {
+	width:180px;
+	height:270px;
+}

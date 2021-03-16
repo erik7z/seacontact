@@ -1,0 +1,26 @@
+<section class="pics">
+	<?php if(count($pics) > 0) { ?>
+	<h2> <?=$current_user->login; ?> Pics </h2>
+		<?php foreach ($pics as $pic) { ?>
+			<div class="pic" style="float:left;">
+				<a href="/<?= _PICSWWW_.$pic['img']; ?>" target = "_blank">
+					<img src="/<?= _PICSWWW_.$pic['thumb']; ?>" />
+				</a>				
+			</div>
+		<?php } ?>
+	<?php } ?>
+	<?php if(count($avatars) > 0) { ?>
+	<h2 style="clear: both;"> <?=$current_user->login; ?> Avatar photos </h2>
+		<?php foreach ($avatars as $pic) { ?>
+			<div class="pic" style="float:left;">
+				<a href="/<?= _PICSWWW_.$pic['img']; ?>" target = "_blank">
+					<img src="/<?= _PICSWWW_.$pic['thumb']; ?>" />
+				</a>					
+			</div>
+		<?php } ?>
+	<?php } ?>
+
+
+<hr style="clear: both;">
+<a href="<?= $this->url(null); ?>">Back</a>
+</section>

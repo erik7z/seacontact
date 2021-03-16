@@ -1,0 +1,149 @@
+w<section id="reviews-edit" class="section-reviews container-fluid">
+	<div class="row">
+	<h1> Edit Review </h1>
+		<?php
+			$form = $this->form;
+			$form->prepare();
+			// $form->setAttribute('class', 'col-md-10');
+			echo $this->form(null)->openTag($form);
+			$review_fields = $form->get('ships-reviews');
+		?>
+
+		<div class="row form-data">
+
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-12">
+						<?=$this->formRow($review_fields->get('ship_id')->setOption('column-size','md-7'));?>
+						<?=$this->formRow($review_fields->get('rate')->setOption('column-size', 'md-5'));?>
+					</div>
+				</div>
+				<div class="row ship-data">
+					<div class="col-md-5 ship-photos">
+						<div class="row">
+							<?php if('' != $ship['photos']) {
+								$photos = json_decode($ship['photos']);
+								for ($i=0; $i < count($photos); $i++) {
+									if($i > 3) break;
+									$cols = ($i == 0)? 12:4;
+								?>
+									<img src="<?=$this->basePath('/'._PICSWWW_.$photos[$i]->thumb);?>" class="col-md-<?=$cols;?>"/>
+									<?php if(count($photos) < 2) {?>
+										<button class="btn btn-sm btn-default" value="">
+											<span class="fa fa-camera"></span>
+											Add More Photos
+										</button>
+									<?php } ?>
+								<?php }
+							} else { ?>
+								<img src="<?=$this->basePath('/'._PICSWWW_.'ship_blank.png');?>" class="col-md-12"/>
+								<button class="btn btn-sm btn-default" value="">
+									<span class="fa fa-camera"></span>
+									Add More Photos
+								</button>
+							<?php }	?>			
+						</div>
+					</div>	
+					<div class="col-md-4 ship-info">
+						<table>
+							<tr>
+								<th>IMO</th>
+								<td><?=$ship['imo'];?></td>
+							</tr>
+							<tr>
+								<th>CALLSIGN</th>
+								<td><?=$ship['callsign'];?></td>
+							</tr>
+							<tr>
+								<th>TYPE</th>
+								<td><?=$ship['type'];?></td>
+							</tr>
+							<tr>
+								<th>FLAG</th>
+								<td><?=$ship['flag'];?></td>
+							</tr>
+							<tr>
+								<th>BUILT</th>
+								<td><?=$ship['built'];?></td>
+							</tr>
+							<tr>
+								<th>DWT</th>
+								<td><?=$ship['dwt'];?></td>
+							</tr>
+							<tr>
+								<th>LENGTH</th>
+								<td><?=$ship['length'];?></td>
+							</tr>
+							<tr>
+								<th>BREADTH</th>
+								<td><?=$ship['breadth'];?></td>
+							</tr>
+							<tr>
+								<th>SPEED</th>
+								<td><?=$ship['speed'];?> Kts</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3">
+						<button type="button" class="btn btn-primary" >Edit Ship Data</button>
+					</div>
+				</div><!-- row ship-data -->
+				<div class="row">
+					<div class="col-md-12">
+						<?=$this->formRow($review_fields->get('title')->setOption('column-size','md-7'));?>
+						<?=$this->formRow($review_fields->get('link')->setOption('column-size', 'md-5'));?>
+					</div>
+				</div>				
+				<div class="row">
+					<div class="col-md-8">
+						<?=$this->formRow($review_fields->get('text')->setOption('column-size','md-12'));?>
+					</div>
+					<div class="col-md-4">
+						<?=$this->formRow($review_fields->get('date_from')->setOption('column-size', 'md-12'));?>
+						<?=$this->formRow($review_fields->get('date_to')->setOption('column-size', 'md-12'));?>
+					</div>
+				</div>
+				<div class="row">
+				</div>
+				<div class="row">
+					<div class="col-md-8">
+						<?php 
+							$old_pics = $form->get('old_pics');
+							echo $this->formLabel($old_pics);
+							echo '<br />';
+
+							foreach ($old_pics->getElements() as $pic) 
+								{ ?>
+									<img src="<?= '/'._PICSWWW_.$pic->getAttribute('data-thumb'); ?>" /> 
+								<?php
+									echo $this->formElement($pic);
+								}
+							echo '<br />';
+						?>
+					</div>
+					<div class="col-md-4">
+						<?=$this->formRow($form->get('pics')->get('img')->setOption('column-size', 'md-12'));?>
+					</div>
+				</div>
+			</div>
+
+		</div> <!-- row form-data -->
+		<div class="row">
+			<div class="col-md-4 col-md-offset-8">
+				<?=$this->formButton($form->get('Save')
+					->setOptions(array(
+						'fontAwesome' => array(
+							'icon' => 'save fa-lg',
+							'position' => 'prepend',
+							),
+						))
+					->setAttribute('class', 'btn-primary'));
+				?>
+			</div>
+		</div>			
+
+		<?php
+			echo $this->form()->closeTag();			
+		?>
+	</div>
+</section>

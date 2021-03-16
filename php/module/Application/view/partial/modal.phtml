@@ -1,0 +1,53 @@
+<!-- Modal -->
+<?php
+$modal_name = ($modal_name && $modal_name != '')? $modal_name : 'myModal';
+$modal_size = (isset($modal_size))? $modal_size : 'lg';
+$modal_title = (isset($modal_title))? $modal_title : '';
+$modal_content = (isset($modal_content))? $modal_content : '';
+$show_header = (isset($show_header))? $show_header : 1;
+$show_footer = (isset($show_footer))? $show_footer : 1;
+$modal_save_btn = (isset($modal_save_btn))? $modal_save_btn : null;
+$modal_cancel_btn = (isset($modal_cancel_btn))? $modal_cancel_btn : $this->translate('Close');
+?>
+<div class="modal fade" id="<?=$modal_name;?>" tabindex="-1" role="dialog" aria-labelledby="<?=$modal_name;?>Label" aria-hidden="true">
+  <div class="modal-dialog modal-<?=$modal_size;?>">
+    <div class="modal-content">
+      <?php if ($show_header): ?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="<?=$modal_name;?>Label"><?=$modal_title;?></h4>
+        </div>
+      <?php endif ?>
+
+      <div class="modal-body" >
+      	<div class="container-fluid load-content">
+          <?=$modal_content;?>
+        </div><!-- container-fluid -->
+      </div><!-- modal-body -->
+
+      <?php if ($show_footer): ?>
+        <div class="modal-footer">
+          <?php if ($modal_save_btn): ?>
+            <button type="button" class="btn btn-primary" id="<?=$modal_save_btn_id;?>">
+              <span class="fa fa-save"></span> <?=$modal_save_btn;?>
+            </button>
+          <?php endif ?>
+          <?php if ($modal_cancel_btn): ?>
+            <button type="button" class="btn btn-default" <?php if(isset($modal_cancel_btn_id)):?> id="<?=$modal_cancel_btn_id;?> <?php endif;?>" data-dismiss="modal"><?=$modal_cancel_btn;?></button>
+          <?php endif ?>
+        </div><!-- modal-footer -->
+      <?php endif ?>
+    </div><!-- modal-content -->
+  </div>
+</div>
+<script type="text/javascript">
+	var modal_id = "#<?=$modal_name;?>";
+    $(modal_id).on('show.bs.modal', function () {
+        $('select:not(.no_chosen)').chosen("destroy");
+    });
+	$(modal_id).on('shown.bs.modal', function () {
+       $('.modal-content').focus();
+       $('.modal-backdrop').remove();
+       $('select:not(.no_chosen)').chosen();
+    });
+</script>

@@ -1,0 +1,76 @@
+<?php
+	$this->id = $this->user_id = $company_id;
+	$this->section = \Application\Model\NewsTable::SECTION_USER;
+	$this->page_url = $this->url('sc').zgetUserLogin($this->vars());
+	$page_url = $this->page_url;
+	$small_view = (isset($small_view))? $small_view : 0;
+	$full_view = (isset($full_view))? $full_view : 0;
+
+?>
+<div class="row data-block news-entry company-entry">
+	<?php if (!$small_view && !$full_view): ?>
+		<ul class="pe-social col-md-1 col-xs-12 social-labels text-right">
+			<li class="share_facebook">
+				<i class="pe-so-facebook pe-bg pe-hover pe-2x" data-url="<?=$page_url;?>"></i>
+			</li>
+		  <li>
+	    	<script type="text/javascript">
+	  			document.write(VK.Share.button({url: "<?=$page_url;?>"},{type: "custom", text: "<img src=\"http://vk.com/images/share_32_eng_2x.png\" width=\"40\" height=\"40\" />", eng: 1}));
+	  		</script>
+		  </li>
+		  <li class="share_linkedin">
+		  	<i class="pe-so-linkedin pe-bg pe-hover pe-2x" data-url="<?=$page_url;?>"></i>
+		  </li>
+		</ul>
+	<?php endif ?>
+	<div class="col-md-<?=($small_view || $full_view)? '12' : '11';?> col-xs-12">
+		<div class="row">
+			<div class="drop-shadow col-md-12">
+				<div class="row">
+					<?php if (!$full_view): ?>
+						<div class="col-md-2 data-avatar">
+							<a href="<?=$this->basePath(zgetUserLogin($this->vars()));?>">
+								<img src="<?=zgetUserAvatar($this->vars());?>" />
+								<h3><?=zgetUserName($this->vars());?></h3>
+							</a>
+						</div>
+					<?php endif ?>
+					<div class="col-md-<?=($full_view)? 12 : 10;?> pt">
+						<div class="row">
+							<div class="col-md-12">
+								<span class="pull-right">
+									<?=$this->partial('application/partial/counters_block');?>
+								</span>
+								<?=$this->partial('company/partial/company-info', ['company' => $this->vars(), 'show_avatar' => $full_view, 'full_view' => $full_view]);?>
+							</div>
+						</div>
+						<?php if (!$full_view): ?>
+							<div class="row">
+								<div class="col-md-12 text-right pb">
+									<a href="<?=$page_url;?>">
+										<button class="btn btn-default btn-sm">
+											<i class="fa fa-eye"></i> <?=$this->translate('View');?>
+										</button>
+									</a>
+									<?php if (isset($company_vacancies) && $company_vacancies): ?>
+										<a href="<?=$this->url('sc/companyinfo', ['controller' => 'vacancies', 'user' => zgetUserLogin($this->vars())]);?>">
+											<button class="btn btn-warning btn-sm">
+												<i class="li_fire"></i> <?=$this->translate('Vacancies');?> (<?=$company_vacancies;?>)
+											</button>
+										</a>
+									<?php endif ?>
+									<?php if($this->isPermitted('my\controller\messages.pm', $company_id)) {?>
+										<?=$this->partial('my/partial/contacts-btn-msg', array('text' => $this->translate('Send Message'), 'user' => $this->vars()));?>
+									<?php } ?>
+								</div>
+							</div>
+						<?php endif ?>
+					</div>
+				</div>
+			</div> <!-- -->
+			<div class="activity-block col-md-12">
+				<?=$this->partial('my/partial/activity-block');?>
+			</div> 				
+		</div> <!-- row  -->
+	</div>				
+</div> <!-- row vacancy-entry -->

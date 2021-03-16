@@ -1,0 +1,55 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<?php 
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('class', 'form-horizontal');
+				echo $this->form(null)->openTag($form);
+				$fieldset = $form->get('user');
+			?>
+
+			<div class="form-group">
+					<?php if ($fieldset->has('company_name')): ?>
+						<div class="row">
+							<div class="col-md-12">
+								<?=$this->formLabel($fieldset->get('company_name'));?>
+								<?=$this->formElement($fieldset->get('company_name')->setAttribute('class','form-control'));?>
+								<?=$this->formElementErrors($fieldset->get('company_name'));?>
+							</div>
+						</div>
+					<?php endif ?>
+				<div class="row">
+					<div class="col-md-6">
+						<?=$this->formLabel($fieldset->get('email'));?>
+					</div>
+					<div class="col-md-6">
+						<?=$this->formLabel($form->get('submit'));?>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<?=$this->formElement($fieldset->get('email')->setAttribute('class','form-control'));?>
+						<?=$this->formElementErrors($fieldset->get('email'));?>
+					</div>
+					<div class="col-md-6">
+						
+						<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary form-control'));?>
+							<span class="glyphicon glyphicon-send"></span>
+							<?=$form->get('submit')->getValue();?>
+						<?=$this->formButton()->closeTag($form);?>
+					</div>
+				</div>
+
+
+			</div>
+			<?=$this->form()->closeTag();?>				
+		</div>
+	</div>	
+</div>
+
+
+
+
+
+

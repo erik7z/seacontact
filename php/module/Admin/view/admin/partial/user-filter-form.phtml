@@ -1,0 +1,402 @@
+<?php 
+	$layout = (isset($layout))? $layout : null;
+?>
+
+<div class="row user-filter-form">
+	<div class="col-md-12">
+		<?php 
+			$v = $this->v = (isset($vertical))? $vertical : 0;
+
+			$form = $this->form;
+			$form->prepare();
+			$form->setAttribute('action',$this->url($this->routeMatch()->getRoute(), array('controller' => $this->routeMatch()->getController(), 'action' => $this->routeMatch()->getAction()), array('query' => array('filters' => $q_options['filters'], 'layout' => $q_options['layout']))));
+			$form->setAttribute('method', 'get');
+			$form->setAttribute('class', 'form-horizontal');
+			echo $this->form()->openTag($form);
+		?>
+
+			<?php $fieldset = $form->get('filters');?>
+			<fieldset class="col-md-12">
+				<div class="row">
+					<?php if ($fieldset->has('name')): ?>
+						<div class="col-md-<?=($v)? 12 : 4;?> priority_high">
+							<?=$this->formLabel($fieldset->get('name'));?>
+							<?=$this->formElement($fieldset->get('name')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('name'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('ship_name')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_high">
+							<?=$this->formLabel($fieldset->get('ship_name'));?>
+							<?=$this->formElement($fieldset->get('ship_name')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('ship_name'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('company')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_low">
+							<?=$this->formLabel($fieldset->get('company'));?>
+							<?=$this->formElement($fieldset->get('company')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('company'));?>
+						</div>
+					<?php endif ?>
+				</div>
+				<div class="row">
+					<?php if ($fieldset->has('nationality')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_high">
+							<?=$this->formLabel($fieldset->get('nationality'));?>
+							<?=$this->formElement($fieldset->get('nationality')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('nationality'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('home_country')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('home_country'));?>
+							<?=$this->formElement($fieldset->get('home_country')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('home_country'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('home_city')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('home_city'));?>
+							<?=$this->formElement($fieldset->get('home_city')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('home_city'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('english_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('english_from'));?>
+							<?=$this->formElement($fieldset->get('english_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('english_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('english_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('english_to'));?>
+							<?=$this->formElement($fieldset->get('english_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('english_to'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('age_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('age_from'));?>
+							<?=$this->formElement($fieldset->get('age_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('age_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('age_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('age_to'));?>
+							<?=$this->formElement($fieldset->get('age_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('age_to'));?>
+						</div>
+					<?php endif ?>
+				</div>
+
+				<div class="row">
+					<?php if ($fieldset->has('real_last_rank')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_low">
+							<?=$this->formLabel($fieldset->get('real_last_rank'));?>
+							<?=$this->formElement($fieldset->get('real_last_rank')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('real_last_rank'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('worked_in_psn')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_low">
+							<?=$this->formLabel($fieldset->get('worked_in_psn'));?>
+							<?=$this->formElement($fieldset->get('worked_in_psn')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('worked_in_psn'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('desired_rank')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_high">
+							<?=$this->formLabel($fieldset->get('desired_rank'));?>
+							<?=$this->formElement($fieldset->get('desired_rank')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('desired_rank'));?>
+						</div>
+					<?php endif ?>
+				</div>
+				<div class="row">
+					<?php if ($fieldset->has('last_ship_type')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_low">
+							<?=$this->formLabel($fieldset->get('last_ship_type'));?>
+							<?=$this->formElement($fieldset->get('last_ship_type')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('last_ship_type'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('ship_type')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_high">
+							<?=$this->formLabel($fieldset->get('ship_type'));?>
+							<?=$this->formElement($fieldset->get('ship_type')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('ship_type'));?>
+						</div>
+					<?php endif ?>
+
+				</div>
+
+				<div class="row priority_low">
+					<?php if ($fieldset->has('last_dwt_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('last_dwt_from'));?>
+							<?=$this->formElement($fieldset->get('last_dwt_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('last_dwt_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('last_dwt_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('last_dwt_to'));?>
+							<?=$this->formElement($fieldset->get('last_dwt_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('last_dwt_to'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('dwt_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('dwt_from'));?>
+							<?=$this->formElement($fieldset->get('dwt_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('dwt_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('dwt_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('dwt_to'));?>
+							<?=$this->formElement($fieldset->get('dwt_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('dwt_to'));?>
+						</div>
+					<?php endif ?>
+
+					<?php if ($fieldset->has('minimum_salary_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('minimum_salary_from'));?>
+							<?=$this->formElement($fieldset->get('minimum_salary_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('minimum_salary_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('minimum_salary_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('minimum_salary_to'));?>
+							<?=$this->formElement($fieldset->get('minimum_salary_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('minimum_salary_to'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('readiness_date_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('readiness_date_from'));?>
+							<?=$this->formElement($fieldset->get('readiness_date_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('readiness_date_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('readiness_date_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('readiness_date_to'));?>
+							<?=$this->formElement($fieldset->get('readiness_date_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('readiness_date_to'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('cv_last_update_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('cv_last_update_from'));?>
+							<?=$this->formElement($fieldset->get('cv_last_update_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('cv_last_update_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('cv_last_update_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('cv_last_update_to'));?>
+							<?=$this->formElement($fieldset->get('cv_last_update_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('cv_last_update_to'));?>
+						</div>
+					<?php endif ?>
+				</div>
+
+				<div class="row priority_low">
+					<?php if ($fieldset->has('visa_usa')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('visa_usa'));?>
+							<?=$this->formElement($fieldset->get('visa_usa')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('visa_usa'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('visa_shenghen')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('visa_shenghen'));?>
+							<?=$this->formElement($fieldset->get('visa_shenghen')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('visa_shenghen'));?>
+						</div>
+					<?php endif ?>
+				</div>
+				<div class="row">
+					<?php if ($fieldset->has('notes')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('notes'));?>
+							<?=$this->formElement($fieldset->get('notes')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('notes'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('notes_text')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_low">
+							<?=$this->formLabel($fieldset->get('notes_text'));?>
+							<?=$this->formElement($fieldset->get('notes_text')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('notes_text'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('worked_for')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_low">
+							<?=$this->formLabel($fieldset->get('worked_for'));?>
+							<?=$this->formElement($fieldset->get('worked_for')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('worked_for'));?>
+						</div>
+					<?php endif ?>
+
+				</div>
+				<div class="row">
+					<?php if ($fieldset->has('registered')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('registered'));?>
+							<?=$this->formElement($fieldset->get('registered')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('registered'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('online')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('online'));?>
+							<?=$this->formElement($fieldset->get('online')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('online'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('role')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('role'));?>
+							<?=$this->formElement($fieldset->get('role')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('role'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('info_source')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 4;?> priority_low">
+							<?=$this->formLabel($fieldset->get('info_source'));?>
+							<?=$this->formElement($fieldset->get('info_source')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('info_source'));?>
+						</div>
+					<?php endif ?>
+				</div>
+				<div class="row priority_low">
+					<?php if ($fieldset->has('in_db_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('in_db_from'));?>
+							<?=$this->formElement($fieldset->get('in_db_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('in_db_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('in_db_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('in_db_to'));?>
+							<?=$this->formElement($fieldset->get('in_db_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('in_db_to'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('cv_last_view_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('cv_last_view_from'));?>
+							<?=$this->formElement($fieldset->get('cv_last_view_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('cv_last_view_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('cv_last_view_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('cv_last_view_to'));?>
+							<?=$this->formElement($fieldset->get('cv_last_view_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('cv_last_view_to'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('cv_last_call_from')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('cv_last_call_from'));?>
+							<?=$this->formElement($fieldset->get('cv_last_call_from')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('cv_last_call_from'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('cv_last_call_to')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> priority_low">
+							<?=$this->formLabel($fieldset->get('cv_last_call_to'));?>
+							<?=$this->formElement($fieldset->get('cv_last_call_to')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('cv_last_call_to'));?>
+						</div>
+					<?php endif ?>
+				</div>
+				<div class="row priority_low">
+					<?php if ($fieldset->has('login')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('login'));?>
+							<?=$this->formElement($fieldset->get('login')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('login'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('email')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('email'));?>
+							<?=$this->formElement($fieldset->get('email')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('email'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('contact_mobile')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('contact_mobile'));?>
+							<?=$this->formElement($fieldset->get('contact_mobile')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('contact_mobile'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($fieldset->has('home_address')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+							<?=$this->formLabel($fieldset->get('home_address'));?>
+							<?=$this->formElement($fieldset->get('home_address')->setAttribute('class','form-control input-sm'));?>
+							<?=$this->formElementErrors($fieldset->get('home_address'));?>
+						</div>
+					<?php endif ?>
+				</div>
+				<?php if ($form->has('filter_options')): ?>
+					<div class="row priority_low">
+						<?php if ($form->get('filter_options')->has('show_notes')): ?>
+							<div class="pt05 col-md-<?=($v)? 12 : 3;?> col-md-offset-6 ">
+								<?=$this->formLabel($form->get('filter_options')->get('show_notes'));?>
+								<?=$this->formElement($form->get('filter_options')->get('show_notes')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($form->get('filter_options')->get('show_notes'));?>
+							</div>
+						<?php endif ?>
+						<?php if ($form->get('filter_options')->has('_limit')): ?>
+							<div class="pt05 col-md-<?=($v)? 12 : 3;?> ">
+								<?=$this->formLabel($form->get('filter_options')->get('_limit'));?>
+								<?=$this->formElement($form->get('filter_options')->get('_limit')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($form->get('filter_options')->get('_limit'));?>
+							</div>
+						<?php endif ?>
+					</div>
+				<?php endif ?>
+				<div class="row pb05 ">
+					<?php if ($form->has('layout')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 2;?> no_search">
+							<?=$this->formLabel($form->get('layout'));?>
+							<?=$this->formElement($form->get('layout')->setAttribute('class','form-control input-sm btn-sm'));?>
+							<?=$this->formElementErrors($form->get('layout'));?>
+						</div>
+					<?php endif ?>
+					<?php if ($form->has('_limit')): ?>
+						<div class="pt05 col-md-<?=($v)? 12 : 3;?>">
+							<?=$this->formLabel($form->get('_limit'));?>
+							<?=$this->formElement($form->get('_limit')->setAttribute('class','form-control input-sm  btn-sm'));?>
+							<?=$this->formElementErrors($form->get('_limit'));?>
+						</div>
+					<?php endif ?>
+				</div>
+				<?=$this->partial('application/partial/filter-form-submit.phtml');?>
+
+			</fieldset>	
+
+		<?= $this->form()->closeTag();?>
+	</div>
+</div>
+
+<?php if (strpos($this->routeMatch()->getRoute(), 'admin') !== false): ?>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		   $('select:not(.no_chosen)').chosen();
+		});
+	</script>	
+<?php endif ?>	

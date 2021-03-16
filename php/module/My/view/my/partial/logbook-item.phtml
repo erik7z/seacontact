@@ -1,0 +1,153 @@
+<?php
+	$user_id = (isset($user_id)) ? $user_id : $user;
+	// $this->id = $this->logbook_id;
+	$this->section = \Application\Model\NewsTable::SECTION_LOGBOOK;
+	$this->page_url = $this->url('sc/logbook/actions', ['action' => 'view', 'id' => $this->id]);
+	$page_url = $this->page_url;
+	$full_view = (isset($full_view))? $full_view : 0;
+
+	$this->small_view = (isset($small_view))? $small_view : 0;
+	$this->total_comments = (isset($total_comments))? $total_comments : null;
+	$avatar_size = ($this->small_view)? 32 : 64;
+	$cont_width = ($this->userInfo() || $this->small_view) ? 11 : 10;
+	$bg = ($time > time())? 'style="background-color: #EFF5FB;"' : '';
+
+?>
+
+<div class="row data-block news-entry logbook-entry" data-xhrctr="logbook_<?=$this->id;?>">
+	<?php if (!$this->small_view): ?>
+		<ul class="pe-social col-md-1 col-xs-12 social-labels text-right">
+			<li class="share share_facebook" title="<?=$this->translate('share in');?> Facebook">
+				<i class="pe-so-facebook pe-bg pe-hover pe-2x" data-url="<?=$page_url;?>"></i>
+			</li>
+			<li class="share" title="<?=$this->translate('share in');?> Vkontakte">
+				<a href="http://vk.com/share.php?url=<?=$page_url;?>" target="_blank">
+					<i class="pe-so-vk pe-bg pe-hover pe-1x" data-url="<?=$page_url;?>"></i>
+				</a>
+			</li>
+			<li class="share share_linkedin" title="<?=$this->translate('share in');?> LinkedIn">
+				<i class="pe-so-linkedin pe-bg pe-hover pe-2x" data-url="<?=$page_url;?>"></i>
+			</li>
+		</ul>
+	<?php endif ?>
+	
+
+	<div class="col-md-<?=$cont_width;?> col-xs-11 block-content">
+		<div class="row">
+			<div class="drop-shadow col-md-12" <?=$bg;?>>
+				<div class="row">
+					<?php if (!$this->small_view): ?>
+						<div class="col-md-2 data-avatar">
+							<?=$this->partial('my/partial/news-item-avatar.phtml', ['user_info' => $this->vars(), 'avatar_size' => $avatar_size, 'small_text' => 1]);?>
+						</div>
+					<?php endif ?>
+					<div class="col-md-<?=($this->small_view)? 12 : 10;?>">
+						<div class="row">
+							<div class="col-md-12 data-avatar text-center">
+								<span class="pull-right">
+									<?=$this->partial('application/partial/counters_block');?>
+								</span>
+								<?php if ($this->small_view): ?>
+									<?=$this->partial('my/partial/news-item-avatar.phtml', ['user_info' => $this->vars(), 'avatar_size' => $avatar_size, 'small_text' => 1]);?>
+								<?php endif ?>
+							</div>
+							<div class="col-md-12 data-text">
+								<?php if ($title): ?>
+									<span class="pull-right"><a href="<?=$page_url;?>" target="_blank" class="read_more_link" data-section="logbook" data-id="<?=$this->id;?>"><?=$title;?></a></span>
+								<?php endif ?>
+								<?php 
+									$text = htmlspecialchars_decode($text);
+									$is_plain_text = ($text == strip_tags($text))? 1 : 0;
+								 	if (!$full_view) {
+								 		$new_text = zhtml_cut($text, 1200);
+								 		if($new_text != $text) $new_text .= ' <a href="'.$page_url.'">'.$this->translate('Read more')."</a>";
+								 		$text = $new_text;
+								 	}
+								 		
+								?>
+								<?php if ($is_plain_text): ?><p><?php endif ?>
+									<?=$text;?>
+								<?php if ($is_plain_text): ?></p><?php endif ?>
+							</div>
+						</div>
+						<div class="row data-video">
+							<div class="col-md-12">
+								<?php if (isset($video) && $video): ?>
+									<div class="embed-responsive embed-responsive-4by3">
+										<iframe src="<?=$video;?>" class="embed-responsive-item" allowfullscreen="1"></iframe>
+									</div>
+								<?php endif ?>
+							</div>
+							<?php if(isset($videos)) :?>
+									<?php 
+										$videos_obj = json_decode($videos);
+										$v_count = count($videos_obj);
+										$v_cols = ($v_count > 2)? 4 : (($v_count < 2)? 12 : 6);
+									?>
+									<?php for ($i=0; $i < $v_count; $i++) : ?>
+										<div class="col-md-<?=$v_cols;?>">
+											<?=$this->partial('application/partial/video-item', $videos_obj[$i]);?>
+										</div>
+									<?php endfor ?>
+							<?php endif	?>
+						</div>
+						<div class="row data-pics">
+							<?php if(isset($pics)) :?>
+								<?php $pics = json_decode($pics);?>
+								<?php $grid = ($time > time()) ? '-postponed' : '';?>
+								<?=$this->partial('application/partial/pics-grid', ['pics' => $pics, 'grid_id' => $grid, 'gallery_id' => '#logbook_pics_'.$this->id]);?>
+							<?php endif	?>
+						</div>
+						<div class="row data-links">
+							<?php if(isset($links)) :?>
+								<?=$this->partial('application/partial/links-collection', ['links' => $links]);?>
+							<?php endif	?>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 tags">
+						<?php if (isset($post_vk_wall) && $post_vk_wall && isset($post_vk_id) && $post_vk_id): ?>
+							<span class="small text-muted"><i class="fa fa-share-alt"></i> </span> <i class="fa fa-vk text-info"></i>
+						<?php endif ?>
+						<?php if($tags) $tags = explode(',', $tags);?>
+						<?=$this->partial('application/partial/tags-collection', ['tags' => $tags]);?>
+					</div>
+					<div class="col-md-12">
+						<span class="pull-left small">
+							<?php if($this->isPermitted('application\controller\logbook.edit', $user_id, $this->id)): ?>
+								[
+								<a href="<?= $this->url('sc/logbook/actions', array('action' => 'edit','id' => $this->id)); ?>" class="edit_logbook" data-id="<?=$this->id;?>" target="_parent">
+									<span class="fa fa-pencil text-info"></span>
+								</a>
+								]
+							<?php endif ?> 	
+
+							<?php if($this->isPermitted('application\controller\logbook.delete', $user_id, $this->id)): ?>
+								&nbsp;
+								[
+								<a href="<?= $this->url('sc/logbook/actions', array('action' => 'delete','id' => $this->id)); ?>" target="_parent" data-xhrdelete="delete_logbook" data-xhrtarg="logbook_<?=$this->id;?>" >
+									<span class="fa fa-trash-o text-muted"></span>
+								</a>
+								]
+							<?php endif ?>
+						</span>
+						<?php if (!$full_view): ?>
+							<span class="pull-right pb">
+								<a href="<?=$page_url;?>" class="read_more_link" data-section="logbook" data-id="<?=$this->id;?>">
+									<i class="fa fa-angle-double-right"></i> <strong class="small"><?=$this->translate('Read more');?></strong>
+								</a>
+							</span>
+						<?php endif ?>
+					</div>
+				</div>		
+			</div>
+			<div class="activity-block col-md-12">
+				<?=$this->partial('my/partial/activity-block');?>
+			</div> 						
+		</div> <!-- row -->
+	</div>
+
+</div> 

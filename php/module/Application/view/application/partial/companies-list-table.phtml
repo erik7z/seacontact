@@ -1,0 +1,77 @@
+<?php 
+
+	$title = (isset($title))? $title : $this->translate('Companies Database'); 
+	$table_sorting = (isset($table_sorting))? $table_sorting : 1; 
+
+?>
+
+<div class="table-responsive">
+	<div class="box">
+		<div class="box-body">
+			<table class="table table-hover table-condensed">
+				<thead >
+					<tr class="col-title">
+						<th class="text-center no-sort col-md-2">
+							
+							<?php if ($table_sorting): ?>
+								<?=$this->partial('application/partial/custom_sorting', ['field_title' => '<span class="fa fa-university" aria-hidden="true"></span>', 'field_name' => 'company_name', 'q_options' => $q_options]);?>
+							<?php else: ?>
+								<span class="fa fa-university" aria-hidden="true"></span>
+							<?php endif ?>
+						</th>
+						<th class="col-md-2"><?=$this->translate('Address');?></th>
+						<th class="col-md-2"><?=$this->translate('Email');?></th>
+						<th class="col-md-2"><?=$this->translate('Contacts');?></th>
+						<th class="col-md-1">
+							<?php if ($table_sorting): ?>
+								<?=$this->partial('application/partial/custom_sorting', ['field_title' => $this->translate('Vacancies'), 'field_name' => 'company_vacancies', 'q_options' => $q_options]);?>
+							<?php else: ?>
+								<?=$this->translate('Vacancies');?>
+							<?php endif ?>
+						</th>
+					</tr>
+				</thead>
+				<?php foreach($data_list as $company) {?>
+					<?php $company_url = $this->url('sc').zgetUserLogin($company);?>
+
+					<tr>
+						<td class="text-center">
+							<a href="<?=$company_url;?>">
+								<img style="max-width: 75px" alt="<?=zgetUserName($company);?>" src="<?=zgetUserAvatar($company);?>">
+							</a>
+							<br />
+							<a href="<?=$company_url;?>">
+								<?=zgetUserName($company);?>
+							</a>
+						</td>
+						<td>
+							<?=($company->home_country)? $company->home_country.', ' : '';?>
+							<?=($company->home_city)? $company->home_city.', ' : '';?>
+							<?=($company->home_address)? $company->home_address : '';?>
+						</td>
+						<td>
+							<?php $email = ($company->contact_email) ? $company->contact_email : $company->email; ?>
+							<a href="mailto:<?=$email;?>"><?=$email;?></a>
+						</td>
+						<td style="max-width: 40px; overflow: auto;">
+							<small>
+								<?php if (isset($company->contact_phone) && $company->contact_phone != ''): ?><i class="fa fa-phone"></i> <a href="tel:<?=$company->contact_phone;?>"><?=$company->contact_phone;?></a><br /><?php endif ?>
+								<?php if (isset($company->contact_phone_2) && $company->contact_phone_2 != ''): ?><i class="fa fa-phone"></i> <a href="tel:<?=$company->contact_phone_2;?>"><?=$company->contact_phone_2;?></a><br /><?php endif ?>
+								<?php if (isset($company->contact_mobile) && $company->contact_mobile != ''): ?><i class="fa fa-mobile"></i> <a href="tel:<?=$company->contact_mobile;?>"><?=$company->contact_mobile;?></a><br /><?php endif ?>
+								<?php if (isset($company->contact_mobile_2) && $company->contact_mobile_2 != ''): ?><i class="fa fa-mobile"></i> <a href="tel:<?=$company->contact_mobile_2;?>"><?=$company->contact_mobile_2;?></a><?php endif ?>
+							</small>
+						</td>
+						<td class="text-center">
+							<?php if (isset($company->company_vacancies) && $company->company_vacancies): ?>
+								<a href="<?=$this->url('sc/companyinfo', ['controller' => 'vacancies', 'user' => zgetUserLogin($company)]);?>">
+									<?=$company->company_vacancies;?>
+								</a>
+							<?php endif ?>
+						</td>
+					</tr>			
+				<?php }?>
+			</table>
+		</div>
+	</div>
+
+</div>

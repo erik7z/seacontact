@@ -1,0 +1,22 @@
+<?php
+if(isset($key)) {
+	$new_filters = [];
+	for ($i=0; $i < count($filters[$key]); $i++) { 
+		if($filters[$key][$i] != $value) $new_filters[$key][] = $filters[$key][$i]; 
+	}
+	$url = $this->url($this->routeMatch()->getRoute(),['controller' => $this->routeMatch()->getController(), 'action' => $this->routeMatch()->getAction(), 'user' => $this->routeMatch()->getUser()], 
+			['query' => ['filters' => $new_filters]]
+			);
+} else {
+	$url = $this->url($this->routeMatch()->getRoute(),['controller' => $this->routeMatch()->getController(), 'action' => $this->routeMatch()->getAction(), 'user' => $this->routeMatch()->getUser()], 
+			['query' => ['filters' => array_filter($filters, function($item) use ($value) {return ($item != $value) ? true : false;})]]
+			);
+}
+
+?>
+
+<a href="<?=$url;?>">
+	<button type="button" class="btn btn-xs btn-primary mb05" aria-label="<?=$label;?>" >
+	  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <?=$label;?> = <?=$value;?>
+	</button>
+</a>

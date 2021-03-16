@@ -1,0 +1,41 @@
+<?php 
+
+if (!$field_title || !$field_name || !$q_options) throw new \Application\Exception\Exception("field_title and field_name should be provided", 1);
+
+
+$active_page = (isset($q_options['_page']))? $q_options['_page'] : 1;
+$limit = (isset($q_options['_limit']))? $q_options['_limit'] : 10;
+$filters = (isset($q_options['filters']))? $q_options['filters'] : [];
+
+$route_name = (isset($route_name))? $route_name : $this->routeMatch()->getRoute();
+$route_params = (isset($route_params))? $route_params : $this->routeMatch()->getRouteParams();
+$query_params = ['query' => [
+          '_page' => $active_page,
+          '_limit' => $limit,
+          'filters' => $filters,
+          '_order' => $field_name,
+        ]];
+if(isset($q_options['layout'])) $query_params['query']['layout'] = $q_options['layout'];
+
+ ?>
+
+ <?php if ($q_options['_order'] == $field_name): ?>
+ 		<?php if ($q_options['up']): ?>
+			<?php $query_params['query']['up'] = false;?>
+ 			<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+        <b><?=$field_title;?></b> 
+ 				<i class="fa fa-sort-amount-asc"></i>
+ 			</a>
+ 		<?php else: ?>
+ 			<?php $query_params['query']['up'] = true;?>
+ 			<a href="<?=$this->url($route_name, $route_params,$query_params);?>">
+        <b><?=$field_title;?></b> 
+ 				<i class="fa fa-sort-amount-desc"></i>
+ 			</a>
+ 		<?php endif ?>
+ <?php else: ?>
+ 	<?php $query_params['query']['up'] = true;?>
+ 	<a href="<?=$this->url($route_name, $route_params,$query_params);?>"><?=$field_title;?></a>
+ <?php endif ?>
+
+ 

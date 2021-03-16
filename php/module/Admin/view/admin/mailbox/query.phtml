@@ -1,0 +1,117 @@
+<div class="row">
+	<div class="col-md-12 table-responsive">
+		<div class="box">
+			<div class="box-header bg-info">
+				<h4><?=$this->translate('Mail Query');?></h4>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered table-hover table-condensed table-favorites">
+					<thead>
+						<tr>
+							<th><?=$this->translate('Mail');?></th>
+							<th><?=$this->translate('To Email');?></th>
+							<th><?=$this->translate('From MailBox');?></th>
+							<th><?=$this->translate('Attachments Size');?></th>
+							<th><?=$this->translate('Added to query');?></th>
+							<th><?=$this->translate('Status');?></th>
+							<th><?=$this->translate('Resend');?></th>
+						</tr>
+					</thead>
+					<?php foreach($data_list as $data_item) {?>
+						<tr>
+							<td>
+								<a target="_blank" href="<$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'view', 'id' => $data_item->unique_id]);?>">
+									<?=$data_item->subject;?>
+								</a>
+							</td>
+							<td class="small">
+								<?php $mail_to = json_decode($data_item->mail_to);?>
+								<?php if (count($mail_to) > 0): ?>
+									<?php foreach ($mail_to as $to): ?>
+										<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'new-mail'], 
+													['query' => ['mail_box' => $this->mail_box, 'mail_to' => $to->email, 'reply_on_id' => $unique_id]]);?>">
+											<button type="button" class="btn btn-xs btn-default" >
+											  <span class="fa fa-envelope-o" aria-hidden="true"></span> 
+											  <?php if (isset($to->name)): ?>
+											  	<?=$to->name;?>
+											  <?php endif ?> 
+											  (<?=$to->email;?>)
+											</button>
+										</a>
+									<?php endforeach ?>
+								<?php endif ?>
+								<?php $mail_cc = json_decode($data_item->mail_cc);?>
+								<?php if (count($mail_cc) > 0): ?>
+									<p class="text-muted">
+										<?php foreach ($mail_cc as $to): ?>
+											<a href="<?=$this->url('admin/actions', array('controller' => 'mailbox', 'action' => 'new-mail'), 
+														array('query' => array('mail_box' => $this->mail_box, 'mail_to' => $to->email, 'reply_on_id' => $unique_id)));?>">
+												<button type="button" class="btn btn-xs btn-default" >
+												  <span class="fa fa-envelope-o" aria-hidden="true"></span> 
+												  <?php if (isset($to->name)): ?>
+												  	<?=$to->name;?>
+												  <?php endif ?> 
+												  (<?=$to->email;?>)
+												</button>
+											</a>
+										<?php endforeach ?>
+									</p>
+								<?php endif ?>
+							</td>
+							<td>
+								<?=$data_item->from_mail;?><br />
+								<span class="text-muted"><?=$data_item->from_name;?></span>
+							</td>
+							<td>
+								<?=$data_item->attachments_size;?> MB
+							</td>
+							<td>
+								<?=zformatDateTimeYear($data_item->time);?>
+							</td>
+							<td>
+								<?=($data_item->status)? 'Sending in progress' : 'In query';?>
+
+							</td>
+							<td class="text-center">
+								<a class="resend_saved" href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'send-saved-mail', 'id' => $data_item->unique_id]);?>">
+									<button class="btn btn-default btn-xs form-control">
+										<i class="fa fa-refresh"></i> <?=$this->translate('Resend Now');?>
+									</button>
+								</a>
+							</td>
+						</tr>
+						
+					<?php }?>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<div class="row">
+	<div class="col-md-12 text-center">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+</div>
+<script type="text/javascript">
+	$('.resend_saved').on('click', function(e){
+		e.preventDefault();
+		var $btn = $(this);
+		var href = $btn.attr('href');
+		var $ctr = $btn.parents('td');
+		$ctr.empty();
+		$('<i></i>',{
+			class: 'fa fa-refresh fa-spin'
+		}).appendTo($ctr);
+		$.get(href,null, function(response){
+			if(response.success) {
+				$.notify({message: response.message },notify_success_settings);
+				$ctr.parents('tr').remove();
+			}
+			else $.notify({message: response.message },notify_error_settings);
+			console.log(response);
+		}, 'json');
+	});
+</script>
+

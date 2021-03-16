@@ -1,0 +1,59 @@
+<?php
+	$form = $this->form;
+	$form->prepare();
+	$form->setAttribute('class', 'form-horizontal');
+	$form->setName('user_documents_form');
+	$fieldset = $form->get('user_documents');
+	echo $this->form()->openTag($form);
+?>
+<?= $this->formRow($fieldset->get('id')); ?>
+<fieldset class="col-md-12">
+	<div class="form-group">
+		<div class="col-md-6">
+			<?=$this->formLabel($fieldset->get('title'));?>
+			<?=$this->formElement($fieldset->get('title')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('title'));?>
+		</div>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('grade'));?>
+			<?=$this->formElement($fieldset->get('grade')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('grade'));?>
+		</div>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('number'));?>
+			<?=$this->formElement($fieldset->get('number')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('number'));?>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('type'));?>
+			<?=$this->formElement($fieldset->get('type')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('type'));?>
+		</div>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('issue_date'));?>
+			<?=$this->formElement($fieldset->get('issue_date')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('issue_date'));?>
+		</div>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('expiry_date'));?>
+			<?=$this->formElement($fieldset->get('expiry_date')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('expiry_date'));?>
+		</div>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('issue_place'));?>
+			<?=$this->formElement($fieldset->get('issue_place')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('issue_place'));?>
+		</div>
+	</div>
+</fieldset>
+
+<div class="col-md-7 col-md-offset-5">
+	<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary save_doc'));?>
+		<?=$form->get('submit')->getLabel();?>
+		<span class="glyphicon glyphicon-send"></span> 
+	<?=$this->formButton()->closeTag();?>
+</div>
+
+<?= $this->form()->closeTag();?>
