@@ -1,0 +1,57 @@
+<div class="row vacancy-filter-form">
+	<div class="col-md-12">
+		<?php
+			$v = $this->v = (isset($vertical))? $vertical : 0;
+
+			$form = $this->form;
+			$form->prepare();
+			$form->setAttribute('action',$this->url($this->routeMatch()->getRoute(), array('controller' => $this->routeMatch()->getController(), 'action' => $this->routeMatch()->getAction(), 'user' => $this->routeMatch()->getUser()), array('query' => array('filters' => $q_options['filters'], 'layout' => $q_options['layout']))));
+			$form->setAttribute('method', 'get');
+			$form->setAttribute('class', 'form-horizontal');
+			$form->setAttribute('id', 'filter_vacancies');
+			$fieldset = $form->get('filters');
+			echo $this->form()->openTag($form);
+		?>
+			<div class="form-group">
+				<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_high">
+					<?=$this->formLabel($fieldset->get('ship_type'));?>
+					<?=$this->formElement($fieldset->get('ship_type')->setAttribute('class','form-control input-sm'));?>
+					<?=$this->formElementErrors($fieldset->get('ship_type'));?>
+				</div>
+				<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_high">
+					<?=$this->formLabel($fieldset->get('rank'));?>
+					<?=$this->formElement($fieldset->get('rank')->setAttribute('class','form-control input-sm'));?>
+					<?=$this->formElementErrors($fieldset->get('rank'));?>
+				</div>
+				<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+					<?=$this->formLabel($fieldset->get('minimum_salary'));?>
+					<?=$this->formElement($fieldset->get('minimum_salary')->setAttribute('class','form-control input-sm'));?>
+					<?=$this->formElementErrors($fieldset->get('minimum_salary'));?>
+				</div>
+				<div class="pt05 col-md-<?=($v)? 12 : 3;?> priority_low">
+					<?=$this->formLabel($fieldset->get('max_contract'));?>
+					<?=$this->formElement($fieldset->get('max_contract')->setAttribute('class','form-control input-sm'));?>
+					<?=$this->formElementErrors($fieldset->get('max_contract'));?>
+				</div>
+			</div>
+			<div class="row pb05 ">
+				<?php if ($form->has('layout')): ?>
+					<div class="pt05 col-md-<?=($v)? 12 : 2;?> no_search">
+						<?=$this->formLabel($form->get('layout'));?>
+						<?=$this->formElement($form->get('layout')->setAttribute('class','form-control input-sm btn-sm'));?>
+						<?=$this->formElementErrors($form->get('layout'));?>
+					</div>
+				<?php endif ?>
+				<?php if ($form->has('_limit')): ?>
+					<div class="pt05 col-md-<?=($v)? 12 : 3;?> no_search">
+						<?=$this->formLabel($form->get('_limit'));?>
+						<?=$this->formElement($form->get('_limit')->setAttribute('class','form-control input-sm  btn-sm'));?>
+						<?=$this->formElementErrors($form->get('_limit'));?>
+					</div>
+				<?php endif ?>
+			</div>
+			<?=$this->partial('application/partial/filter-form-submit.phtml');?>
+		<?= $this->form()->closeTag();?>
+	</div>
+</div>
+

@@ -1,0 +1,177 @@
+
+<section id ="cv-docs" class="section-cv container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-9">
+					<h2><?=$this->translate('Documents');?></h2>
+				</div>
+				<div class="right-top-button col-md-2">
+					<!-- Button trigger modal -->
+					<button type="button" id="add_button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><?=$this->translate('Add More Documents');?>
+					</button>
+				
+				</div>	
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Title</th>
+									<th>Number</th>
+									<th>Type</th>
+									<th>Grade</th>
+									<th>Issued</th>
+									<th>Expiry</th>
+									<th>Place</th>
+									<th><span class="glyphicon glyphicon-cog pull-rigth"></span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($this->user_docs as $count => $doc) {?>
+									<tr>
+										<th><?=$count+1;?></th>
+										<td class="col-sm-2"><?=$doc['title'];?></td>
+										<td class="col-sm-1"><?=$doc['number'];?></td>
+										<td class="col-sm-1">
+											<?php 
+												if($doc['type'] == 1) echo $this->translate('Passport');
+												else if ($doc['type'] == 2) echo $this->translate('Certificate');
+											;?>
+										</td>
+										<td class="col-sm-1"><?=$doc['grade'];?></td>
+										<td class="col-sm-2"><?=$doc['issue_date'];?></td>
+										<td class="col-sm-2"><?=$doc['expiry_date'];?></td>
+										<td class="col-sm-2"><?=$doc['issue_place'];?></td>
+										<td class="col-sm-1">
+											<a href="<?=$this->url('sc/cv/actions', 
+												array('action' => 'docs'), 
+												array('query' => array('edit' => $doc['id']))
+											);?>" >
+												<span class="glyphicon glyphicon-pencil"></span>
+											</a>
+											|
+											<a href="<?=$this->url('sc/cv/actions', array('action' => 'delete'), array('query' => array(
+												'document' => $doc['id']
+											)));?>" > 
+												<span class="glyphicon glyphicon-trash"></span>
+											</a>
+
+										</td>
+									</tr>					
+								<?php }?>
+							</tbody>
+						</table>
+					</div> <!-- table-responsive -->
+				</div> <!-- col-md-12 -->
+			</div><!--  row -->
+
+			<!-- Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-dialog modal-lg">
+			    <div class="modal-content">
+			    	<?php
+			    		$form = $this->form;
+			    		$form->prepare();
+			    		$form->setAttribute('class', 'form-horizontal');
+			    		$fieldset = $form->get('user_documents');
+			    		echo $this->form()->openTag($form);
+			    	?>
+
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h2 class="modal-title" id="myModalLabel"><?=$this->modal_header;?></h2>
+			      </div>
+			      <div class="modal-body" style="padding-top: 30px">
+			      	<div class="container-fluid">
+			      		<div class="row">
+							<?= $this->formRow($fieldset->get('id')); ?>
+							<fieldset class="col-md-12">
+								<div class="form-group">
+									<div class="col-md-6">
+										<?=$this->formLabel($fieldset->get('title'));?>
+										<?=$this->formElement($fieldset->get('title')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('title'));?>
+									</div>
+									<div class="col-md-3">
+										<?=$this->formLabel($fieldset->get('grade'));?>
+										<?=$this->formElement($fieldset->get('grade')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('grade'));?>
+									</div>
+									<div class="col-md-3">
+										<?=$this->formLabel($fieldset->get('number'));?>
+										<?=$this->formElement($fieldset->get('number')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('number'));?>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-md-3">
+										<?=$this->formLabel($fieldset->get('type'));?>
+										<?=$this->formElement($fieldset->get('type')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('type'));?>
+									</div>
+									<div class="col-md-3">
+										<?=$this->formLabel($fieldset->get('issue_date'));?>
+										<?=$this->formElement($fieldset->get('issue_date')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('issue_date'));?>
+									</div>
+									<div class="col-md-3">
+										<?=$this->formLabel($fieldset->get('expiry_date'));?>
+										<?=$this->formElement($fieldset->get('expiry_date')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('expiry_date'));?>
+									</div>
+									<div class="col-md-3">
+										<?=$this->formLabel($fieldset->get('issue_place'));?>
+										<?=$this->formElement($fieldset->get('issue_place')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('issue_place'));?>
+									</div>
+								</div>
+							</fieldset>								      		
+			      		</div><!-- row -->
+			      	</div><!-- container-fluid -->
+
+
+			      </div><!-- modal-body -->
+
+
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			        <?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary'));?>
+			        	<?=$form->get('submit')->getLabel();?>
+			        	<span class="glyphicon glyphicon-ok"></span> 
+			        <?=$this->formButton()->closeTag();?>
+			      </div><!-- modal-footer -->
+
+			      <?= $this->form()->closeTag();?>
+
+			    </div> <!-- modal-content -->
+			  </div>
+			</div>
+		</div> <!-- section col-sm-12 -->
+	</div> <!-- row -->
+</section>
+
+<script type="text/javascript">
+	<?php 
+	if(true === $this->show_form) { ?>
+
+	    $(window).load(function(){
+	        $('#myModal').modal('show');
+	    });
+
+	<?php }?>
+
+	$('#add_button').click(function(){
+		$(':input', '#exp_form').not(':submit').val('');
+		$('#myModalLabel').text('Add New document');
+	});
+
+	$('#myModal').on('shown.bs.modal', function () {
+	  $('#myInput').focus();
+	  $('.modal-backdrop').remove();
+	});
+
+</script>

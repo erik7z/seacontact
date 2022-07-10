@@ -1,0 +1,195 @@
+<?php 
+	$this->layout()->page_filters = $this->partial('my/partial/question-ask-btn.phtml');
+?>
+<section id="questions" class="section-questions container-fluid" data-type="main_section">
+
+
+	<div class="row" data-xhrmenu="q_tags" data-xhrtarg="data_list,q_search">
+		<?=$this->partial('application/partial/tags-map.phtml', ['route' => $this->routeMatch()->getRoute(), 'tags_map' => $tags_map]);?>
+	</div>
+	<div class="row" data-xhrctr="q_search">
+		<div class="col-md-6 col-md-offset-3 pt mt05 mb" id="questions_search">
+			<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('class', 'form-horizontal');
+				echo $this->form()->openTag($form);
+
+				if(isset($q_options['filters']['tag'])) $form->get('q')->setValue($q_options['filters']['tag']);
+			?>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="input-group">
+						<?=$this->formElement($form->get('q')->setAttribute('class','form-control input-sm'));?>
+
+						<div class="input-group-btn" data-name="clean_filters">
+
+							<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-info btn-sm input-sm typeahead_button'));?>
+								<span class="fa fa-search"></span> 
+								<?=$form->get('submit')->getLabel();?> 
+							<?=$this->formButton()->closeTag();?>
+							<?php if ($form->get('q')->getValue() != ''): ?>
+								<a href="<?=$this->routeMatch()->getUrl(['controller', 'action']);?>">
+									<button type="button" class="btn btn-danger btn-sm typeahead_button" >
+									  <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+									</button>
+								</a>
+							<?php endif ?>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<?= $this->form()->closeTag();?>
+		</div>
+		<div class="col-md-2 col-md-offset-1 text-right">
+			<?=$this->partial('application/partial/custom_layout_switch');?>
+		</div>
+	</div>
+	<div class="row pb05" data-xhrmenu="data_menu" data-xhrtarg="data_list,q_search">
+		<ul class="nav nav-tabs nav-justified">
+		   <li role="presentation" <?php if (empty($q_options['filters'])): ?> class="active" <?php endif ?> ><a href="<?=$this->url('sc/questions', [], ['query' => ['layout' => $q_options['layout']]]);?>"><?=$this->translate('All questions');?></a></li>
+		   <li role="presentation" <?php if (isset($q_options['filters']['unanswered'])): ?> class="active" <?php endif ?> ><a href="<?=$this->url('sc/questions',[],['query' => ['filters' => ['unanswered' => '1'], 'layout' => $q_options['layout']]]);?>"><?=$this->translate('Unanswered');?></a></li>
+		   <li role="presentation" <?php if (isset($q_options['filters']['answered'])): ?> class="active" <?php endif ?> ><a href="<?=$this->url('sc/questions',[],['query' => ['filters' => ['answered' => '1'], 'layout' => $q_options['layout']]]);?>"><?=$this->translate('Answered');?></a></li>
+		   <li role="presentation" <?php if (isset($q_options['filters']['completed'])): ?> class="active" <?php endif ?> ><a href="<?=$this->url('sc/questions',[],['query' => ['filters' => ['completed' => '1'], 'layout' => $q_options['layout']]]);?>"><?=$this->translate('Completed');?></a></li>
+		   <li role="presentation" class="dropdown"> <a class="dropdown-toggle no_follow" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> <small><?=$this->translate('Sort');?></small><span class="caret"></span> </a> 
+			   	<ul class="dropdown-menu"> 
+			   		<li><a href="<?=$this->url('sc/questions',[],['query' => ['_order' => 'time', 'filters' => $q_options['filters'], 'layout' => $q_options['layout']]]);?>"><?=$this->translate('by Time');?></a></li> 
+			   		<li><a href="<?=$this->url('sc/questions',[],['query' => ['_order' => 'total_rating', 'up' => 'false', 'filters' => $q_options['filters'], 'layout' => $q_options['layout']]]);?>"><?=$this->translate('by Rating');?></a></li> 
+			   	</ul> 
+		   </li>
+		</ul>
+	</div>
+
+	
+	<div class="row grid js-masonry data-list" data-xhrctr="data_list"
+	data-limit="<?=$q_options['_limit'];?>" data-offset="<?=$q_options['_offset'];?>"
+	data-name="questions_list" data-masonry-options='{"itemSelector": ".masonry-grid-item" }'>
+		<?php $q_count = count($data_list);?>
+		<?php if ($q_count): ?>
+			<?php if ($q_options['layout'] == 'thumb'): ?>
+				<?php foreach ($data_list as $question): ?>
+					<div class="masonry-grid-item col-lg-6">
+						<?php $question->total_comments = null;?>
+						<?php $question->comments_list = null;?>
+						<?=$this->partial('my/partial/question-list-item.phtml', $question);?>
+					</div>
+				<?php endforeach ?>
+			<?php else: ?>
+				<?=$this->partial('application/partial/questions-list-table.phtml');?>
+			<?php endif ?>
+
+		<?php else: ?>
+			<!-- <h4 class="text-center text-muted"><?=$this->translate('There is no questions matching request');?></h4> -->
+		<?php endif ?>
+
+	</div>
+	<?=$this->partial('application/partial/custom_pagination');?>
+</section>
+<?=$this->partial('application/image-gallery');?>
+<?php	
+	if($q_options['layout'] == 'thumb') $this->headScript()->appendFile($this->basePath('vendor/masonry/dist/masonry.pkgd.min.js'));
+
+	$this->headScript()->appendFile($this->basePath('vendor/typeahead/typeahead.bundle.js'));
+
+	$this->headLink()
+	    ->appendStylesheet($this->basePath('vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css'))
+		->appendStylesheet($this->basePath('vendor/typeahead/typeahead.css'._SCRIPTS_VER_))
+		;
+?>
+
+<script type="text/javascript">
+	$(function() {
+
+		var layout = 'list';
+		$('[data-name=custom_pagination]').hide();
+		<?php if ($q_options['layout'] == 'thumb'): ?>
+			var layout = 'thumb';
+			var msnry = window.msnry = new Masonry( '.grid', {itemSelector: '.masonry-grid-item'});
+			$(window).scroll(function(){
+				masonryPreload($(this), '.data-list', window.location.href, '.masonry-grid-item');
+			});
+			//Updating masonry grid, after image gridmaker resize images
+			// setTimeout(function(){
+			// 	var $grid = $('.grid').masonry({itemSelector: '.masonry-grid-item'});
+			// 	$grid.masonry();
+			// }, 500);
+		<?php else: ?>
+			$(window).scroll(function(){
+				preload($(this), '.data-list', window.location.href);
+			});
+		<?php endif ?>
+
+		var list = ['seacontact', 'odessa'];
+		var tags = new Bloodhound({
+		  datumTokenizer: Bloodhound.tokenizers.whitespace,
+		  queryTokenizer: Bloodhound.tokenizers.whitespace,
+		  local: list,
+		  remote: {
+		    url: '/tags?section=questions&q=%QUERY',
+		    wildcard: '%QUERY'
+		  }
+		});
+
+		$('input[name=q]').typeahead({hint: true,highlight: true,minLength: 1},
+		{
+		  name: 'tags',
+		  source: tags
+		});
+
+		xhrAction.complete_q_tags = xhrAction.complete_data_menu = function(response) {
+			if(layout == 'thumb') var msnry = window.msnry = new Masonry( '.grid', {itemSelector: '.masonry-grid-item'});
+		}
+
+
+	// $('#questions_search form [type=text]').keyup(function(){
+	// 	getQuestions($(this).parents('form'));
+	// });
+	
+	// var selectTimer;        
+	// var doneInterval = 500;
+	// function getQuestions($form) {
+	// 	var data = $form.serializeArray();
+	// 	var url = window.location.href;
+	// 	appendLoader();
+	// 	clearTimeout(selectTimer);
+	// 	selectTimer = setTimeout(function(){
+	// 		$.get(url, data, function(response) {
+	// 			if(response.success == 1) {
+					
+	// 				var questions_list = $(response.data).find('[data-name=questions_list]');
+	// 				if(questions_list.length == 0) $('[data-name=questions_list]').empty(); 
+	// 				else $('[data-name=questions_list]').replaceWith(questions_list);
+					
+	// 				$('[data-name=clean_filters]').replaceWith($(response.data).find('[data-name=clean_filters]'));
+	// 				$('[data-name=custom_pagination]').replaceWith($(response.data).find('[data-name=custom_pagination]'));
+	// 				$('[data-name=results_count]').replaceWith($(response.data).find('[data-name=results_count]'));
+	// 			}
+	// 			else console.log(response);
+	// 			hideLoader();
+	// 		}, 'json');
+	// 	}, doneInterval);
+	// }
+
+	// function appendLoader()
+	// {
+	// 	$('[data-name=questions_list]').css('opacity' , 0.6);
+	// 	$('<div></div>', {
+	// 		class: 'loading-fixed',
+	// 		css: {
+	// 		        "position": "absolute",
+	// 		        "left": "35%",
+	// 		        "top": "15%",
+	// 		    }
+	// 	}).prependTo('[data-name=questions_list]');
+	// }
+
+	// function hideLoader()
+	// {
+	// 	$('.loading-fixed').remove();
+	// 	$('[data-name=questions_list]').css('opacity' , 1);
+	// }
+
+	});
+</script>

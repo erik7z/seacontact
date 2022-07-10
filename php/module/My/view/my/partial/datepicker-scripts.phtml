@@ -1,0 +1,39 @@
+<?php	$this->headScript()
+			->appendFile($this->basePath('vendor/moment/moment-with-locales.js'))
+			->appendFile($this->basePath('vendor/twbs/bootstrap/js/transition.js'))
+			->appendFile($this->basePath('vendor/twbs/bootstrap/js/collapse.js'))
+			->appendFile($this->basePath('vendor/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js'))
+			->appendFile($this->basePath('vendor/bootstrap-switch/dist/js/bootstrap-switch.min.js'));
+
+		$this->headLink()
+			->appendStylesheet($this->basePath('vendor/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'))
+			->appendStylesheet($this->basePath('vendor/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css'))
+			;
+?>
+<script type="text/javascript">
+	$(document).on('ready', function() {
+		$('#datetimepicker1').hide();
+		$('.submit_later').hide();
+		$.fn.bootstrapSwitch.defaults.size = 'small';
+		$.fn.bootstrapSwitch.defaults.handleWidth = 'auto';
+		$.fn.bootstrapSwitch.defaults.labelWidth = 'auto';
+		$("#switch-publish").bootstrapSwitch();
+		$('#switch-publish').on('switchChange.bootstrapSwitch', function(event, state) {
+			if(state) {
+				$('.submit_later').slideDown('slow');
+				$('.submit_now').slideUp('slow');
+				$('#datetimepicker1').show('slow').css('overflow', 'auto');
+				$('#datetimepicker1').datetimepicker({
+				                    locale: 'ru',
+				                    minDate:  "<?=date('M/d/Y', time());?>",
+				                    sideBySide: true,
+				                    <?php if(isset($next_pub_time)):?> defaultDate: "<?=date('M/d/Y H:i', $next_pub_time);?>", <?php endif;?>
+				                }).datetimepicker().data("DateTimePicker").enable();
+			} else {
+				$('.submit_later').slideUp('slow');
+				$('.submit_now').slideDown('slow');
+				$('#datetimepicker1').hide('slow').val('').datetimepicker().data("DateTimePicker").disable();
+			}
+		});
+	});
+</script>

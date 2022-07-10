@@ -1,0 +1,46 @@
+<div class="col-md-6 ship-item item-block">
+	<div class="row">
+		<div class="col-md-9 ship-name">
+			<h4><?=$ship_name;?></h4>
+		</div>
+		<div class="col-md-9">
+			<div class="ship-photo">
+				<?php if(isset($photos)) {
+					$photos = json_decode($photos);
+					for ($i=0; $i < count($photos); $i++) {
+						if($i > 0) break;
+					?>
+						<img src="<?=$this->basePath('/'._PICSWWW_.$photos[$i]->thumb);?>"/>
+					<?php }
+				} else { ?>
+					<img src="<?=$this->basePath('/img/no-photo.jpg');?>" class="blank-img"/>
+				<?php }	?>
+				<button class="btn btn-sm btn-default add-photos" value="">
+					<span class="fa fa-camera"></span>
+					<?=$this->translate('Add Ship Photos');?>
+				</button>
+			</div>			
+			
+		</div>
+		<div class="col-md-3 ship_activity">
+			<div class="row ship_likes">
+				<div class="col-md-12">
+					<span class="icon li_heart icon-sm"></span>
+					<span class="count">124</span>
+				</div>
+			</div> <!-- ship_likes -->
+			<div class="row ship_users">
+				<div class="col-md-12">
+					<span class="icon li_user icon-sm"></span>
+					<span class="count">543</span>
+				</div>
+			</div> <!-- ship_users -->
+			<div class="row ship_comments">
+				<div class="col-md-12">
+					<span class="icon li_bubble icon-sm"></span>
+					<span class="count">232</span>
+				</div> <!-- ship_comments -->
+			</div>
+		</div> <!-- col-md-1 ship_activity -->
+	</div>
+</div> <!--col-md-6 ship-item -->

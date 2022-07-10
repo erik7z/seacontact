@@ -1,0 +1,26 @@
+<div class="input-group">
+	<div class="input-group-btn">
+		<button class="btn btn-sm btn-default input-sm" name="submit" type="submit" value="mark_readed" >
+			<i class="fa fa-check-square-o"></i> <?=$this->translate('Mark as Readed');?>
+		</button>
+		<button type="button" class="btn btn-default input-sm " type="button"></button>
+	</div>
+	<select name="folder_name" class="form-control input-sm">
+		<option selected="selected">--<?=$this->translate('Move to folder');?>--</option>
+		<?php foreach ($mail_accounts as $account): ?>
+			<optgroup label="<?=$account['mail_box'];?>">
+				<?php $folders = json_decode($account['folders']);?>
+				<?php if(is_array($folders)):?>
+					<?php foreach ($folders as $folder): ?>
+						<option value="<?=$account['mail_box'];?>:<?=$folder->folder_full;?>"><?=$folder->folder;?></option>
+					<?php endforeach ?>
+				<?php endif?>
+			</optgroup>
+		<?php endforeach ?>
+	</select>
+	<div class="input-group-btn">
+		<button class="btn btn-sm btn-warning input-sm" name="submit" type="submit" value="Move" >
+			<i class="fa fa-mail-forward"></i>
+		</button>
+	</div>
+</div>

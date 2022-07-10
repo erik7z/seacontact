@@ -1,0 +1,9 @@
+<?php if(!isset($text)) $text = $this->translate('Confirm Friendship');?>
+<?php if(!isset($user_id)) $user_id = $user['user_id'];?>
+<?php if(!isset($class)) $class = '';?>
+<a href="<?= $this->url('sc/contacts/actions', array(
+						'action' => 'add',
+						'id' => $user_id
+						)); ?>" data-action="contacts">
+	<button type="button" class="btn btn-xs btn-primary <?=$class;?>" ><span class="glyphicon glyphicon-link"></span> <?=$text;?></button>
+</a>

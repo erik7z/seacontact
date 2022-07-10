@@ -1,0 +1,10 @@
+<?php if (is_array($tags) && count($tags) > 0): ?>
+	<?php for ($i=0; $i < count($tags); $i++) :?>
+		<a href="<?=$this->url('sc/news', array(),
+			array('query' => array( 'filters' => array('tag' => str_replace(' ', '_', trim($tags[$i])))))
+		);?>"
+		>
+		#<?=zlessChars(trim($tags[$i]), 40);?>
+		</a>
+	<?php endfor ?>
+<?php endif ?>

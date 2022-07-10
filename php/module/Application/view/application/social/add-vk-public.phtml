@@ -1,0 +1,39 @@
+<div class="vk_publics_form">
+	<?php
+		$form = $this->form;
+		$form->prepare();
+		$form->setAttribute('class', 'form-horizontal');
+		$fieldset = $form->get('parsing_options');
+		echo $this->form()->openTag($form);
+	?>
+	<?php if ($form->has('id')): ?>
+		<?=$this->formElement($form->get('id'));?>
+	<?php endif ?>
+
+	<div class="form-group">
+		<div class="col-md-6 col-md-offset-3">
+			<?=$this->formLabel($fieldset->get('page'));?>
+			<?=$this->formElement($fieldset->get('page')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($fieldset->get('page'));?>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<?=$this->formLabel($fieldset->get('parsing_tags'));?>
+			<?=$this->formElement($fieldset->get('parsing_tags')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($fieldset->get('parsing_tags'));?>
+			<span class="help-block"><?=$fieldset->get('parsing_tags')->getAttribute('description');?></span>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control input-sm'));?>
+				<span class="fa fa-plus"></span> 
+	 			 <?=$form->get('submit')->getLabel();?>
+			<?=$this->formButton()->closeTag();?>
+		</div>
+	</div>
+
+	<?= $this->form()->closeTag();?>
+</div>
+

@@ -1,0 +1,15 @@
+<?php
+	$page_url = $this->url('sc/logbook/actions', ['action' => 'view', 'id' => $this->id]);
+?>
+<div class="media mt05">
+  <div class="media-left">
+    <a href="<?= $this->url('sc/userinfo', array('user' => zgetUserLogin($this->vars()), 'controller' => null )); ?>">
+    	<img class="media-object" width="24px" src="<?=zgetUserAvatar($this->vars());?>" />
+    </a>
+  </div>
+  <div class="media-body">
+	  <small>
+	  	<a href="<?=$page_url;?>"><?=zshorterText(strip_tags(html_entity_decode($this->text)), 10);?></a>
+	  </small>
+  </div>
+</div>

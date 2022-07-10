@@ -1,0 +1,137 @@
+<?php 
+	$user_login = ($this->identity())? $this->identity()->login : 'guest';
+?>
+
+<script type="text/javascript">
+
+	var tinymce_standart_settings = {
+	      mode:'exact',
+	      elements: 'text',
+	      menubar: false,
+	      plugins: ['autolink lists link'],  
+	      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link',  
+	      image_advtab: false, 
+	      toolbar_items_size : 'small',
+	      textcolor_cols: 3,
+	      textcolor_rows: 4,
+	      content_css: '/vendor/twbs/bootstrap/dist/css/bootstrap.min.css, /vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css ',
+	      paste_data_images: false,
+	      relative_urls : false,
+	      remove_script_host : false,
+	      document_base_url : "<?=$this->url('sc');?>",
+	      setup: function(editor) {
+	      	editor.on('change', function () {
+	      	    tinymce.triggerSave();
+	      	});
+	      }
+	    };
+
+
+	var tinymce_extended_settings = {
+	      mode:'exact',
+	      elements: 'text',
+	      menubar: true,
+	      plugins: [    'advlist autolink lists link image charmap print hr anchor pagebreak',    
+	              'searchreplace wordcount visualblocks visualchars',    
+	              'insertdatetime media nonbreaking save table contextmenu directionality',    
+	              'template paste textcolor colorpicker textpattern imagetools fullscreen code'  ],  
+	      toolbar: 'undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | link image table fullscreen code',  
+	      image_advtab: true, 
+	      toolbar_items_size : 'small',
+	      textcolor_cols: 3,
+	      textcolor_rows: 4,
+	      content_css: '/vendor/twbs/bootstrap/dist/css/bootstrap.min.css, /vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css ',
+	      paste_data_images: true,
+	      images_upload_url: '/pics/upload-image',
+	      images_upload_base_path: '/<?=_PICSWWW_;?>',
+	      images_upload_credentials: true,
+	      relative_urls : false,
+	      remove_script_host : false,
+	      document_base_url : "<?=$this->url('sc');?>",
+	      setup : function(editor) {
+
+	        editor.on('change', function () {
+	            tinymce.triggerSave();
+	        });
+	        // editor.on('SaveContent', function (e) { 
+	          // wrapImages(editor);
+	          // });
+
+	          editor.on('submit', function() {
+	            wrapImages(editor);
+	          });
+	          editor.on('NodeChange', function (e) { 
+	            setImageOriginalSrc( e.target.contentDocument );
+	          }); 
+	          editor.on('BeforeSetContent', function(e) {
+	            setImageOriginalSrc( e.target.contentDocument );
+	          });
+
+	          editor.on('init', function(e) { 
+	            setImageOriginalSrc( e.target.contentDocument );
+	          });
+	      }
+	    };
+
+	    var  wrapImages = function(editor)
+	    {
+	      var content = editor.getContent();
+	      var $content = $(content);
+	      $content.find('img').each(function(){
+	        var img = $(this);
+	        var original_src = img.attr('data-original-src');
+	        var wrapped = img.attr('data-wrapped');
+	        if(original_src && wrapped != 1) {
+	          img.attr('src', img.attr('src'));
+	          img.wrap('<a href="' + original_src + '" data-gallery="<?=$user_login.mt_rand(1, 1000);?>"></a>');
+	          img.attr('data-wrapped', 1);
+	        }
+	        
+	      });
+	      content = $("<div />").append( $content.clone() ).html();
+	      editor.setContent(content);
+	      return true;
+	    }
+
+	    var setImageOriginalSrc = function(contentDocument){
+	        var $contentDocument = $( contentDocument );
+	        var $imgs = $contentDocument.find('img');
+	        $imgs.each(function(i,obj){
+	            var $img = $(obj);
+	            if( !($img.is('[src*="blob:"],img[src*="data:"]')) ){
+	            	$img.attr('width', $img.width());
+	            	$img.attr('height', $img.height());
+	            	if (!$img.attr('data-original-src')) {
+	            		$img.attr('data-original-src', $img.attr('src'));
+	            	};
+
+	            }
+	        });
+	    };
+
+	    <?php if ($this->isPermitted('_info_\extended_logbook')): ?>
+	    	var tinymce_settings = tinymce_extended_settings;
+	    <?php else: ?>
+	    	var tinymce_settings = tinymce_standart_settings;
+	    <?php endif ?>
+
+	    var mce_init = 0;
+	    var mce_on = 0;
+	    $('body').on('click', '[data-action=extend_edit]', function(e){
+	    	e.preventDefault();
+	    	tinymce_settings.elements = 'text';
+	    	if(!mce_init) {
+	    		tinyMCE.init(tinymce_settings);
+	    		mce_init = 1;
+	    		mce_on = 1;
+	    	}
+	    	
+	    	if(mce_on) {
+	    		tinyMCE.EditorManager.execCommand('mceRemoveEditor', false, 'text');
+	    		mce_on = 0;
+	    	} else {
+	    		tinyMCE.EditorManager.execCommand('mceAddEditor', true, 'text');
+	    		mce_on = 1;
+	    	}
+	    });
+</script>

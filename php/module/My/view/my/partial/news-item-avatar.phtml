@@ -1,0 +1,22 @@
+<?php
+	$user_info = isset($user_info)? $user_info : null;
+	if(!$user_info) throw new \Application\Exception\Exception("User information should be provided to partial", 1);
+	$user_page = isset($user_page)? $user_page : $this->url('sc/userinfo', array('user' => zgetUserLogin($user_info), 'controller' => null));
+	$avatar_size = isset($avatar_size)? $avatar_size : 70;
+	$anonym = isset($anonym)? $anonym : 0;
+	$small_text = isset($small_text)? $small_text : 0;
+	$text_size = ($small_text)? 'h5' : 'h4';
+?>
+<span style="display: inline-block;">
+<?php if ($anonym): ?>
+		<img src="<?=_ADDRESS_._IMGWWW_._ANONYM_AVA_;?>" style="width: <?=$avatar_size;?>px; height: <?=$avatar_size;?>px;" />
+<?php else: ?>
+	<a href="<?=$user_page;?>">
+		<img src="<?=zgetUserAvatar($user_info);?>" style="width: <?=$avatar_size;?>px; height: <?=$avatar_size;?>px;" />
+	</a>
+	<a href="<?=$user_page;?>">
+		<<?=$text_size?>><small><b><?=zgetUserName($user_info);?></b></small></<?=$text_size?>>
+	</a>
+<?php endif ?>
+</span>
+

@@ -1,0 +1,37 @@
+<section id="company-info" class="container-fluid">
+
+	<div class="row section-content">
+		<div class="col-md-12 ">
+			<div class="row ">
+				<div class="col-md-12">
+					<?php $company->company_id = $company->id;?>
+					<?php 
+						$company->full_view = 1;
+						$company->activity_social = 1;
+					?>
+					<?=$this->partial('application/partial/companies-list-item.phtml', $company);?>
+				</div>
+			</div>
+
+			<div class="row pt pb">
+				<div class="col-md-6 col-md-offset-3">
+					<?php if($this->isPermitted('my\controller\messages.pm', $company->id)) {?>
+						<?=$this->partial('my/partial/contacts-btn-msg', array('text' => $this->translate('Send Message (company will be informed by email)'), 'class' => 'form-control', 'user' => $company));?>
+					<?php } ?>
+				</div>
+			</div>
+			<div class="row data-list" data-limit="<?=$q_options['_limit'];?>" data-offset="<?=$q_options['_offset'];?>">
+				<div class="col-md-12">
+					<?=$this->partial('application/partial/news-list.phtml');?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<?=$this->partial('application/partial/custom_pagination');?>
+				</div>
+			</div>
+		</div>
+
+	</div> <!-- row section-content -->
+
+</section>

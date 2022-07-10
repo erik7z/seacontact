@@ -1,0 +1,83 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    # command: --default-authentication-plugin=mysql_native_password
+    command: --init-file /data/application/init.sql
+    restart: always
+    environment:
+      MYSQL_ROOT_USER: ${_MYSQL_ROOT_USER_}
+      MYSQL_ROOT_PASSWORD: ${_MYSQL_PASSWORD_}
+      MYSQL_USER: ${_MYSQL_USER_}
+      MYSQL_PASSWORD: ${_MYSQL_PASSWORD_}
+      MYSQL_DATABASE: ${_MYSQL_DB_NAME_}
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db/data:/var/lib/mysql
+      - ./init.sql:/data/application/init.sql
+      - ./dump:/docker-entrypoint-initdb.d
+
+  scredis:
+    image: redis:6.0-alpine
+    restart: unless-stopped
+    volumes:
+      - ./redis/data:/data
+    expose:
+      - ${_REDIS_PORT_}
+
+  php:
+#    build: ./php
+    image: zzzloy777/sc:latest
+    volumes:
+      - static_content:/home/seacontact/
+    environment:
+      - SEA_DOMAIN=${SEA_DOMAIN}
+      - _MYSQL_HOST_=${_MYSQL_HOST_}
+      - _MYSQL_DB_NAME_=${_MYSQL_DB_NAME_}
+      - _MYSQL_USER_=${_MYSQL_USER_}
+      - _MYSQL_PASSWORD_=${_MYSQL_PASSWORD_}
+      - _REDIS_IP_=${_REDIS_IP_}
+      - _REDIS_PORT_=${_REDIS_PORT_}
+      - _GMAPS_KEY_=${_GMAPS_KEY_}
+      - _DKIM_DOMAIN_=${_DKIM_DOMAIN_}
+      - _DKIM_KEY_=${_DKIM_KEY_}
+      - _MBOFFICE_=${_MBOFFICE_}
+      - _MBOFFICEPWD_=${_MBOFFICEPWD_}
+      - _MBCREW_=${_MBCREW_}
+      - _MBCREWPWD_=${_MBCREWPWD_}
+      - _IN_APP_ID_=${_IN_APP_ID_}
+      - _IN_APP_SECRET_=${_IN_APP_SECRET_}
+      - _FB_APP_ID_=${_FB_APP_ID_}
+      - _FB_APP_SECRET_=${_FB_APP_SECRET_}
+      - _VK_APP_ID_=${_VK_APP_ID_}
+      - _VK_APP_SECR_KEY_=${_VK_APP_SECR_KEY_}
+      - _VK_APP_CODE_=${_VK_APP_CODE_}
+      - _VK_2APP_ID_=${_VK_2APP_ID_}
+      - _VK_2APPSECR_KEY_=${_VK_2APPSECR_KEY_}
+      - _VK_USER_=${_VK_USER_}
+      - _VK_USER_SECRET_=${_VK_USER_SECRET_}
+      - _VK_USER_TOKEN_=${_VK_USER_TOKEN_}
+      - _VK_GROUP_=${_VK_GROUP_}
+    links:
+      - db
+    depends_on:
+      - db
+      - scredis
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - NGINX_PHP_SOURCE=${NGINX_PHP_SOURCE}
+      - NGINX_HOST=${NGINX_HOST}
+      - SSL_CERT_HOST=${SSL_CERT_HOST}
+    volumes:
+      - static_content:/home/seacontact/
+      - ./nginx/ssl/:/etc/nginx/ssl/
+    depends_on:
+      - php
+volumes:
+  static_content:

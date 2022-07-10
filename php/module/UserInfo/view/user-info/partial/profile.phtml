@@ -1,0 +1,19 @@
+<div id="user-profile" >
+    <a href="<?=$this->basePath($this->userInfo()->login);?>">
+        <img src="<?= zgetUserAvatar($this->userInfo()); ?>" id="user_avatar" class="<?=$size;?>" alt="avatar"/>
+    </a>
+    <span id="user-profile-name" class="<?=$size;?>">
+        <a href="<?=$this->basePath($this->userInfo()->login);?>">
+            <?=($this->userInfo()->type == \Application\Model\UserTable::TYPE_COMPANY)? 
+                zgetUserName($this->userInfo()) : 
+                zhashUserName(zgetUserName($this->userInfo()), 0 , $this->isPermitted('_user_fields\full_name', $this->userInfo()->id));
+            ?>
+        </a>
+    </span>
+    <span class="user-section-bc">  
+        <?php
+            $role = (isset($this->identity()->role))? $this->identity()->role : \Application\Access\AccessList::ROLE_GUEST;
+            echo ' >> '.$this->navigation('user_navigation')->breadcrumbs()->setMinDepth(0)->setMaxDepth(1)->setRole($role);
+        ?>
+    </span>
+</div>

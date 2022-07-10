@@ -1,0 +1,18 @@
+<?php 
+
+if(!isset($text)) $text = $this->translate('Send Message');
+if(!isset($user_id)) $user_id = (isset($user['user_id']))? $user['user_id'] : $user['id'];
+if(!isset($class)) $class = '';
+if(!isset($class)) $class = '';
+$size = (isset($size))? $size : 'xs';
+$responsive = (isset($responsive))? $responsive : 0;
+
+
+ ?>
+<a href="<?= $this->url('sc/messages/actions', 
+				array('action' => 'pm'),
+				array('query' => array('talk' => $user_id))
+				); ?>" title="<?=$this->translate('Send Message');?>">
+	<button type="button" class="btn btn-<?=$size;?> <?=($responsive)? 'btn-responsive' : '';?> btn-info <?=$class;?>" >
+		<span class="glyphicon glyphicon-envelope"></span> <?=$text;?></button>
+</a>

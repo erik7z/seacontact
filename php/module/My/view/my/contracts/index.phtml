@@ -1,0 +1,22 @@
+<section class="ships">
+	<h2> Ships </h2>
+<?php foreach ($user_ships as $ship) { ?>
+	<div class="ship_info">
+		<h3><?= $ship->ship_name; ?></h3>
+		<img src="<?= $ship->img; ?>" style="floating: left;"/>
+		<ul>
+			<li>Rank : <?= $ship->rank; ?></li>
+			<li>from : <?= zformatDate($ship->date_from); ?> </li>
+			<li>to : <?= zformatDate($ship->date_to); ?></li>
+			<li>flag: <?= $ship->flag; ?></li>
+			<li>built: <?php if(isset($ship->built)) echo $ship->built; ?> </li>
+		</ul>
+		<a href="<?= $this->url('contracts/actions', array('action' => 'edit', 'id' => $ship->contract_id)); ?>">Edit contract</a>
+	</div>
+
+<?php } ?>
+
+
+<hr style="clear: both;">
+<a href="<?= $this->url(null); ?>">Back</a>
+</section>

@@ -1,0 +1,20 @@
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#col<?=$name;?>" aria-expanded="false" aria-controls="collapseTwo">
+        	<?=$name;?>
+        </a>
+      </h4>
+    </div>
+    <div id="col<?=$name;?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+	      <ul>
+	      <?php foreach ($object as $field): ?>
+	      	<li><?=$field;?></li>
+	      <?php endforeach ?>
+	      </ul>
+      </div>
+    </div>
+  </div>
+</div>

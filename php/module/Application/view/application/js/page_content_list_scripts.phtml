@@ -1,0 +1,101 @@
+<?php 
+	$show_low_priority = (isset($show_low_priority))? $show_low_priority : 0;
+	$hide_submit = (isset($hide_submit))? $hide_submit : 1;
+?>
+
+
+<script type="text/javascript">
+
+	$('body').on('click', '.unlock_info', function(e){
+		e.preventDefault();
+		unlockUserInfo($(this).data('user'), $(this),  function(){
+				getFilteredContent($('#content-filters form'));
+			});
+	});
+
+	$('body').on('click', '.user-actions [data-action=contacts]', function(e){
+		e.preventDefault();
+		$.get($(this).attr('href'),function(response){
+			if(response.success == 1) {
+				apendDataLoader();
+				getFilteredContent($('#content-filters form'));
+			} else console.log(response);
+		},'json');
+	});
+
+	<?php if ($hide_submit): ?>
+		$('#content-filters [data-name=form_submit]').hide();
+	<?php endif ?>
+
+	$('.show_options').removeClass('hide');
+
+	<?php if (!$show_low_priority): ?>
+		$('#content-filters .priority_low').hide();
+	<?php else: ?>
+		$('[data-action=more_options]').hide();
+	<?php endif ?>
+
+	$('.no_search').hide();
+
+	$('body').on('click', '[data-action=more_options]', function(){
+		$('#content-filters .priority_low').slideToggle('slow');
+	});
+
+
+	$('#content-filters form [type=text]').keyup(function(){
+		getFilteredContent($(this).parents('form'));
+	});
+
+	$('#content-filters form :input').on('change', function(e){
+		e.preventDefault();
+		getFilteredContent($(this).parents('form'));
+	});
+	
+	var selectTimer;        
+	var doneInterval = 500;
+	function getFilteredContent($form) {
+		var data = $form.serializeArray();
+		var url = window.location.href;
+		apendDataLoader();
+		clearTimeout(selectTimer);
+		selectTimer = setTimeout(function(){
+			$.get(url, data, function(response) {
+				if(response.success == 1) {
+					// setLocation(url);
+					// console.log(data);
+					var $r = $(response.data);
+					$('#content-filters [data-name=clean_filters]').replaceWith($r.find('#content-filters [data-name=clean_filters]'));
+					$('[data-name=custom_pagination]').replaceWith($r.find('[data-name=custom_pagination]'));
+					$('[data-name=results_count]').replaceWith($r.find('[data-name=results_count]'));
+					var page_content_list = $r.find('[data-name=page_content_list]');
+					if(page_content_list.length == 0) $('[data-name=page_content_list]').empty(); 
+					else $('[data-name=page_content_list]').replaceWith(page_content_list);
+
+					
+				}
+				else notifyError(response);
+				hideLoader();
+			}, 'json');
+		}, doneInterval);
+	}
+
+	function apendDataLoader()
+	{
+		$('[data-name=page_content_list]').css('opacity' , 0.6);
+		$('<div></div>', {
+			class: 'loading-fixed',
+			css: {
+			        "position": "absolute",
+			        "left": "35%",
+			        "top": "15%",
+			    }
+		}).prependTo('[data-name=page_content_list]');
+	}
+
+	function hideLoader()
+	{
+		$('.loading-fixed').remove();
+		$('[data-name=page_content_list]').css('opacity' , 1);
+	}
+
+</script>

@@ -1,0 +1,241 @@
+<?php 
+	$edit_mode = (isset($edit_mode))? $edit_mode : 0;
+	$add_mode = (isset($add_mode))? $add_mode : 0;
+	$tags_map = (isset($tags_map))? $tags_map : null;
+
+?>
+
+<div class="row logbook-form drop-shadow" style="padding: 10px; margin-bottom: 10px;">
+	<?php
+		$form = $this->form;
+		$form->prepare();
+		$form->setAttribute('class', 'form-horizontal col-md-12');
+		$logbook_id = $form->get('id')->getValue();
+		echo $this->form()->openTag($form);
+	?>
+		<div class="row">
+			<?=$this->formRow($form->get('id'));?>
+			<?php if ($form->has('old_pics')): ?>
+				<fieldset class="col-md-3">
+						<div class="row">
+							<?php $old_pics = $form->get('old_pics')->getElements(); ?>
+							<?php if (count($old_pics) > 0): ?>
+								<label><?=$this->translate('Attached Pictures');?></label>
+								<div class="col-md-10 file-preview">
+										<?php foreach ($old_pics as $pic): ?>
+											<div class="col-md-6 text-right bg-thumb" style="background-image: url(<?= '/'._PICSWWW_.$pic->getAttribute('data-thumb'); ?>)">
+												<?=$this->formElement($pic);?>
+											</div>
+										<?php endforeach ?>
+										<div class="col-md-12">
+											<?=$this->formElementErrors($pic);?>
+										</div>
+
+								</div>
+							<?php endif ?>
+						</div>
+				</fieldset>
+			<?php endif ?>
+			<fieldset class="col-md-<?=($edit_mode)? 9 : 12;?>">
+				<div class="row">
+					<div class="col-md-<?=($edit_mode)? 12 : 10;?> logbook-text">
+						<div class="row">
+							<div class="col-md-12">
+								<?php 
+									if ($edit_mode || $add_mode) $form->get('text')->setAttribute('rows', 12);
+								?>
+								<?=$this->formElement($form->get('text')->setAttribute('class','form-control'));?>
+								
+								<?=$this->formElementErrors($form->get('text'));?>
+							</div>
+						</div>
+						<div class="row preview_container">
+							<div class="col-md-12 pt05">
+								<span class="text-muted"><?=$this->translate('Link');?>:</span>
+								<button type="button" class="close remove_link" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
+								<div class="link_preview">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 pt05 pb05 video_link hide">
+								<?=$this->formElement($form->get('video')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($form->get('video'));?>
+							</div>
+						</div>
+					</div>
+					<?php if (!$edit_mode): ?>
+						<div class="col-md-2 logbook-submit">
+							<?=$this->formElement($form->get('submit')->setAttribute('class', 'btn-primary form-control'));?>
+						</div>
+					<?php endif ?>
+				</div>
+
+				<div class="row <?=($edit_mode)? 'pt' : '';?>">
+					<div class="col-md-3 pt05">
+						<button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#add_video_modal" onClick="return false;"><i class="fa fa-youtube-play"></i> <?=$this->translate('Add Video');?></button>
+					</div>
+					<div class="col-md-6 pt05 logbook-files">
+						<?=$this->formFile($form->get('pics'));?>
+						<?=$this->formElementErrors($form->get('pics'));?>
+					</div>
+					<?php if ($edit_mode || $add_mode): ?>
+						<div class="col-md-3 text-right pt05">
+							<button class="btn btn-default btn-xs" data-action="extend_edit"><i class="fa fa-pencil-square-o"></i> <?=$this->translate('Extended Formatting');?></button>
+						</div>
+					<?php endif ?>
+				</div>
+				<div class="row pt">
+					<div class="col-md-12">
+						<div class="input-group">
+							<span class="input-group-addon"><?=$form->get('tags')->getLabel();?></span>
+							<?=$this->formElement($form->get('tags')->setAttribute('class', 'form-control'));?>
+							<?=$this->formElementErrors($form->get('tags'));?>
+						</div>
+					</div>
+				</div>
+				<?php if (($edit_mode || $add_mode) && $tags_map): ?>
+					<div class="row pt">
+						<?=$this->partial('application/partial/tags-list.phtml');?>
+					</div>
+				<?php endif ?>
+				<?php if (($edit_mode || $add_mode) && $form->has('post_vk')): ?>
+					<div class="row pt05">
+						<div class="col-md-6">
+							<div class="input-group">
+								<span class="input-group-addon">
+									<?=$form->get('post_vk')->getLabel();?>
+								</span>
+								<?=$this->formElement($form->get('post_vk')->setAttribute('class','form-control'));?>
+								<?=$this->formElementErrors($form->get('post_vk'));?>
+							</div>
+						</div>
+					</div>
+				<?php endif ?>
+				<?php if ($form->has('link')): ?>
+					<div class="row hide">
+						<div class="col-md-12">
+							<?=$this->formElement($form->get('link'));?>
+							<?=$this->formElement($form->get('link_title'));?>
+							<?=$this->formElement($form->get('link_description'));?>
+							<?=$this->formElement($form->get('link_img'));?>
+						</div>
+					</div>
+				<?php endif ?>
+				<?php if ($form->has('old_links')): ?>
+					<div class="row pt">
+						<?php $old_items = $form->get('old_links')->getElements(); ?>
+						<?php if (count($old_items) > 0): ?>
+							<label><?=$form->get('old_links')->getLabel();?></label>
+							<div class="col-md-10">
+								<?php foreach ($old_items as $old_item): ?>
+									<?=$this->partial('application/partial/link-item', ['form_element' => $old_item]);?>
+								<?php endforeach ?>
+							</div>
+						<?php endif ?>
+					</div>
+				<?php endif ?>
+
+				<?php if ($form->has('old_videos')): ?>
+					<div class="row pt">
+						<?php $old_items = $form->get('old_videos')->getElements(); ?>
+						<?php if (count($old_items) > 0): ?>
+							<label><?=$form->get('old_videos')->getLabel();?></label>
+							<div class="col-md-10">
+								<?php foreach ($old_items as $old_item): ?>
+									<?=$this->partial('application/partial/video-item', ['form_element' => $old_item]);?>
+								<?php endforeach ?>
+							</div>
+						<?php endif ?>
+					</div>
+				<?php endif ?>
+				<div class="row pt05">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-7">
+								<button type="button" class="close remove_yvideo hide" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<div class="video_preview hide embed-responsive embed-responsive-4by3"></div>
+								<?php if ($video = $form->get('video')->getValue()): ?>
+									<div class="row video_attached">
+										<div class="col-md-12">
+										<button type="button" class="close remove_yvideo" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<label><?=$this->translate('Attached Videos');?></label>
+											<div class="embed-responsive embed-responsive-4by3">
+												<iframe src="<?=$video;?>" class="embed-responsive-item" allowfullscreen="1"></iframe>
+											</div>
+										</div>
+									</div>
+								<?php endif ?>
+							</div>
+							<?php if ($edit_mode || $add_mode) : ?>
+								<div class="col-md-5 text-right">
+									<p>
+									  <input id="switch-publish" type="checkbox" class="form-control" data-label-text="<?=$this->translate('Postpone Publication');?>" data-off-text="<?=$this->translate('No');?>" data-on-text="<?=$this->translate('Yes');?>" data-off-color="info">
+									</p>
+								</div>
+							<?php endif ?>
+						</div>
+						<?php if (($edit_mode || $add_mode) && $form->has('time')): ?>
+							<div class="row publication_time">
+								<div class="col-md-12">
+									<div class='input-group date' id='datetimepicker1'>
+								    	<?=$this->formElement($form->get('time')->setAttributes(array('class' => 'form-control', 'disabled' => false)));?>
+								        <span class="input-group-addon">
+								            <span class="glyphicon glyphicon-calendar"></span>
+								        </span>
+								    </div>	
+								</div>
+							</div>
+							<?=$this->formElementErrors($form->get('time'));?>
+						<?php endif ?>
+					</div>
+				</div>
+				<?php if (isset($publish_time) && $publish_time > time()): ?>
+					<div class="row pt">
+						<div class="col-md-12">
+							<button name="submit" value="publish_now" class="btn btn-warning form-control" aria-label="<?=$this->translate('Publish Now');?>">
+							  <span class="fa fa-bolt" aria-hidden="true"></span> <?=$this->translate('Publish Now');?>
+							</button>	
+						</div>
+					</div>
+				<?php endif ?>
+
+				<?php if ($edit_mode): ?>
+					<div class="row pt">
+						<div class="col-md-12">
+							<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control'));?>
+								<?=$form->get('submit')->getLabel();?>
+								<span class="glyphicon glyphicon-floppy-disk"></span> 
+							<?=$this->formButton()->closeTag();?>			
+							<?= $this->form()->closeTag(); ?>	
+						</div>
+					</div>
+					<div class="form-group pt">
+						<div class="col-md-12 text-center">
+							<a href="<?=$this->url('sc/logbook/actions', array('action' => 'view', 'id' => $logbook_id));?>" target="_blank">
+								<span class="fa fa-external-link"></span> <?=$this->translate('View logbook entry page on website');?>
+							</a>
+						</div>
+					</div>
+				<?php endif ?>
+
+			</fieldset>
+
+		</div>
+	<?=$this->form()->closeTag(); ?>
+	<div>
+		<input type="text" class="preview_field hide" />
+		<button class="refresh_button hide"><?=$this->translate('Refresh preview');?></button>
+	</div>
+</div>
+
+<?=$this->partial('application/modal',array(
+	'modal_name' => 'add_video_modal',
+	'modal_size' => 'md',
+	'modal_title' => $this->translate('Add Youtube video'),
+	'modal_content' => $this->partial('application/partial/add-youtube-video'),
+));?>
+
+
+<?=$this->partial('application/js/page-form-scripts', ['form_name' => '[name=logbook_record]', 'pics_upload' => 1, 'attach_link_preview' => 1, 'force_redirect' => 1]);?>
+

@@ -1,0 +1,413 @@
+<?php
+	$fields = (isset($fields))? array_flip($fields) : [];
+
+	$header = (isset($header)) ? $header : $this->translate('User Statistic');
+	$avatar = (isset($fields['avatar'])) ? 1 : 0;
+	$cv_avatar = (isset($fields['cv_avatar'])) ? 1 : 0;
+	$cv_last_update = (isset($fields['cv_last_update'])) ? 1 : 0;
+	$cv_last_call = (isset($fields['cv_last_call'])) ? 1 : 0;
+	$show_link = (isset($fields['show_link'])) ? 1 : 0;
+	$show_messages = (isset($fields['show_messages'])) ? 1 : 0;
+	$show_last_view = (isset($fields['show_last_view'])) ? 1 : 0;
+	$show_registered = (isset($fields['show_registered'])) ? 1 : 0;
+	$show_last_activity = (isset($fields['show_last_activity'])) ? 1 : 0;
+	$show_last_ip = (isset($fields['show_last_ip'])) ? 1 : 0;
+	$show_favorites = (isset($fields['show_favorites'])) ? 1 : 0;
+	$generate_cv = (isset($fields['generate_cv'])) ? 1 : 0;
+	$user_assignment = (isset($fields['user_assignment'])) ? 1 : 0;
+?>
+
+
+<div class="box">
+	<div class="box-header bg-info">
+		<h5><?=$header;?></h5>
+	</div>
+	<div class="box-body">
+		<?php if ($cv_avatar && $userFields->has('cv_avatar')): ?>
+			<div class="row">
+				<div class="col-md-12">
+					<div id="kv-avatar-errors" class="center-block" style="width:300px;display:none"></div>
+					<div class="kv-avatar center-block">
+						<?= $this->formFile($userFields->get('cv_avatar'));?>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+		<?php if ($avatar && $userFields->has('avatar')): ?>
+			<div class="row">
+				<div class="col-md-12">
+					<div id="kv-avatar-errors" class="center-block" style="width:300px;display:none"></div>
+					<div class="kv-avatar center-block">
+						<?= $this->formFile($userFields->get('avatar'));?>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+		<?php if ($show_link): ?>
+			<div class="row pt">
+				<div class="col-md-12 text-center">
+					<a href="<?=_ADDRESS_.zgetUserLogin($user);?>" target="_blank">
+						<b><?=zgetUserLogin($user);?></b>
+					</a>
+				</div>
+			</div>
+		<?php endif ?>
+		<?php if ($show_registered): ?>
+			<div class="row mt">
+				<div class="col-md-3"  style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="glyphicon glyphicon-user"></span>
+					</button>
+				</div>
+				<div class="col-md-9"  style="padding-left: 0;">
+					<?php $reg_date = ($user->reg_date) ? zformatDateYear($user->reg_date) : $this->translate('Not Registered');?>
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<?=$this->translate('Registered');?>: <?=$reg_date;?>
+					</button>
+				</div>
+			</div>
+		<?php endif ?>
+	
+
+		<div class="row" >
+			<div class="col-md-3"  style="padding-right: 0;">
+				<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+					<span class="glyphicon glyphicon-list-alt"></span>
+				</button>
+			</div>
+			<div class="col-md-9"  style="padding-left: 0;">
+				<?php $in_db_date = ($user->in_db_date) ? zformatDateYear($user->in_db_date) : 'Not Stated';?>
+				<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+					<?=$this->translate('In Database From');?> : <?=$in_db_date;?>
+				</button>
+			</div>
+		</div>		
+		<?php if ($cv_last_update): ?>
+			<div class="row">
+				<div class="col-md-3"  style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="glyphicon glyphicon-pencil"></span>
+					</button>
+				</div>
+				<div class="col-md-9"  style="padding-left: 0;">
+					<?php $cv_last_update = ($user->cv_last_update) ? zformatDateYear($user->cv_last_update) : 'Not Stated';?>
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<?=$this->translate('CV Last Updated');?> : <?=$cv_last_update;?>
+					</button>
+				</div>
+			</div>			
+		<?php endif ?>			
+					
+		<?php if ($show_last_activity): ?>
+			<div class="row">
+				<div class="col-md-3"  style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="glyphicon glyphicon-flash"></span>
+					</button>
+				</div>
+				<div class="col-md-9"  style="padding-left: 0;">
+					<?php $last_activity = ($user->last_activity) ? zformatDateTimeYear($user->last_activity) : 'No Activity';?>
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<?=$this->translate('Last Activity');?> : <?=$last_activity;?>
+					</button>
+				</div>
+			</div>		
+		<?php endif ?>
+			
+
+		<?php if ($show_last_view): ?>
+			<div class="row">
+				<div class="col-md-3"  style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="glyphicon glyphicon-eye-open"></span>
+					</button>
+				</div>
+				<div class="col-md-9 text-center" style="padding-left: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<?php $last_view = ($user->cv_last_view) ? zformatDateTimeYear($user->cv_last_view) : 'First Time';?>
+						<?=$last_view;?>
+					</button>
+				</div>
+			</div>		
+		<?php endif ?>
+
+
+		<?php if ($cv_last_call && $this->isPermitted('admin\controller\userdb.refresh-last-call')): ?>
+			<div class="row">
+				<div class="col-md-3 text-center" style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="glyphicon glyphicon-earphone"></span>
+					</button>
+				</div>
+				<div class="col-md-7" style="padding-left: 0; padding-right:0;">
+					<?php $last_call = ($user->cv_last_call) ? zformatDateTimeYear($user->cv_last_call) : 'Never';?>
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" 
+						data-toggle="modal" 
+						data-title="<?=$this->translate('Add Note');?>" 
+						data-action="made_call" 
+						data-target="#myModal" 
+						id="call_button"
+						> 
+							<?=$last_call;?> 
+					</button>
+				</div>
+				<div class="col-md-2" style="padding-left: 0;">
+					<button type="button" class="btn btn-xs btn-info form-control input-sm" 
+															data-toggle="modal" 
+															data-title="<?=$this->translate('Add Note');?>" 
+															data-action="made_call" 
+															data-target="#myModal" 
+															id="call_button"
+															>
+						<span class="glyphicon glyphicon-refresh"></span>
+					</button>
+				</div>
+			</div>			
+		<?php endif ?>			
+
+		<?php if (isset($cv_notes)  && $this->isPermitted('admin\controller\userdb.user-cv-notes')): ?>
+			<div class="row">
+				<div class="col-md-3 text-center" style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="fa fa-comments"></span>
+					</button>
+				</div>
+				<div class="col-md-7" style="padding-left: 0; padding-right:0;">
+					<?php $notes_count = ($cv_notes) ? count($cv_notes).' '.$this->translate('Note(s)') : $this->translate('No Notes');?>
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" 
+					data-toggle="modal" 
+					data-title="<?=$this->translate('Add Note');?>" 
+					data-action="add_note" 
+					data-target="#myModal"
+					> 
+						<?=$notes_count;?> 
+					</button>
+				</div>
+				<div class="col-md-2" style="padding-left: 0;">
+					<button type="button" class="btn btn-xs btn-primary form-control input-sm" 
+					data-toggle="modal" 
+					data-title="<?=$this->translate('Add Note');?>" 
+					data-action="add_note" 
+					data-target="#myModal"
+					> 
+					<span class="fa fa-pencil"></span>
+					</button>
+				</div>
+			</div>				
+		<?php endif ?>				
+		<?php if (isset($last_note) && isset($last_note->text)  && $this->isPermitted('admin\controller\userdb.user-cv-notes')): ?>
+			<div class="row">
+				<div class="col-md-12" >
+					<h5 class="bg-warning">
+						<small><?=zformatDateTimeYear($last_note->time);?></small>
+						<br />
+						<?=$last_note->text;?>
+					</h5>
+				</div>
+			</div>
+		<?php endif ?>
+		<?php if (isset($mails_count) && $this->isPermitted('admin\controller\mailbox.new-mail')): ?>
+			<div class="row">
+				<div class="col-md-3 text-center" style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="fa fa-envelope-o"></span>
+					</button>
+				</div>
+				<div class="col-md-7" style="padding-left: 0; padding-right:0;">
+
+					<?php $mails_count = ($mails_count)? $mails_count.' '.$this->translate('Mail(s)') : $this->translate('No Mails sended');?>
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" 
+						data-toggle="modal" 
+						data-title="<?=$this->translate('Send Mail');?>" 
+						data-action="send_mail" 
+						data-target="#myModal"
+						> 
+						<?=$mails_count;?> 
+					</button>
+				</div>
+				<div class="col-md-2" style="padding-left: 0;">
+					<button type="button" class="btn btn-xs  btn-danger form-control input-sm" 
+						data-toggle="modal" 
+						data-title="<?=$this->translate('Send Mail');?>" 
+						data-action="send_mail" 
+						data-target="#myModal"
+						>
+						<span class="fa fa-envelope-o"></span>
+					</button>
+				</div>
+			</div>			
+		<?php endif ?>
+
+		<?php if ($this->isPermitted('_admin_\write_messages') && $show_messages): ?>
+			<div class="row">
+				<div class="col-md-3 text-center" style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="fa fa-comments-o"></span>
+					</button>
+				</div>
+				<div class="col-md-7" style="padding-left: 0; padding-right:0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" 
+						data-toggle="modal" 
+						data-title="<?=$this->translate('User Private Messages');?>" 
+						data-action="user_messages" 
+						data-target="#myModal"
+						> 
+						<?=$this->translate('User Private Messages');?> (<?=$messages_count;?>)
+					</button>
+				</div>
+				<div class="col-md-2" style="padding-left: 0;">
+					<button type="button" class="btn btn-xs  btn-info form-control input-sm" 
+						data-toggle="modal" 
+						data-title="<?=$this->translate('User Private Messages');?>" 
+						data-action="user_messages" 
+						data-target="#myModal"
+						>
+						<span class="fa fa-comments-o"></span>
+					</button>
+				</div>
+			</div>			
+		<?php endif ?>
+
+		<?php if ($show_favorites && isset($in_favorites)): ?>
+			<div class="row">
+				<div class="col-md-3 text-center" style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="fa fa-star-o"></span>
+					</button>
+				</div>
+				<?php if($in_favorites) {?> 
+					<div class="col-md-7" style="padding-left: 0; padding-right:0;">
+						<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'remove-from-favorites', 'id' => $user->id));?>" > 
+						<button type="button" class="btn btn-xs btn-default form-control input-sm"> <?=$this->translate('Remove From Favorites');?> </button>
+						</a>
+					</div>
+					<div class="col-md-2" style="padding-left: 0;">
+						<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'remove-from-favorites', 'id' => $user->id));?>" > 
+							<button type="button" class="btn btn-xs  btn-warning form-control input-sm"><span class="glyphicon glyphicon-trash"></span></button>
+						</a>
+					</div>
+				<?php } else {?>
+					<div class="col-md-7" style="padding-left: 0; padding-right:0;">
+					<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'add-to-favorites', 'id' => $user->id));?>" >
+						<button type="button" class="btn btn-xs btn-default form-control input-sm"> <?=$this->translate('Add To Favorites');?> </button>
+					</a>
+					</div>
+					<div class="col-md-2" style="padding-left: 0;">
+						<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'add-to-favorites', 'id' => $user->id));?>" > 
+							<button type="button" class="btn btn-xs  btn-warning form-control input-sm"><span class="fa fa-star-o"></span></button>
+						</a>
+					</div>
+				<?php } ?>
+			</div>			
+		<?php endif ?>
+		<?php if ($generate_cv && $this->isPermitted('admin\controller\userdb.generate-cv')): ?>
+			<div class="row pt pb">
+				<div class="col-md-12">
+					
+					<button type="button" class="btn btn-md btn-success form-control input-sm" data-toggle="modal" data-title="<?=$this->translate('Generate CV');?>" data-action="generate_cv" data-target="#myModal" data-size="modal-md">
+						<span class="glyphicon glyphicon-floppy-save"></span> <?=$this->translate('Generate CV');?>
+					</button>
+					
+				</div>
+			</div>			
+		<?php endif ?>
+		<?php if ($user_assignment && $this->isPermitted('admin\controller\vacancies.assign-candidate')): ?>
+			<div class="row pb">
+				<div class="col-md-12">
+					
+					<button type="button" class="btn btn-md btn-primary form-control input-sm" data-toggle="modal" data-title="<?=$this->translate('Assign Candidate');?>" data-action="assign_vacancy" data-target="#myModal">
+						<span class="fa fa-street-view"></span> <?=$this->translate('User Assignment');?>
+					</button>
+					
+				</div>
+			</div>
+		<?php endif ?>
+
+		<?php if ($userFields->has('role')): ?>
+			<div class="row">
+				<div class="col-md-3 text-center" style="padding-right: 0;">
+					<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+						<span class="fa fa-key"></span>
+					</button>
+				</div>
+				<div class="col-md-7" style="padding-left: 0; padding-right:0;">
+					<?=$this->formElement($userFields->get('role')->setAttribute('class','form-control input-sm'));?>
+					<?=$this->formElementErrors($userFields->get('role'));?>
+				</div>
+				<div class="col-md-2" style="padding-left: 0;">
+					<button type="submit" class="btn btn-xs  btn-primary form-control input-sm"><span class="glyphicon glyphicon-ok"></span></button>
+				</div>
+			</div>	
+		<?php endif ?>
+
+		<?php if ($userFields->has('type')): ?>
+			<div class="row">
+				<div class="col-md-10" style="padding-left: 0; padding-right:0;">
+					<?=$this->formElement($userFields->get('type'));?>
+					<?=$this->formElementErrors($userFields->get('type'));?>
+				</div>
+				<div class="col-md-2" style="padding-left: 0;">
+					<button type="submit" class="btn btn-xs  btn-primary form-control input-sm"><span class="glyphicon glyphicon-ok"></span></button>
+				</div>
+			</div>	
+		<?php endif ?>
+
+		<?php if ($this->isPermitted('admin\controller\access.toggle-ban')): ?>
+			<?php if ($show_last_ip): ?>
+				<div class="row">
+					<div class="col-md-3"  style="padding-right: 0;">
+						<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+							<span class="fa fa-plug"></span>
+						</button>
+					</div>
+					<div class="col-md-9"  style="padding-left: 0;">
+						<?php $last_ip = ($user->last_ip) ? $user->last_ip : 'No Activity';?>
+						<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+							<?=$this->translate('Last Ip');?>: <?=$last_ip;?>
+						</button>
+					</div>
+				</div>
+			<?php endif ?>
+
+			<?php if (isset($is_banned)): ?>
+				<div class="row">
+					<div class="col-md-12">
+						<?php $toggle_ban_link = $this->url('admin/actions', array('controller' => 'access', 'action' => 'toggle-ban', 'id' => $user->id));?>
+						<?php if(!$is_banned) {?> 
+								<a href="<?=$toggle_ban_link;?>" > 
+									<button type="button" class="btn btn-xs btn-warning form-control input-sm"> 
+										<span class="glyphicon glyphicon-ban-circle"></span>
+										<?=$this->translate('Ban User');?> 
+									</button>
+								</a>
+						<?php } else {?>
+							<a href="<?=$toggle_ban_link;?>" >
+								<button type="button" class="btn btn-xs btn-success form-control input-sm"> 
+									<span class="glyphicon glyphicon-ban-circle"></span>
+									<?=$this->translate('Remove Ban');?> 
+								</button>
+							</a>
+						<?php } ?>
+					</div>
+				</div>
+			<?php endif ?>	
+
+		<?php endif ?>
+
+		<?php if ($this->isPermitted('_admin_\delete\user')): ?>
+			<div class="row">
+				<div class="col-md-12">
+					<a class="delete_user" data-id="<?=$user->id;?>" href="<?=$this->url('admin/actions', array('controller' => 'index', 'action' => 'delete'), array('query' => array(
+																		'id' => $user->id, 'section' => 'user'
+																	)));?>" >
+						<button type="button" class="btn btn-xs btn-danger form-control input-sm"><span class="glyphicon glyphicon-trash"></span> 
+							<?=$this->translate('Delete User');?>
+						</button>
+					</a>
+				</div>
+			</div>									
+		<?php endif ?>
+
+
+	</div>
+</div>

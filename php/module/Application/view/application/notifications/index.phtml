@@ -1,0 +1,18 @@
+<section id ="all-notifications" class="section-notifications container-fluid">
+	<div class="row">
+		<div class="col-md-12 pt">
+				<?php if(count($notifications) != 0) {?>
+					<div class="row">
+						<?=$this->partial('application/partial/notifications-list-table.phtml');?>
+					</div>
+				<?php } else { ?>
+					<h3><?=$this->translate('There is no any notifications');?></h3>
+				<?php }?>
+		</div> <!-- col-md-12 -->
+	</div><!--  row -->
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<?=$this->partial('application/partial/custom_pagination');?>
+		</div>
+	</div>
+</section>

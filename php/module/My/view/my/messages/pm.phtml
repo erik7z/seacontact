@@ -1,0 +1,148 @@
+<?php
+	$controller =  $this->routeMatch()->getParam('controller');
+	$query_params = ['talk' => $send_to_id];
+	if(strpos(strtolower($controller), 'messages') !== false) {
+		$route = 'sc/messages/actions';
+		$controller = 'messages';
+	} else {
+		$route = 'admin/actions';
+		$controller = 'userdb';
+		$query_params['from_id'] = $from_id;
+	}
+?>
+
+<section id="messages-pm" class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12 pt">
+			<?php if($chat_members) {?>
+				<h4>
+					<?=$this->translate('Conversation with');?> :
+				
+				<?php foreach ($chat_members as $key => $member) {
+					$name = zhashUserName(zgetUserName($member), 0, $this->isPermitted('_user_fields\name', $member['user_id']));
+					if($key > 0) echo ', ';
+				?>
+					<a href="<?= $this->url('sc/userinfo', array('user' => zgetUserLogin($member), 'controller' => null)); ?>">
+						<?=$name;?> 
+					</a> 
+				<?php }?>
+				</h4> 
+			<?php } else {?>
+				<h4><?=$this->translate('Conversation');?></h4> 
+			<?php } ?>		
+		</div>
+	</div>
+
+	<div class="row">		
+		<iframe class="col-xs-12" 	hspace="10px" src="<?php echo $this->url($route, array(
+			'controller' => $controller,
+			'action' => 'pmflow',
+			'id' => $chat_id
+			), ['query' => $query_params]) ?>"
+			id="msg_list_frame">
+		</iframe>		
+	</div>
+
+	<?php
+		$form->setAttribute('class', 'form-horizontal');
+		$form->setAttribute('action', $this->url($route, ['controller' => $controller, 'action' => 'pm','id' => $chat_id], ['query' => $query_params]) );
+		echo $this->form()->openTag($form);
+	?>
+			<div class="form-group">
+				<div class="col-sm-10 message-text">
+					<?= $this->formElement($form->get('text')->setAttribute('class', 'form-control')); ?>
+					<?= $this->formElementErrors($form->get('text'));?>
+				</div>
+				<div class="col-sm-2 message-button">
+					<?=$this->formButton()->openTag($form->get('submit')->setAttributes(['class' => 'btn btn-sm btn-primary form-control', 'style' => 'white-space: normal;', 'id' => 'send_msg']));?>
+						<?=$form->get('submit')->getLabel();?>
+					<?=$this->formButton()->closeTag();?>
+				</div>
+			</div>
+		<?= $this->form()->closeTag();?>
+</section>
+
+<?php
+	$this->headScript()->appendScript(
+		'$(function() {
+			// window.setInterval(function(){
+			// 	document.getElementById(
+			// 		"msg_list_frame").contentWindow.location.reload(true);
+			// }, 5000);
+
+		});', 'text/javascript');
+
+	$this->headStyle()->appendStyle('
+		#main-content {
+			padding-bottom: 5px;
+		}
+		');
+?>
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+			$("#message_text").keydown(MessageTextOnKeyEnter);
+
+			$("#send_msg").click(function(e){
+				e.preventDefault();
+				sendMessage();
+			});
+
+			function sendMessage(){
+				var $form = $('form[name=user_messages]');
+				var form_data = $form.serializeArray();
+				var action = $form.attr('action');
+				$('#send_msg').attr('disabled', true);
+				$.post(action, form_data, function(response) {
+					$('#send_msg').attr('disabled', false);
+						if(response.success == 0) {
+							if(typeof(response.message) == 'object') {
+							  $.each(response.message, function(fieldset_name){
+							  	var message = 'Fieldset: <b>'+fieldset_name+'</b> ';
+							    $.each(this, function(field_name){
+							      $.notify({message: message + '<br /> Check values for: <b>'+field_name+'</b>' },notify_warning_settings);
+							    });
+							  });
+							} else $.notify({message: response.message},notify_error_settings);
+							
+						}
+						document.getElementById("msg_list_frame").contentWindow.location.reload(true);
+						$("#message_text").val('').focus();
+						window.setTimeout(function(){
+							var $contents = $('#msg_list_frame').contents();
+							    var height = $contents.find("html, body").height();
+							    $contents.find("html, body").animate({ scrollTop: height });
+						}, 300);
+
+				}, 'json');
+			}
+
+			function MessageTextOnKeyEnter(e) {
+			    if (e.keyCode == 13) {
+			        if (e.ctrlKey) {
+			        	sendMessage();
+			        } else {
+		        		 var val = this.value;
+		        	    if (typeof this.selectionStart == "number" && typeof this.selectionEnd == "number") {
+		        	        var start = this.selectionStart;
+		        	        this.value = val.slice(0, start) + "\n" + val.slice(this.selectionEnd);
+		        	        this.selectionStart = this.selectionEnd = start + 1;
+		        	    } else if (document.selection && document.selection.createRange) {
+		        	        this.focus();
+		        	        var range = document.selection.createRange();
+		        	        range.text = "\r\n";
+		        	        range.collapse(false);
+		        	        range.select();
+		        	    }
+			        }
+			        return false;
+			    }
+			}
+
+
+	});
+
+
+
+</script>

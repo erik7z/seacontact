@@ -1,0 +1,32 @@
+<section class="pics">
+	<?php if($pics->count() > 0) { ?>
+	<h2> Pics </h2>
+		<?php foreach ($pics as $pic) { ?>
+			<div class="pic" style="float:left;">
+				<a href="<?= '/'._PICSWWW_.$pic['img']; ?>" target = "_blank">
+					<img src="<?= '/'._PICSWWW_.$pic['thumb']; ?>" />
+				</a>
+				<p>
+					<a href="<?= $this->url('pics/actions', array('action' => 'delete-pic', 'id' => $pic['id'])); ?>" >Delete</a>
+				</p>				
+			</div>
+		<?php } ?>
+	<?php } ?>
+	<?php if($avatars->count() > 0) { ?>
+	<h2 style="clear: both;"> Personal photos </h2>
+		<?php foreach ($avatars as $pic) { ?>
+			<div class="pic" style="float:left;">
+				<a href="<?= $this->basePath('/'._PICSWWW_.$pic['img']); ?>" target = "_blank">
+					<img src="<?= $this->basePath('/'._PICSWWW_.$pic['thumb']); ?>" />
+				</a>
+				<p>
+					<a href="<?= $this->url('pics/actions', array('action' => 'delete-avatar-pic', 'id' => $pic['id'])); ?>" >Delete</a>
+				</p>					
+			</div>
+		<?php } ?>
+	<?php } ?>
+
+
+<hr style="clear: both;">
+<a href="<?= $this->url(null); ?>">Back</a>
+</section>

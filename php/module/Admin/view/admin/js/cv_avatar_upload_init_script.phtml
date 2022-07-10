@@ -1,0 +1,23 @@
+<?php
+	if(!isset($user)) throw new \Application\Exception\Exception("user model should be provided for partial", 1);
+	if(!isset($form)) throw new \Application\Exception\Exception("form should be provided for partial", 1);
+	$submit_name = (isset($submit_name))? $submit_name : 'submit';
+	$avatar_type = (isset($avatar_type))? $avatar_type : 'cv_avatar';
+	$field_name = ($avatar_type == 'cv_avatar') ? '#cv_avatar_upload' : '#avatar_upload';
+	$avatar_src = ($avatar_type == 'cv_avatar') ? zgetUserCvAvatar($user) : zgetUserAvatar($user);
+?>
+
+
+<script type="text/javascript">
+	var avatar_field = '<?=$field_name;?>';
+	var previewImg = '<img src="<?=$avatar_src;?>" class="img-responsive" alt="User Avatar" />';
+	var btnCust = '<?=$this->formButton()->openTag($form->get($submit_name)->setAttribute("class", "btn btn-primary btn-sm"));?>'+
+	             '<span class="glyphicon glyphicon-floppy-disk"></span>'+
+	             '<?=$this->formButton()->closeTag();?>';
+	cv_avatar_upload_settings.layoutTemplates = {main2: '{preview} ' + '{browse}  {remove} '+ btnCust};
+	cv_avatar_upload_settings.defaultPreviewContent = previewImg;
+	$(document).on('ready', function() {
+	    $(avatar_field).fileinput(cv_avatar_upload_settings);
+	});
+
+</script>

@@ -1,0 +1,46 @@
+<?php if($vacancies) { ?>
+	<div class="row">
+		<?php 
+		     $filters_list = [
+			     ['name' => 'company_id', 'value' => _COMPANY_ID_, 'title' => 'Seacontact', 'icon' => 'fa fa-globe'], 
+			     ['name' => 'company_id', 'value' => _CREWING_ID_, 'title' => 'Ocean Contract', 'icon' => 'fa fa-globe'], 
+			     ['name' => 'active_companies', 'value' => 1, 'title' => $this->translate('Active Companies')], 
+			     ['name' => 'passive_companies', 'value' => 1, 'title' => $this->translate('Passive Companies')], 
+		     ];
+		?>
+		<?=$this->partial('admin/partial/vacancy-table',array(
+			'vacancies' => $vacancies,
+			'modal_button_id' => 'add_vacancy_modal',
+			'button_filters' => $this->partial('application/partial/custom_horiz_filters', [
+				'filters' => $q_options['filters'], 
+				'filters_list' => $filters_list, 
+				]),
+			'fields' => [
+				'edit', 'company', 'for_company',
+				'comments', 'rank', 'salary', 'ship_type', 
+				'publish_time', 'views','subscribers', 'candidates', 'active'
+			],
+			'table_sorting' => 1,
+			'q_options' => $q_options
+		));?>
+	</div>
+	<?=$this->partial('application/modal',array(
+		'modal_name' => 'add_vacancy_modal',
+		'modal_title' => $this->translate('Add New Vacancy'),
+		'modal_content' => $this->partial('application/partial/vacancy-form', array('form' => $form)),
+	));?>
+	<?=$this->partial('my/partial/datepicker-scripts.phtml');?>
+
+<?php }?>
+<div class="row">
+	<div class="col-md-12 text-center custom_pagination">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+</div>
+<script type="text/javascript">
+	<?php if(1 == $this->show_form) { ?>
+	    $(window).load(function(){
+	        $('#add_vacancy_modal').modal('show');
+	    });
+	<?php }?>
+</script>

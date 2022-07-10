@@ -1,0 +1,94 @@
+<?php 
+	$user_type = (isset($q_options['user_type']))? $q_options['user_type'] : 'user';
+?>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="box">
+			<div class="box-header bg-info">
+				<div class="row">
+					<div class="col-md-4">
+						<h4>
+							<?=$this->translate('Results in this request');?>:
+							<small><?=$total_results;?></small>
+						</h4>
+					</div>
+					<div class="col-md-8 text-right">
+						<button type="button" class="btn btn-default btn-sm " aria-label="<?=$this->translate('Filter');?>" data-toggle="modal" data-target="#filterUsersModal">
+						  <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> <?=$this->translate('Filter');?>
+						</button>				
+						<button type="button" class="btn btn-success btn-sm " aria-label="<?=$this->translate('Add User');?>" data-url="/userdb/check-<?=$user_type;?>" data-toggle="modal" data-target="#checkUserModal">
+						  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> <?=$this->translate('Add');?>
+						</button>				
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<?php foreach ($q_options['filters'] as $key => $value) :?>
+							<?php if ($form->get('filters')->has($key)): ?>
+								<?php $label = $form->get('filters')->get($key)->getLabel();?>
+								<?php if (is_array($value)): ?>
+									<?php for ($i=0; $i < count($value); $i++) :?>
+										<?=$this->partial('admin/partial/filter-button', ['filters' => $q_options['filters'], 'label' => $label, 'value' => $value[$i], 'key' => $key]);?>
+									<?php endfor;?>
+								<?php else: ?>
+									<?=$this->partial('admin/partial/filter-button', ['filters' => $q_options['filters'], 'label' => $label, 'value' => $value]);?>
+								<?php endif ?>
+							<?php endif ?>
+						<?php endforeach;?>
+						<?php if(!empty($q_options['filters'])) {?>
+							<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => $this->routeMatch()->getAction()));?>">
+								<button type="button" class="btn btn-xs btn-danger" aria-label="Remove Filters" >
+								  <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span> <?=$this->translate('Remove Filters');?>
+								</button>
+							</a>
+						<?php }?>
+					</div>
+				</div>
+				<?php if (count($q_options['filters'])): ?>
+					<?=$this->partial('application/partial/query-share');?>
+				<?php endif ?>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-md-12 table-responsive">
+						<?=$this->partial('admin/partial/users-table');?>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 text-center">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+</div>
+
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'filterUsersModal',
+					'modal_title' => $this->translate('Filter Users Database'),
+					'modal_content' => $this->partial('admin/partial/user-filter-form'),
+));?>
+
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'checkUserModal',
+					'modal_title' => $this->translate('Check Email')
+));?>
+
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#checkUserModal']);?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#checkUserModal').on('show.bs.modal', function(e){
+			var url = $(e.relatedTarget).data('url');
+			loadContent(url);
+		});
+
+		<?php if(true === $this->show_form) { ?>
+		    $(window).load(function(){
+		        $('#filterUsersModal').modal('show');
+		    });
+		<?php }?>
+	    });
+</script>

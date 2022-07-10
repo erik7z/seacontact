@@ -1,0 +1,67 @@
+<?php $user_address = ($login)? $login : 'id'.$user_id;?>
+<?php 
+	$message_text = (isset($message_text))? $message_text : $this->translate('Message');
+	$add_text = (isset($add_text))? $add_text : $this->translate('Add');
+?>
+			
+<div class="col-md-4 text-center pt" data-xhrctr="partner_<?=$user_id;?>">
+	<div class="row">
+		<div class="col-md-12 pb03">
+			<span class="small bold text-muted ">
+				<?=zhashUserName(zgetUserName($this->vars()), 0, $this->isPermitted('_user_fields\name', $user_id));?>
+			</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-5" style="padding-right: 0; padding-left: 5px;">
+			<div class="row">
+				<div class="col-md-12">
+					<?php $cv_avatar = ($cv_avatar) ? _PICSWWW_.$cv_avatar : _IMGWWW_._AVABLANKUSER_; ?>
+					<a href="<?= $this->url('sc/userinfo', array('user' => $user_address, 'controller' => null)); ?>">
+						<img src="<?=$this->basePath($cv_avatar);?>" class="img-circle" width="45px" height="45px">
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 pt05">
+					<?php if($this->isPermitted('my\controller\messages.pm', $user_id)) echo $this->partial('my/partial/contacts-btn-msg', array('class' => 'btn-xs mb05','text' => $message_text, 'user' => $this->vars()));?>
+					<?php if ($this->isPermitted('my\controller\contacts.add', $user_id)): ?>
+						<a href="<?= $this->url('sc/contacts/actions', array(
+												'action' => 'add',
+												'id' => $user_id
+												)); ?>" 
+							title="<?=$this->translate('Add to Friends');?>" 
+							data-xhrtarg="partner_<?=$user_id;?>"
+							data-xhrdelete="add_partner">
+							<button type="button" class="btn btn-xs btn-primary btn-xs mb05" >
+								<span class="glyphicon glyphicon-link"></span> <?=$add_text;?>
+							</button>
+						</a>
+					<?php endif ?>
+
+				</div>
+			</div>
+		</div>
+		<div class="col-md-7 text-left" style="padding-left: 5px; padding-right: 5px;">
+			<ul class="list-unstyled">
+				<li><i class="fa fa-anchor"></i>
+					<?php 
+						if($this->identity() && $this->identity()->type == 'user') {
+							$module = 'sc/contacts/actions';
+							$route = ['action' => 'search'];
+						} else {
+							$module = 'sc/seamansdb';
+							$route = [];
+						}
+					?>
+					<a href="<?=$this->url($module, $route, ['query' => ['filters' => ['ship_name' => $worked_on]]]);?>">
+						<?=$worked_on;?>
+					</a>
+				</li>
+				<li><i class="fa fa-user"></i> <?=$desired_rank;?></li>
+				<li><i class="fa fa-clock-o"></i> <i class="fa fa-caret-right"></i> <?=date('M-y', $worked_together_from);?></li>
+				<li><i class="fa fa-caret-right"></i> <i class="fa fa-clock-o"></i> <?=date('M-y', $worked_together_to);?></li>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,89 @@
+<div id="home">
+    <div class="headerLine">
+        <?php if (!$social_reg): ?>
+            <?= $this->partial('landing-menu');?>
+        <?php endif ?>
+
+        <div class="container-fluid">
+            <div class="row registration_page fast_reg">
+                <?php if ($social_reg): ?>
+                    <div class="alert alert-warning text-center" role="alert">
+                        <h5 class="mt0"><?=$this->translate('You may be already in our database, and your CV can be already filled.');?></h5>
+                        <h5 class="mt0 mb0"><?=$this->translate('Please enter your email to check.');?></h5>
+                    </div>
+                <?php endif ?>
+                <div class="<?=(!$social_reg)? 'col-md-6 col-md-offset-3  col-sm-6 col-sm-offset-3' : 'col-md-12';?> text-center">
+                    <?php if (!$social_reg): ?>
+                        <?php if(!$title) $title = $this->translate('Fast registration');?>
+                            <h4 class="text-center text-bg"><?=$title;?></h4>
+                        <?php if ($vacancy_title): ?>
+                            <h3 class="text-center text-bg"><?=$vacancy_title;?></h3>
+                        <?php endif ?>
+                    <?php endif ?>
+                    <?php
+                        $form = $this->form;
+                        $form->prepare();
+                        $form->setAttribute('class', 'form-horizontal');
+                    ?>
+                    <?=$this->form()->openTag($form);?>
+                        <?php //$this->formElement($this->form->get('csrf'));?>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <?=$this->formElement($this->form->get('user')->get('email')->setAttributes(array('id' => 'reg_email', 'class' => 'fEmail'))); ?>
+                                <?=$this->formSubmit($this->form->get('submit')->setAttribute('class', 'subS')); ?>
+                            </div>
+                            <div class="col-md-12">
+                                <?=$this->formElementErrors($form->get('user')->get('email'));?> 
+                            </div>
+                        </div>
+                        <?php if ($this->form->get('user')->has('type')): ?>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3">
+                                  <ul class="list-group mb0">
+                                    <li class="list-group-item">
+                                        <h4 class="bg-info mt0 pt0"><b><?=$form->get('user')->get('type')->getLabel();?></b></h4>
+                                        <?=$this->formRadio($form->get('user')->get('type')->setAttribute('style','margin-left: 20px;margin-right: 5px;'));?>
+                                        <?=$this->formElementErrors($form->get('user')->get('type'));?>
+                                    </li>
+                                  </ul>  
+                                </div>
+                            </div>
+                        <?php endif ?> 
+                        <?php if ($this->form->get('user')->has('cv_file')): ?>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <?=$this->formFile($form->get('user')->get('cv_file'));?>
+                                    <?=$this->formElementErrors($form->get('user')->get('cv_file'));?> 
+                                </div>
+                            </div>
+                        <?php endif ?>
+                        <?php if ($this->form->has('captcha')): ?>
+                            <div class="form-group">
+                                <div class="col-md-12" id="captcha-field">
+                                 <?=$this->formCaptcha($this->form->get('captcha'));?>   
+                                </div>
+                            </div>
+                        <?php endif ?>
+                        <?php if ($this->msgs()): ?>
+                            <div class="col-md-12 pt system-messages">
+                                <?= $this->msgs();?>
+                            </div>    
+                        <?php endif ?>
+                    <?=$this->form()->closeTag();?>
+                </div>
+                <?php if (!$social_reg): ?>
+                    <?=$this->partial('landing-social');?>
+                <?php endif ?>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<?php if (!$social_reg): ?>
+    <?=$this->partial('application/js/file_upload');?>
+    <script type="text/javascript">
+        $(document).on('ready', function() {
+            $("input#cv_file_upload").fileinput(cv_upload_settings);
+        });
+    </script>
+<?php endif ?>

@@ -1,0 +1,142 @@
+<section id ="edit-vacancy" class="section-vacancies container-fluid">
+	<div class="row">
+
+		<div class="col-md-3 text-center">
+			<div class="box">
+				<div class="box-header bg-info">
+					<h5><?=$this->translate('Vacancy Statistic');?></h5>
+				</div>
+				<div class="box-body">
+					<div class="row" style="margin-top: 1em;">
+						<div class="col-md-12 text-center">
+							<img src="<?=zgetUserAvatar($vacancy);?>" class="img-responsive" />
+						</div>
+					</div>
+					<div class="row"  style="margin-top: 1em;">
+						<div class="col-md-3"  style="padding-right: 0;">
+							<?php $page = ($vacancy->login) ? $vacancy->login : 'id'.$vacancy->user; ?>
+							<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'company', 'id' => $vacancy->user));?>">
+								<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+									<span class="fa fa-university"></span>
+								</button>
+							</a>
+						</div>
+						<div class="col-md-9"  style="padding-left: 0;">
+							<?php $page = ($vacancy->login) ? $vacancy->login : 'id'.$vacancy->user; ?>
+							<a href="<?=_ADDRESS_.$page;?>">
+							<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+								<span class="text-info"><?=$vacancy->company_name;?></span>
+							</button>
+							</a>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-3"  style="padding-right: 0;">
+							<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+								<span class="fa fa-eye"></span>
+							</button>
+						</div>
+						<div class="col-md-9"  style="padding-left: 0;">
+							<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+								<?=$this->translate('Views');?> : <span ><?=$vacancy->views;?></span>
+							</button>
+						</div>
+					</div>	
+					<div class="row">
+						<div class="col-md-3"  style="padding-right: 0;">
+							<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+								<span class="fa fa-user-plus"></span>
+							</button>
+						</div>
+						<div class="col-md-9"  style="padding-left: 0;">
+							<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+								<?=$this->translate('Subscribers');?> : <span ><?=$vacancy->subscribers;?></span>
+							</button>
+						</div>
+					</div>	
+					<div class="row">
+						<div class="col-md-3"  style="padding-right: 0;">
+							<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+								<span class="glyphicon glyphicon-time"></span>
+							</button>
+						</div>
+						<div class="col-md-9"  style="padding-left: 0;">
+							<button type="button" class="btn btn-xs btn-default form-control input-sm" >
+								<?=$this->translate('Publication Time');?> : <span ><?=$vacancy->time;?></span>
+							</button>
+						</div>
+					</div>	
+				</div>
+			</div>
+		</div>
+
+		<fieldset class="col-md-9">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="box">
+						<div class="box-header bg-info">
+							<h5><?=$this->translate('Vacancy Data');?></h5>
+						</div>
+						<div class="box-body">
+							<?=$this->partial('application/partial/vacancy-form', array('form' => $form));?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
+	</div>
+	<div class="row">
+		<div class="col-md-12 table-responsive">
+			<div class="box">
+				<div class="box-header bg-info">
+					<div class="row">
+						<div class="col-md-12">
+							<h4><?= $this->translate('Vacancy Subscribers');?></h4>
+						</div>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-12 table-responsive">
+							<?php $q_options['show_fields'] = ['item_number', 'login', 'office_note', 'name', 'desired_rank', 'subscribed_time', 'nationality'];?>
+							<?=$this->partial('admin/partial/users-table', [
+								'data_list' => $subscribers,
+								'vacancy_id' => $vacancy->id,
+								'q_options' => $q_options,
+							]);?>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 table-responsive">
+			<div class="box">
+				<div class="box-header bg-info">
+					<div class="row">
+						<div class="col-md-12">
+							<h4><?= $this->translate('Vacancy Candidates');?></h4>
+						</div>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-12 table-responsive">
+							<?php $q_options['show_fields'] = ['item_number', 'login', 'office_note', 'name', 'desired_rank', 'assigned_time', 'assigned_by', 'status'];?>
+							<?=$this->partial('admin/partial/users-table', [
+								'data_list' => $candidates,
+								'vacancy_id' => $vacancy->id,
+								'q_options' => $q_options,
+							]);?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<?=$this->partial('my/partial/datepicker-scripts.phtml');?>

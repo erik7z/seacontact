@@ -1,0 +1,42 @@
+<section id ="cv-personal" class="section-cv container-fluid">
+	<?= $this->partial('user-info/partial/user-cv', [
+		'plain' => false, 
+		'user' => $user, 
+		'user_experience' => $user_experience, 
+		'user_education' => $user_education,
+		'user_docs' => $user_docs,
+		'user_last_note' => $user_last_note
+		]);?>
+	<div class="row pb mb">
+		<div class="col-md-12 text-center">
+			<a href="?format=print&lang=en" target="_blank">
+				<button type="button" id="cv_file_print" class="btn btn-md btn-default">
+					<span class="glyphicon glyphicon-print"></span> <?=$this->translate('Print');?>
+				</button>
+			</a>
+			<a href="?format=pdf&lang=en"  target="_blank">
+				<button type="button" id="cv_file_download" class="btn btn-md btn-default">
+					<span class="glyphicon glyphicon-floppy-save"></span> <?=$this->translate('Download');?>
+				</button>
+			</a>
+		</div>
+	</div>
+</section>
+<?=$this->partial('application/js/unlock_user_info');?>
+
+<?php if ($this->isPermitted('application\controller\seamansdb.user-cv-notes')): ?>
+	<?=$this->partial('application/modal',array(
+						'modal_name' => 'cv_notes_modal',
+						'modal_title' => $this->translate('User CV Notes')
+	));?>
+	<?=$this->partial('application/js/cv_notes_scripts');?>
+	<script type="text/javascript">
+		var user_id = '<?=$user->id;?>';
+		$('.user_cv_notes').on('click', function(){
+			$('#cv_notes_modal').modal('show');
+			loadContent('/seamansdb/user-cv-notes/'+user_id, null);
+		});
+	</script>
+	<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#cv_notes_modal']);?>
+
+<?php endif ?>

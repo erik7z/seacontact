@@ -1,0 +1,128 @@
+<?php
+	$title = (isset($title))? $title : $this->translate('Vacancies');
+?>
+
+<div class="col-md-12 table-responsive">
+	<div class="box">
+		<div class="box-body">
+			<table class="table table-hover table-condensed table-vacancies">
+				<thead>
+					<tr>
+						<th><?=$this->translate('Title');?></th>
+						<?php if ($this->identity() && $this->identity()->type == 'company'): ?>
+							<th class="text-center no-sort">
+								<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+							</th>
+						<?php else :?>
+							<th><?=$this->translate('Company');?></th>
+						<?php endif?>
+						<th><?=$this->translate('Rank');?></th>
+						<th><?=$this->translate('Salary');?></th>
+						<th><?=$this->translate('Ship Type');?></th>
+						<th><?=$this->translate('Contract');?></th>
+						<?php if ($this->identity() && $this->identity()->type == 'company'): ?>
+							<th><span class="fa fa-eye"></span></th>
+							<th><span class="fa fa-user-plus"></span></th>
+						<?php else :?>
+							<th class="text-center"><?=$this->translate('Apply');?></th>
+						<?php endif?>
+						<th><?=$this->translate('Publish Date');?></th>
+						<?php if ($this->identity() && $this->identity()->type == 'company'): ?>
+							<th><?=$this->translate('Active');?></th>
+						<?php endif ?>
+					</tr>
+				</thead>
+				<?php foreach($data_list as $vacancy) {?>
+					<?php
+						$vacancy = (object) $vacancy;
+						$vacancy_url = $this->url('sc/vacancies/actions', 
+							array('action' => 'view', 'id' => $vacancy->id)
+						);
+						if(isset($vacancy->data)) {
+							$data = json_decode($vacancy->data); 
+							$vacancy = array_merge((array)$data[0], (array)$vacancy);
+						}
+					?>
+					<tr <?php if ($this->identity() && $this->identity()->type == 'company'): ?> <?php if ($vacancy->active == false): ?> class="table_inactive" <?php endif ?>  <?php endif ?>>
+						<td>
+							<?php if ($vacancy->urgent): ?>
+								<span class="glyphicon glyphicon-fire text-danger"></span>
+							<?php endif ?>
+							<a href="<?=$vacancy_url;?>"><?=zshorterText($vacancy->title);?></a>
+						</td>
+						<?php if ($this->identity() && $this->identity()->id == $vacancy->user): ?>
+							<td>
+								<?php if($this->isPermitted('application\controller\vacancies.edit', $vacancy->user)) : ?>
+									<a href="<?=$this->url('sc/vacancies/actions',['action' => 'edit', 'id' => $vacancy->id]);?>">
+										<button type="button" class="btn btn-default btn-sm form-control" aria-label="View Vacancy">
+					 						<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+										</button>
+									</a>
+								<?php endif?>
+							</td>
+						<?php else :?>
+							<td>
+								<?php $page = ($vacancy->login) ? $vacancy->login : 'id'.$vacancy->user; ?>
+								<a href="<?=$this->url('sc').$page;?>"><?=$vacancy->company_name;?></a>
+							</td>
+						<?php endif?>
+						<td><?=$vacancy->rank;?></td>
+						<td>
+							<?php if ($vacancy->salary): ?>
+								<?=$vacancy->salary;?> <?=$vacancy->salary_unit;?>
+							<?php endif ?>
+							
+						</td>
+						<td><?=$vacancy->ship_type;?></td>
+						<td><?=zdaysToMonths($vacancy->contract_length);?></td>
+						<?php if ($this->identity() && $this->identity()->type == 'company'): ?>
+							<td> <span class="fa fa-eye"></span> <?=$vacancy->views;?></td>
+							<td> <span class="fa fa-user-plus"></span> <?=$vacancy->subscribers;?></td>
+						<?php else :?>
+							<td class="text-center">
+								
+								<?php if($this->isPermitted('application\controller\vacancies.toggle-subscribe')) :?>
+									<?php 
+										$subscribe_status = isset($vacancy->subscribe_status)? $vacancy->subscribe_status : 0;
+										$subs_link = $this->url('sc/vacancies/actions', array('action' => 'toggle-subscribe', 'id' => $vacancy->id));
+									?>
+									<?=$this->partial('my/partial/btn-action', ['type' => 'vacancy', 'action_text' => $this->translate("Send CV"), 'cancel_text' => $this->translate("Unsubscribe"), 'link' => $subs_link, 'id' => $vacancy->id, 'status' => $subscribe_status]);?>
+								<?php endif ?>
+							</td>
+						<?php endif ?>
+						<td><?=zgetTimePosted($vacancy->time);?></td>
+						<?php if ($this->identity() && $this->identity()->type == 'company'): ?>
+							<td class="text-center">
+								<?php $can_edit = $this->isPermitted('application\controller\vacancies.edit', $vacancy->user);?>
+								<input type="checkbox" <?php if(!$can_edit) : ?> disabled="disabled" <?php endif?> class="active_vacancy <?=($can_edit)? '' : 'hide';?>" <?=($vacancy->active)? 'checked="checked"' : '';?> name="active_<?=$vacancy->id;?>" data-id="<?=$vacancy->id;?>" value="<?=$vacancy->active;?>" />
+							</td>
+						<?php endif?>
+					</tr>			
+				<?php }?>
+			</table>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	$(function () {
+	  $('.active_vacancy').on('click', function(e) {
+	  	e.preventDefault();
+	  	var $checkbox = $(this);
+	  	var id = $checkbox.data('id');
+	  	var status = ($checkbox.attr('value') == 1) ? 0 : 1;
+	  	var url = '/vacancies/toggle-active/'+id;
+	  	$.get(url, {status: status, request: 'json'}, function(response) {
+	  		console.log(response.success);
+	  		if(response.success == 1){
+	  			$checkbox.prop("checked", !$checkbox.prop("checked"));
+	  			$checkbox.parents('tr').toggleClass('table_inactive');
+	  		} else {
+	  			alert(response.message);
+	  		}
+	  	}, 'json');
+	  });
+	});
+	
+</script>

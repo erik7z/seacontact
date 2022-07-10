@@ -1,0 +1,65 @@
+<div id="home">
+    <div class="headerLine">
+        <?php if (!$social_reg): ?>
+            <?= $this->partial('landing-menu');?>
+        <?php endif ?>
+        <div class="container-fluid fast_reg">
+            <div class="row">
+                <div class="<?=(!$social_reg)? 'col-md-6 col-md-offset-3  col-sm-6 col-sm-offset-3' : 'col-md-12';?> text-center">
+                <?php if ($social_reg): ?>
+                        <h5 class="mt05 mb0 bg-info" data-name="message"></h5>
+                <?php endif ?>
+                    <?php if (!$social_reg): ?>
+                        <h3 class="text-bg"><?=$this->translate('Confirm E-mail');?></h3>
+                    <?php endif ?>
+                    <?php
+                        $form = $this->form;
+                        $form->prepare();
+                        $form->setAttribute('class', 'form-horizontal');
+                        echo $this->form()->openTag($form);
+                    ?>
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-2 pt05">
+                                <?=$this->formElement($this->form->get('user')->get('email_confirmation_key')->setAttributes(array('class' => 'fEmail'))); ?>
+                                <?=$this->formElement($this->form->get('submit')->setAttribute('class', 'subS')->setValue($this->translate('Confirm Email'))); ?> 
+                            </div>
+                            <div class="col-md-12 bg-warning">
+                                <?=$this->formElementErrors($form->get('user')->get('email_confirmation_key'));?> 
+                            </div>
+                        </div>
+                        <?php if ($this->form->has('captcha')): ?>
+                            <div class="form-group">
+                                <div class="col-md-12" id="captcha-field">
+                                 <?=$this->formCaptcha($this->form->get('captcha'));?>   
+                                </div>
+                            </div>
+                        <?php endif ?>              
+                    <?=$this->form()->closeTag();?>
+                    <?php if($this->msgs()) { ?>
+                        <div class="system-messages bg-info">
+                                <script type="text/javascript">
+                                    $(window).load(function(){
+                                        $('#myModal').modal('show');
+                                    });
+                                </script>
+                        </div>
+                    <?php }?>
+                </div>
+                <?php if (!$social_reg): ?>
+                    <?=$this->partial('landing-social');?>
+                <?php endif ?>
+            </div>
+        </div>
+    </div>
+    <?=$this->partial('application/modal',array(
+                        'modal_name' => 'myModal',
+                        'modal_size' => 'md',
+                        'modal_cancel_btn' => $this->translate('Continue registration')
+    ));?>
+
+    <script type="text/javascript">
+        $('#myModal').on('shown.bs.modal', function () {
+            $('.load-content').html('<span class="text-danger"><b><?=$this->msgs();?></b></span>');
+        });
+    </script>
+</div>

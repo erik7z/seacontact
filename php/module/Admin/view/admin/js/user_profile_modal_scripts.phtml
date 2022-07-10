@@ -1,0 +1,58 @@
+<?php
+	if(!isset($user_id)) throw new \Application\Exception\Exception("user_id should be provided to the partial", 1);
+	if(!isset($user_email)) echo "user_email should be provided to the partial", 1;
+	$mailbox = (isset($mailbox))? $mailbox : _MBCREW_;
+?>
+
+<script type="text/javascript">
+	$('#myModal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget);
+		var action = button.data('action');
+		var m_size = button.data('size');
+		var modal = $(this);
+
+		if(m_size != undefined) modal.find('.modal-dialog').removeClass('modal-lg').addClass(m_size);
+		else modal.find('.modal-dialog').addClass('modal-lg');
+		
+		modal.find('.modal-title').text(button.data('title'));
+		if(action == 'add_contract') loadContent('/userdb/user-experience/<?=$user_id;?>',null, function(){
+				$('select:not(.no_chosen)').chosen();
+			});
+		if(action == 'edit_contract') {
+			var id = button.data('id');
+			loadContent('/userdb/user-experience/<?=$user_id;?>'+'?edit_contract='+id, null, function(){
+				$('select:not(.no_chosen)').chosen();
+			});
+		}
+
+		if(action == 'add_document') loadContent('/userdb/user-documents/<?=$user_id;?>');
+		if(action == 'add_work_for') loadContent('/userdb/add-work-for/<?=$user_id;?>');
+		if(action == 'edit_document') {
+			var id = button.data('id');
+			loadContent('/userdb/user-documents/<?=$user_id;?>'+'?edit_document='+id);
+		}
+
+		if(action == 'add_note') loadContent('/userdb/user-cv-notes/<?=$user_id;?>', null);
+		if(action == 'made_call') {
+			loadContent('/userdb/user-cv-notes/<?=$user_id;?>', null);
+			$.get('/userdb/refresh-last-call/<?=$user_id;?>' , function(response) {
+				if(response.success) {
+					$('#call_button').text(response.data);
+					$.notify({message: response.message },notify_success_settings);
+				} else $.notify({message: response.message },notify_error_settings);
+			}, 'json');
+		}
+
+		if(action == 'assign_vacancy') loadContent('/vacancies/assign-candidate/<?=$user_id;?>');
+		<?php if(isset($user_email)) :?>
+			if(action == 'send_mail') loadContent('/mailbox/new-mail?mail_box='+'<?=$mailbox;?>'+'&mail_to='+'<?=$user_email;?>');
+		<?php else:?>
+			modal.find('.load-content').text('This user dont have E-MAIL');
+			$.notify({message: 'This user dont have E-MAIL' },notify_error_settings);
+		<?php endif;?>
+
+		if(action == 'user_messages') loadContent('/userdb/user-messages/'+'<?=$user_id;?>');
+
+		if(action == 'generate_cv') $('.load-content').load('/userdb/generate-cv/<?=$user_id;?>?response=terminal');
+	});
+</script>

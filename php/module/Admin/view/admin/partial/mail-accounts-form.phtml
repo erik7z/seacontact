@@ -1,0 +1,95 @@
+<div class="mail_accounts_form">
+	<?php
+		$form = $this->form;
+		$form->prepare();
+		$form->setAttribute('class', 'form-horizontal');
+		echo $this->form()->openTag($form);
+	?>
+	<?=$this->formElement($form->get('id'));?>
+
+	<div class="form-group">
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('mail_box'));?>
+			<?=$this->formElement($form->get('mail_box')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('mail_box'));?>
+		</div>
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('user_name'));?>
+			<?=$this->formElement($form->get('user_name')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('user_name'));?>
+		</div>
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('password'));?>
+			<?=$this->formElement($form->get('password')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('password'));?>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('imap_host'));?>
+			<?=$this->formElement($form->get('imap_host')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('imap_host'));?>
+		</div>
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('imap_port'));?>
+			<?=$this->formElement($form->get('imap_port')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('imap_port'));?>
+		</div>
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('imap_ssl'));?>
+			<?=$this->formElement($form->get('imap_ssl')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('imap_ssl'));?>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('smtp_host'));?>
+			<?=$this->formElement($form->get('smtp_host')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('smtp_host'));?>
+		</div>
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('smtp_port'));?>
+			<?=$this->formElement($form->get('smtp_port')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('smtp_port'));?>
+		</div>
+		<div class="col-md-4">
+			<?=$this->formLabel($form->get('smtp_ssl'));?>
+			<?=$this->formElement($form->get('smtp_ssl')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('smtp_ssl'));?>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-3">
+			<?=$this->formLabel($form->get('title'));?>
+			<?=$this->formElement($form->get('title')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('title'));?>
+		</div>
+		<div class="col-md-3">
+			<?=$this->formLabel($form->get('access_level'));?>
+			<?=$this->formElement($form->get('access_level')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('access_level'));?>
+		</div>
+		<div class="col-md-3">
+			<?=$this->formLabel($form->get('priority'));?>
+			<?=$this->formElement($form->get('priority')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('priority'));?>
+		</div>
+		<div class="col-md-3">
+			<?=$this->formLabel($form->get('transport'));?>
+			<?=$this->formElement($form->get('transport')->setAttribute('class', 'form-control input-sm '));?>
+			<?=$this->formElementErrors($form->get('transport'));?>
+		</div>
+
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control input-sm'));?>
+				<span class="fa fa-plus"></span> 
+	 			 <?=$form->get('submit')->getLabel();?>
+			<?=$this->formButton()->closeTag();?>
+		</div>
+	</div>
+
+	<?= $this->form()->closeTag();?>
+</div>
+

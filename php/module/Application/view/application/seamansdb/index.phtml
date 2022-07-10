@@ -1,0 +1,76 @@
+<?php $layout_thumb = ($q_options['layout'] == 'thumb')? 1 : 0;?>
+
+<section id ="all-cvs" class="section-cvs container-fluid">
+	<div class="row">
+		<div class="col-md-12 <?=($this->identity())? 'pt' : '';?>">
+			<div class="row">
+				<div class="col-md-2">
+					<button type="button" class="btn btn-info btn-sm form-control" aria-label="<?=$this->translate('Search');?>" data-toggle="modal" data-target="#filterUsersModal">
+					  <span class="glyphicon glyphicon-search" aria-hidden="true"></span> <?=$this->translate('Search');?>
+					</button>
+				</div>
+				<div class="col-md-8 text-center" data-name="results_count">
+					<h4>
+						<?=(count($q_options['filters']) > 0)? $this->translate('Users in this request') : $this->translate('Total Users');?>:
+						<span class="text-danger"><?=$total_results;?></span>
+					</h4>
+				</div>
+				<div class="col-md-2 text-center">
+					<?=$this->partial('application/partial/custom_layout_switch');?>
+				</div>
+			</div>
+			<?php if (!$without_exp): ?>
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3 pt05">
+						<div class="alert alert-warning ">
+							<h5 class="text-center mt0 mb0"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?=$this->translate('Only cv\'s with filled experience are shown');?></h4>
+						</div>
+					</div>
+				</div>
+			<?php endif ?>
+			<?=$this->partial('application/partial/active-form-filters-list');?>
+			<?php if (count($q_options['filters'])): ?>
+				<?=$this->partial('application/partial/query-share');?>
+			<?php endif ?>
+			<div class="row">
+				<div class="col-md-12 pt05">
+						<?php if(count($users) != 0) {?>
+								<?php if (!$layout_thumb): ?>
+									<?=$this->partial('application/partial/users-list-table', ['users' => $users]);?>
+								<?php else : ?>
+									<div class="row">
+										<div class="col-md-4 col-md-push-8" id="content-filters">
+											<?=$this->partial('admin/partial/user-filter-form', ['form' => $form, 'q_options' => $q_options, 'vertical' => 1]);?>
+										</div>
+										<div class="col-md-8 col-md-pull-4" data-name="page_content_list">
+											<?=$this->partialLoop('my/partial/cv-list-item.phtml', $users);?>
+										</div>
+									</div>
+									
+								<?php endif ?>
+						<?php } else { ?>
+							<h3><?=$this->translate('There is no any cv matching request');?></h3>
+						<?php }?>
+				</div> <!-- col-md-12 -->
+			</div><!--  row -->
+			<?=$this->partial('application/partial/custom_pagination');?>
+		</div> <!-- section col-sm-12 -->
+	</div> <!-- row -->
+</section>
+
+<?=$this->partial('application/js/unlock_user_info', ['default_bind' => !$layout_thumb ]);?>
+
+<?php if ($layout_thumb): ?>
+	<?=$this->partial('application/js/page_content_list_scripts');?>
+<?php endif ?>
+
+<?=
+$this->partial('application/modal',array(
+					'modal_name' => 'filterUsersModal',
+					'modal_title' => $this->translate('Search in Users Database'),
+					'modal_content' => $this->partial('admin/partial/user-filter-form'),
+))
+;?>
+
+
+

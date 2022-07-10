@@ -1,0 +1,101 @@
+<div class="container-fluid">
+	<div class="row text-center">
+		<div class="col-md-12">
+			<h3 class="text-danger">
+				<?=$message;?> 
+			</h3>
+		</div>
+		<?php if ($this->identity()): ?>
+			<?php if ($this->identity()->type == 'company'): ?>
+				<?php if ($role == \Application\Access\AccessList::ROLE_COMPANY_UNKNOWN): ?>
+					<div class="col-md-12">
+						<h3 class="text-info"><?=$this->translate('Your account not verified yet');?></h3>
+						<p class="text-success"><?=$this->translate('To speed up verification process, please');?></p>
+					</div>
+				<?php else: ?> <!-- not unknown company -->
+					<div class="col-md-12">
+						<ul class="row list-unstyled">
+							<li class="col-md-12"><h4><?=$this->translate('limits to unlock users contacts');?> :</h4></li>
+							<li class="col-md-4 text-center">
+						        <h4><?=$role_limits['USERS_ADD_DAY'];?> / <?=$this->translate('Day');?></h4>
+						    </li>
+						    <li class="col-md-4 text-center">
+						        <h4><?=$role_limits['USERS_ADD_WEEK'];?> / <?=$this->translate('Week');?></h4>
+						    </li>
+						    <li class="col-md-4 text-center">
+						        <h4><?=$role_limits['USERS_ADD_MONTH'];?> / <?=$this->translate('Months');?></h4>
+						    </li>
+						</ul>
+					</div>
+					<?php if ($stats && $stats->messages_day < $role_limits['MESSAGES_DAY']): ?>
+						<div class="col-md-12">
+							<h3 class="text-danger">
+								<?=$this->translate('You still can write messages to users');?><br />
+								<small><?=$this->translate('(They will receive notifications on Email !)');?></small>
+							</h3>
+						</div>
+					<?php endif ?>  <!-- message limits -->
+
+					<?php if ($role == \Application\Access\AccessList::ROLE_COMPANY_BASIC 
+								|| $role == \Application\Access\AccessList::ROLE_COMPANY_TEST): ?>
+						<div class="col-md-12">
+							<p><?=$this->translate('If you want to upgrade your account to');?> :</p>
+						</div>
+						<div class="col-md-12">
+							<a href="#">
+								<button class="btn btn-lg btn-success form-control" style="height: 60px;">
+									<?=$this->translate('COMPANY PREMIUM');?>
+								</button>
+							</a>
+						</div>
+					<?php else:?> <!-- not basic company -->
+						<div class="col-md-12">
+							<h4 ><?=$this->translate('You\'ve reached limits for');?> : </h4>
+							<h3><strong class="text-primary"><?=$this->translate('Company Premium');?></strong></h3>
+							<p><?=$this->translate('If you want to revise your package limits');?> :</p>
+						</div>
+					<?php endif?> <!-- complete for basic company -->
+
+				<?php endif ?>  <!-- complete not unknown company -->
+
+				<div class="col-md-12 pt">
+					<p><?=$this->translate('Contact with our office');?></p>
+					<h4>
+					    <a href="mailto:<?=$this->siteInfo()->email;?>"><?=$this->siteInfo()->email;?></a>
+					</h4>
+				</div>
+				<div class="col-md-12">
+					<ul class="row list-unstyled">
+					    <li class="col-md-4 text-center">
+					        <h4><a href="tel:<?=$this->siteInfo()->contact_phone;?>"><?=$this->siteInfo()->contact_phone;?></a></h4>
+					    </li>
+					    <li class="col-md-4 text-center">
+					        <h4><a href="tel:<?=$this->siteInfo()->contact_mobile;?>"><?=$this->siteInfo()->contact_mobile;?></a></h4>
+					    </li>
+					    <li class="col-md-4 text-center">
+					        <h4><a href="tel:<?=$this->siteInfo()->contact_mobile_2;?>"><?=$this->siteInfo()->contact_mobile_2;?></a></h4>
+					    </li>
+					</ul>
+				</div>
+			<?php else: ?>  <!-- if not company type -->
+				<!-- Do nothing -->
+			<?php endif ?>  <!-- complete if not company type -->
+
+		<?php else: ?>  <!-- if no identity show registration -->
+			<div class="col-md-12">
+				<a class="reg_link" href="<?=$this->url('sc/home', array(), array('fragment' => 'registration'));?>">
+					<button class="btn btn-lg btn-success form-control reg_link" style="height: 60px;">
+						<?=$this->translate('Register Company');?>
+					</button>
+				</a>
+			</div>
+			<script type="text/javascript">
+				$('.reg_link').on('click', function(){
+					$('#unlock_info_modal').modal('hide');
+				});
+			</script>
+		<?php endif ?>
+	</div>
+
+
+</div>

@@ -1,0 +1,100 @@
+<?php 
+  $show_avatar = (isset($show_avatar)) ? $show_avatar : 1;
+  $full_view = (isset($full_view)) ? $full_view : 1;
+?>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <a href="<?=$this->url('sc').zgetUserLogin($company);?>">
+      <h1 class="mt0"><?=$company->company_name;?></h1>
+    </a>
+  </div>
+  <div class="col-md-<?=($full_view)? 7 : 12;?>">
+   <?php if ($show_avatar): ?>
+      <div class="row pb">
+        <div class="col-md-8 text-right">
+          <a href="<?=$this->url('sc').zgetUserLogin($company);?>">
+            <img src="<?=zgetUserAvatar($company);?>" width="120px">
+          </a>
+        </div>
+      </div>
+   <?php endif ?>
+    <dl class="dl-horizontal">
+      <!--  
+      <dt><?=$this->translate('License');?> :</dt>
+      <dd> <?php $license = ($company->company_license) ? $company->company_license : $this->translate('License Not Confirmed');?>
+        <?=$license;?>
+      </dd> 
+      -->
+
+      <?php if ($company->info_website): ?>
+          <dt><?=$this->translate('Website');?> :</dt>
+          <dd> 
+            <a href="http://<?=str_replace('http://','', $company->info_website);?>" target="_blank"><?=$company->info_website;?></a>
+          </dd>    
+      <?php endif ?>
+      <?php if ($company->home_country): ?>
+        <dt><?=$this->translate('Country');?> :</dt>
+        <dd><?=$company->home_country;?></dd>
+      <?php endif ?>
+      <?php if($company->home_address) :?>
+      <dt><?=$this->translate('Address');?> :</dt>
+        <dd>
+          <address>
+            <?=$company->home_address;?>
+          </address>
+        </dd>
+      <?php endif?>
+      <dt><?=$this->translate('Contacts');?> :</dt>
+      <dd>
+          <ul class="fa-ul">
+            <?php if (isset($company->contact_phone) && $company->contact_phone != ''): ?><li><i class="fa-li fa fa-phone"></i><a href="tel:<?=$company->contact_phone;?>"><?=$company->contact_phone;?></a></li><?php endif ?>
+            <?php if (isset($company->contact_phone_2) && $company->contact_phone_2 != ''): ?><li><i class="fa-li fa fa-phone"></i><a href="tel:<?=$company->contact_phone_2;?>"><?=$company->contact_phone_2;?></a></li><?php endif ?>
+            <?php if (isset($company->contact_mobile) && $company->contact_mobile != ''): ?><li><i class="fa-li fa fa-mobile"></i><a href="tel:<?=$company->contact_mobile;?>"><?=$company->contact_mobile;?></li></a><?php endif ?>
+            <?php if (isset($company->contact_mobile_2) && $company->contact_mobile_2 != ''): ?><li><i class="fa-li fa fa-mobile"></i><a href="tel:<?=$company->contact_mobile_2;?>"><?=$company->contact_mobile_2;?></li></a><?php endif ?>
+          </ul>
+      </dd>
+      <dt><?=$this->translate('Email');?> :</dt>
+      <dd>
+        <address>
+          <?php $email = ($company->contact_email) ? $company->contact_email : $company->email; ?>
+          <a href="mailto:<?=$email;?>"><?=$email;?></a>
+        </address>
+      </dd>
+    </dl>
+  </div>
+  <?php if ($full_view): ?>
+    <div class="col-md-5 pt">
+        <h4><?=$this->translate('Company location');?> :</h4>
+        <?=$company->home_address;?>
+        <?php if (isset($map_html) && $map_html) : ?>
+          <?=$map_html;?>
+        <?php elseif ($this->identity() && $this->identity()->id == $company->id): ?>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <p>
+            <?=$this->translate('Please enter your address in Google standard ');?>: 
+            <br /> <i class="pt pb">1, Deribasovskaya str., Odessa, Ukraine</i>
+            <br /><b><a href="<?=$this->url('sc/my_company/actions', array('controller' => 'profile'));?>"><?=$this->translate('On your company profile page');?></a></b> :
+          </p>
+        <?php endif ?>
+    </div>
+  <?php endif ?>
+</div>
+
+
+<dl class="dl-horizontal">
+  <?php if ($company->company_description): ?>
+    <dt><?=$this->translate('Description');?> :</dt>
+    <dd>
+      <?=($full_view)? nl2br(html_entity_decode($company->company_description)) : zshorterText(strip_tags(html_entity_decode($company->company_description)), 30);?>
+    </dd>
+  <?php endif ?>
+</dl>

@@ -1,0 +1,92 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="input-group">
+		  <span class="input-group-addon" id="basic-addon1"><i class="fa fa-youtube-play"></i></span>
+		  <input type="text" class="form-control" id="youtube_link" placeholder="<?=$this->translate('Copy here your youtube video link');?>" aria-describedby="basic-addon1">
+		</div>
+		<span class="video_add_status"></span>
+	</div>
+	<div class="col-md-6 col-md-offset-3 pt05 text-center" id="youtube_check">
+		<button class="btn btn-info btn-xs"><i class="fa fa-refresh"></i>  <?=$this->translate('Check');?></button>
+	</div>
+	<div class="col-md-12 pt05">
+		<div id="youtube_container" class="embed-responsive embed-responsive-4by3">
+		</div>
+	</div>
+	<div class="col-md-12 text-right pt05" id="youtube_confirm">
+		<button class="btn btn-danger btn-xs form-control"><i class="fa fa-youtube-play"></i>  <?=$this->translate('Add Video');?></button>
+	</div>
+</div>
+
+<script type="text/javascript">
+$('#add_video_modal').on('show.bs.modal', function (event) {
+		cleanYtContainer();
+	});
+
+	function cleanYtContainer()
+	{
+		$('#youtube_container').empty();
+		$('#youtube_container, #youtube_confirm').hide();
+	}
+
+	$('#youtube_link').on('keyup', function(e){
+		e.preventDefault();
+		checkYtLink($(this).val());
+	});
+
+	$('#youtube_check').on('click', function(e){
+		e.preventDefault();
+		checkYtLink($('#youtube_link').val());
+		var $btn = $(this);
+		$btn.css('opacity', 0.5);
+		setTimeout(function(){
+			$btn.css('opacity', 1);
+		}, 500);
+	});
+
+	var selectTimer;        
+	var doneInterval = 500;
+	function checkYtLink(link) {
+		clearTimeout(selectTimer);
+		selectTimer = setTimeout(function(){
+			$('.video_add_status').html('');
+			var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+		    var match = link.match(regExp);
+		    if (match && match[2].length == 11) {
+		    	$('#youtube_container').empty().show('slow');
+		    	$('<div></div>', {class: 'loading-fixed'}).appendTo('#youtube_container');
+		    	$('<iframe></iframe>', {
+		    		class: 'embed-responsive-item',
+		    		allowfullscreen: true,
+		    		src: '//www.youtube.com/embed/'+match[2]
+		    	}).prependTo('#youtube_container');
+		    	$('.loading-fixed').remove();
+			    $('#youtube_confirm').show('slow');
+		    } else {
+		    	cleanYtContainer();
+		    	$('.video_add_status').html('<?=$this->translate("Youtube video URL is incorrect");?>');
+		    }
+		}, doneInterval);
+	}
+
+	$('#youtube_confirm').on('click', function(e){
+		e.preventDefault();
+		var embed_link = $('#youtube_link').val();
+		if(embed_link != '') {
+			$('input[name=video]').val($('#youtube_container iframe').attr('src'));
+			$('.video_preview').empty().removeClass('hide');
+			$('.remove_yvideo').removeClass('hide');
+			$('#youtube_container iframe').prependTo('.video_preview');
+			$('#youtube_link').val('');
+			$('#add_video_modal').modal('hide');
+		} else return false;
+	});
+
+	$('.remove_yvideo').on('click', function(e){ 
+		$('input[name=video]').val('');
+		$('.video_preview, .video_attached').empty().addClass('hide');
+		$('.remove_yvideo').addClass('hide');
+	});
+
+
+</script>

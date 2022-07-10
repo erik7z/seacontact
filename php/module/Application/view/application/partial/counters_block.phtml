@@ -1,0 +1,16 @@
+<?php 
+	$views = (isset($views))? $views : 0;
+	$subscribers = (isset($subscribers))? $subscribers : 0;
+	$reports = (isset($reports))? $reports : 0;
+
+?>
+
+<h5 class="text-muted mt0 mb0">
+	<?php if ($views): ?>
+		<span title="<?=$this->translate('Views');?>"><i class="fa fa-eye"></i> <?=$views;?></span>
+	<?php endif ?> 
+	<span class="subscribers_count_icon <?=($subscribers)? '' : 'hide';?>">/  <i class="fa fa-user "></i></span>
+	<span title="<?=$this->translate('Subscribers');?>" class="subscribers_count"> <?=($subscribers)? $subscribers : '';?></span>
+	<span class="reports_count_icon <?=($reports)? '' : 'hide';?>">/  <i class="fa fa-bell-slash-o text-muted "></i></span>
+	<span title="<?=$this->translate('Reports Canceled');?>" class="reports_count"> <?=($reports)? $reports : '';?></span>
+</h5>

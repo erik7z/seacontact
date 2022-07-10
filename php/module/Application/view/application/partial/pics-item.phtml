@@ -1,0 +1,12 @@
+<?php
+	$img = isset($img)? $img : null;
+	$thumb = isset($thumb)? $thumb : 'th_'.$img;
+	$alt = isset($alt)? $alt : null;
+	$gallery_id = isset($gallery_id)? $gallery_id : null;
+	$img_size = getimagesize(_PICSROOT_.$thumb); 
+	$width = $img_size[0];
+	$height = $img_size[1];
+?>
+<a href="/<?=_PICSWWW_.$img;?>" title="<?=$alt;?>" data-gallery="<?=$gallery_id;?>">
+	<img src="/<?=_PICSWWW_.$thumb;?>" class="grid-item" alt="<?=$alt;?>" width="<?=$width;?>" height="<?=$height;?>" />
+</a>

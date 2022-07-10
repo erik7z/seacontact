@@ -1,0 +1,191 @@
+<?php
+	$base_url = $this->url('sc/questions/actions', 
+		array('action' => 'view', 'id' => $question->question_id)
+	);
+	$active_url = $this->routeMatch()->getUrl();
+
+	$author = ($question->anonym)? '******' : zgetUserName($question);
+	$meta_title = zshorterText(strip_tags(html_entity_decode($question->title)), 10);
+	$meta_keywords = zshorterText(strip_tags(html_entity_decode($question->tags)), 7);
+	$hash_tags = zmakeHashTagString($question->tags);
+	$meta_description = '#'.zstripForHashTag($author).': '.zshorterText(strip_tags(html_entity_decode($question->text)),80)."\n"."\r".$hash_tags;
+	// $default_img = _ADDRESS_._IMGWWW_.'logo-main.png';
+	$default_img = zgetUserAvatar($question);
+
+
+	$this->headTitle()->prepend($meta_title); 
+	$this->headMeta()->appendName('title', $meta_title);
+	$this->headMeta()->appendName('keywords', $meta_keywords);
+	$this->headMeta()->appendName('description', $meta_description);
+
+	//meta tags for facebook:
+	$this->headMeta()->appendName('author', $author);
+	$this->headMeta()->appendProperty('og:url', $base_url);
+	$this->headMeta()->appendProperty('og:type', 'website');
+	$this->headMeta()->appendProperty('og:title', $meta_title);
+	$this->headMeta()->appendProperty('og:keywords', $meta_keywords);
+	$this->headMeta()->appendProperty('og:description', $meta_description);
+	$this->headMeta()->appendProperty('og:author', $author);
+	
+	$pics = json_decode($question->pics);
+
+	if(isset($pics[0]->img) && file_exists(_PICSROOT_.$pics[0]->img)) {
+		$image_url = _ADDRESS_._PICSWWW_.$pics[0]->img;
+		$this->headLink(array('rel' => 'image_src', 'href' => $image_url), 'PREPEND');
+		$this->headMeta()->appendProperty('og:image', $image_url);
+	} else {
+		$this->headMeta()->appendProperty('og:image', $default_img);
+	}
+
+;?>
+<section id ="view-question" class="section-questions container-fluid" data-type="main_section">
+	<?php
+		$this->layout()->show_breadcrumbs = true;
+	?>
+	<div class="row">
+		<div class="col-md-12">
+				<?php if($question) {?>
+						<?php 
+							$question->small_view = 0;
+							$question->full_view = 1;
+						?>
+						<?=$this->partial('my/partial/question-list-item', $question);?>
+				<?php } else { ?>
+					<h3><?=$this->translate('Question not found');?></h3>
+				<?php }?>
+		</div> <!-- col-md-12 -->
+
+	</div> <!-- row -->
+	<h4 class="text-muted mt0"><b><?=$this->translate('Answers');?></b></h4>
+	<hr class="mb05"/>
+	<div class="row">
+		<div class="col-md-12 text-center pb05">
+			<span class="small text-muted"><?=$this->translate('Sort by');?></span> : 
+			<div class="btn-group btn-group-xs" role="group" aria-label="<?=$this->translate('Sort by');?>">
+			  <button type="button" class="btn btn-<?=($q_options['_order'] == 'total_rating')? 'muted' : 'default';?>">
+			  	<a href="<?=$this->url(NULL, NULL ,['query' => ['_order' => 'total_rating','up' => !$q_options['up']]]);?>"><?=$this->translate('Rating');?> 
+					<?php if ($q_options['_order'] == 'total_rating'): ?>
+						<span class="fa fa-caret-<?=($q_options['up'] == 1)? 'up' : 'down';?>"></span>
+					<?php endif ?>
+			  	</a>
+			  </button>
+			  <button type="button" class="btn btn-<?=($q_options['_order'] == 'time')? 'muted' : 'default';?>">
+				  <a href="<?=$this->url(NULL, NULL ,['query' => ['_order' => 'time', 'up' => !$q_options['up']]]);?>">
+				  	<?=$this->translate('Time');?> 
+				  	<?php if ($q_options['_order'] == 'time'): ?>
+				  		<span class="fa fa-caret-<?=($q_options['up'] == 1)? 'up' : 'down';?>"></span>
+				  	<?php endif ?>
+				  </a>
+			  </button>
+			</div>
+		</div>
+	</div>
+	<div class="row text-center" data-name="custom_pagination" data-pagination="prev">
+		<?=$this->partial('application/partial/button_pagination', [
+			'type' => 'prev', 
+			'total_results' => $total_results,
+			'offset' => $q_options['_offset'],
+		]);?>
+	</div>
+	<div class="row data-list" data-limit="<?=$q_options['_limit'];?>" data-offset="<?=$q_options['_offset'];?>" data-url="<?=$active_url;?>" data-xhrctr="data-list">
+		<div class="col-md-12">
+			<?php if (count($data_list)): ?>
+				<?php foreach ($data_list as $answer): ?>
+					<?php 
+						$answer->full_view = 1;
+						$answer->active_url = $active_url;
+					?>
+					<?=$this->partial('my/partial/answer-list-item', $answer);?>
+				<?php endforeach ?>
+			<?php endif ?>
+		</div>
+	</div>
+	<div class="row text-center" data-name="custom_pagination" data-pagination="next">
+		<?=$this->partial('application/partial/button_pagination', [
+			'type' => 'next', 
+			'total_results' => $total_results,
+			'offset' => $q_options['_offset'],
+		]);?>
+	</div>
+	<?php if (count($subscribers) > 1): ?>
+		<h4 class="text-muted"><b><?=$this->translate('Question subscribers');?></b></h4>
+		<hr class="mb05" />
+		<div class="row">
+			<div class="col-md-12">
+				<?php foreach ($subscribers as $subscriber) :?>
+					<?=$this->partial('my/partial/liker-item', ['liker' => (array) $subscriber, 'size' => 35]);?>
+				<?php endforeach ?>
+			</div>
+		</div>
+	<?php endif ?>
+
+	<hr class="mt05" />
+	<div class="row">
+		<div class="col-md-12">
+			<?php
+				$link = '<a href="'.$base_url.'" target="_blank"><b>'.$this->translate('link').'</b></a>';
+				$email = '<a href="mailto:?subject='.$meta_title.'&body='.$meta_title.' '.$base_url.'" ><b>'.$this->translate('email').'</b></a>';
+				$facebook = '<a href="http://www.facebook.com/sharer/sharer.php?u='.$base_url.'" ><b>'.$this->translate('facebook').'</b></a>';
+				$linkedin = '<a href="https://www.linkedin.com/shareArticle?mini=true&url='.$base_url.'"><b>'.$this->translate('linkedin').'</b></a>';
+				$vkontakte = '<a href="http://vk.com/share.php?url='.$base_url.'" target="_blank"><b>'.$this->translate('vkontakte').'</b></a>';
+			?>
+			<h4 class="pb"><?=sprintf($this->translate('You know somebody who can answer? share %s on this question, by %s, %s, %s or %s'), $link, $email, $linkedin, $facebook, $vkontakte);?></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<?php if (!$this->identity() || $this->isPermitted('application\controller\questions.answer-submit', $question->user)): ?>
+				<h4 class="text-muted"><b><?=$this->translate('Your answer');?></b></h4>
+				<hr />
+				<?=$this->partial('application/partial/answer-form');?>
+			<?php endif ?>	
+		</div>
+	</div>
+
+	<?php if (count($sim_questions) > 0): ?>
+		<h4 class="text-muted"><b><?=$this->translate('Similar questions');?></b></h4>
+		<hr class="mb05" />
+		<div class="row">
+			<?=$this->partial('application/partial/questions-list-table.phtml', ['data_list' => $sim_questions]);?>
+		</div>
+	<?php endif ?>
+</section>
+<?=$this->partial('application/image-gallery');?>
+
+<?php $this->headScript()->appendFile($this->basePath('vendor/tinymce/tinymce.min.js'));?>
+<?=$this->partial('application/js/file_upload');?>
+<?=$this->partial('application/js/tinymce-scripts');?>
+
+<?=$this->partial('application/js/page-form-scripts', ['form_name' => '[name=question_answers_form]', 'mce_element' => 'question_answers[text]', 'pics_upload' => 1]);?>
+
+<?=$this->partial('application/modal', ['modal_name' => 'vk_public_modal','modal_size' => 'md', 'modal_title' => $this->translate('Attach VK Post'),]);?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#vk_public_modal']);?>
+<script type="text/javascript">
+	$('#vk_public_modal').on('show.bs.modal', function (event) {
+		loadContent('/social/attach-wall-post', {section: 'questions', id: '<?=$question->question_id;?>'});
+	});
+</script>
+
+<script type="text/javascript">
+
+	$(function(){
+		$('body').on('click','[data-name=custom_pagination] a', function(e){
+			e.preventDefault();
+			$('<div></div>', {class: 'loading-relative'}).appendTo('.data-list');
+			$.get($(this).attr('href'),function(response) {
+				if(response.success == 1) {
+					$('.data-list').append($(response.data).find('.data-list').contents());
+					$('[data-pagination=next]').replaceWith($(response.data).find('[data-pagination=next]'));
+					initGridMaker();
+				} else { $.notify({message: response.message },notify_error_settings);}
+				$('.loading-relative').remove();
+			},'json');
+		});
+
+	});
+
+</script>
+
+
+
+

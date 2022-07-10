@@ -1,0 +1,48 @@
+<?php
+	$form = $this->form;
+	$form->prepare();
+	$form->setAttribute('method', 'get');
+	$form->setAttribute('class', 'form-horizontal');
+	echo $this->form()->openTag($form);
+	$filters_fields = $form->get('filters');
+?>
+
+<fieldset class="form-group">
+	<legend><small><?=$this->translate('Show Only');?> :</small></legend>
+	<div class="col-md-12">
+		<?=$this->formLabel($filters_fields->get('ranks_list'));?>
+		<?=$this->formElement($filters_fields->get('ranks_list')->setAttribute('class','form-control input-sm'));?>
+		<?=$this->formElementErrors($filters_fields->get('ranks_list'));?>		
+	</div>
+	<div class="col-md-12">
+		<?=$this->formLabel($filters_fields->get('ships_list'));?>
+		<?=$this->formElement($filters_fields->get('ships_list')->setAttribute('class','form-control input-sm'));?>
+		<?=$this->formElementErrors($filters_fields->get('ships_list'));?>		
+	</div>
+
+</fieldset>
+<fieldset class="form-group text-center">
+	<div class="col-md-12">
+		<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary btn-sm'));?>
+			<span class="glyphicon glyphicon-filter"></span> 
+			<?=$form->get('submit')->getLabel();?>
+		<?=$this->formButton()->closeTag();?>
+		<?php if($filters) {?>
+		<?php 
+			if($this->userInfo()) {
+				$clean_url = $this->url('sc/userinfo', array(
+										'controller' => 'contacts', 
+										'action' => $this->routeMatch()->getParam('action'),
+										'user' => zgetUserLogin($this->userInfo()),
+										));
+			} else $clean_url = $this->url('sc/contacts/actions', array('action' => $this->routeMatch()->getParam('action')));
+		?>
+			<a href="<?=$clean_url;?>">
+				<button type="button" class="btn btn-danger btn-sm" aria-label="<?=$this->translate('Remove Filters');?>" >
+				  <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> <?=$this->translate('Clean');?>
+				</button>
+			</a>
+		<?php }?>
+	</div>
+</fieldset>
+<?= $this->form()->closeTag();?>

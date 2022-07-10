@@ -1,0 +1,48 @@
+<?php 
+    $reasonMessage= '';
+    if (isset($this->reason) && $this->reason) {
+        switch ($this->reason) {
+            case 'error-controller-cannot-dispatch':
+                $reasonMessage = $this->translate('The requested controller was unable to dispatch the request.');
+                break;
+            case 'error-controller-not-found':
+                $reasonMessage = $this->translate('The requested controller could not be mapped to an existing controller class.');
+                break;
+            case 'error-controller-invalid':
+                $reasonMessage = $this->translate('The requested controller was not dispatchable.');
+                break;
+            case 'error-router-no-match':
+                $reasonMessage = $this->translate('The requested URL could not be matched by routing.');
+                break;
+            default:
+                $reasonMessage = $this->translate('We cannot determine at this time why a 404 was generated.');
+                break;
+        }
+    }
+    $additional_info = '';
+    $code = null;
+    if(isset($this->exception) && $this->exception instanceof Exception) {
+        $additional_info = get_class($this->exception).' '
+            .$this->translate('File').' '
+            .$this->exception->getFile().' '
+            .$this->exception->getLine() .' '
+            .$this->translate('Message').' '
+            .$this->exception->getMessage();
+            $code = $this->exception->getCode();
+    }
+
+    $response = [
+        'type' => $this->translate('A 404 error'),
+        'title' => $this->message,
+        'status' => 404,
+        'code' => $code,
+        'detail' => $reasonMessage,
+        'additional_info' => $additional_info
+            
+    ]
+?>
+
+<?php echo json_encode($response) ?>
+
+
+

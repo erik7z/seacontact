@@ -1,0 +1,145 @@
+<?php
+	$modal_name = (isset($modal_name)) ? $modal_name : '#myModal';
+?>
+
+<script type="text/javascript">
+
+	var loadContent = function(url, data, success_action){
+		if(success_action == 'undefined' || success_action == undefined) var success_action = false;
+		$('<?=$modal_name;?> .load-content').empty();
+		$('<div></div>', {class: 'loading-fixed'}).appendTo('<?=$modal_name;?> .load-content');
+
+		if(data == 'undefined' || data == undefined) data = null;
+
+		$.get(url,data, function(response){
+			$('div.loading-fixed').remove();
+			if(response.success) {
+				$('<?=$modal_name;?> .load-content').html(response.data);
+				if(success_action) success_action(response);
+			}
+			else $.notify({message: response.message },notify_error_settings);
+		}, 'json');
+	}
+
+	var submitContent = function(form, success_action, get_params) {
+		if(success_action == 'undefined' || success_action == undefined) var success_action = false;
+		
+		if(typeof(tinyMCE) != 'undefined') {
+			tinyMCE.triggerSave();
+			tinyMCE.EditorManager.execCommand('mceRemoveEditor', true, 'text');
+		}
+
+		var form_data = form.serializeArray();
+		
+		var url = form.attr('action');
+		var button = form.find('button[type=submit], input[type=submit]');
+		button.attr('disabled',true);
+		if(get_params == 'undefined' || get_params == undefined) {
+		} else {
+			if(url.indexOf('?') == -1) url = url + '?' + $.param(get_params);
+			else url = url + '&' + $.param(get_params);
+		}
+
+		$('<?=$modal_name;?> .load-content').empty();
+		$('<div></div>', {class: 'loading-fixed'}).appendTo('<?=$modal_name;?> .load-content');
+
+		var form_data = new FormData($(form)[0]);
+
+		$.ajax({
+		    url: url,
+		    type: 'post',
+		    data: form_data,
+		    dataType: 'json',
+		    cache: false,
+		    processData: false,
+		    contentType: false,
+		    complete: function(xhr) { 
+		    	var response = xhr.responseJSON;
+		    	if(response == undefined || response == 'undefined'){
+		    		button.attr('disabled',false);
+		    		console.log(xhr.responseText);
+		    	} else {
+		    		if(response.success) {
+		    			if(response.redirect == 'undefined' || response.redirect == undefined || response.redirect == 0 || response.redirect == false) 
+		    				var redirect_action = false;
+		    			else redirect_action = response.redirect;
+		    			if(!success_action) {
+		    				$('<?=$modal_name;?>').modal('hide');
+		    				if(!redirect_action) window.location.reload();
+		    				else window.location.href = response.redirect;
+		    			} 
+		    			else if(success_action == 'follow') {
+		    				$('<?=$modal_name;?> .load-content').empty();
+		    				if(!redirect_action)$('<?=$modal_name;?> .load-content').html(response.data);
+		    				else {
+		    					$('<?=$modal_name;?>').hide();
+		    					window.location.href = response.redirect;
+		    				}
+		    			} 
+		    			else {
+		    				$('<?=$modal_name;?> .load-content').empty();
+		    				success_action(response);
+		    			}
+		    		} 
+		    		else {
+		    			$('div.loading-fixed').remove();
+		    			$('<?=$modal_name;?> .load-content').html(response.data);
+		    			if(form.attr('name') == 'admin_mails_form') {
+		    				tinyMCE.EditorManager.execCommand('mceAddEditor', true, 'text');
+		    			}
+
+		    			// parsing zend form error messages
+		    			// add checking for code 777
+		    			if(typeof(response.message) == 'object') {
+		    				$.each(response.message, function(fieldset_name){
+		    					var message = 'Fieldset: <b>'+fieldset_name+'</b> ';
+		    					$.each(this, function(field_name){
+		    						$.notify({message: message + '<br /> Check values for: <b>'+field_name+'</b>' },notify_warning_settings);
+		    					});
+		    				});
+		    			} 
+		    			else $.notify({message: response.message },notify_warning_settings);
+		    		}
+		    	}
+
+		    },
+		}); 
+
+	}
+
+	var loopLoad = function(url, params, brake_status, brake_action) {
+		loadContent(url, {reg_type: 'social'}, function(response){
+			$('[data-name=message]').html(success_message);
+			loopSubmit(params, brake_status, brake_action);
+		});
+	}
+	var success_message = '';
+	var loopSubmit = function(params, brake_status, brake_action) {
+		$('.load-content ').off('submit','form');
+		$('.load-content ').on('submit', 'form', function(e){
+			e.preventDefault();
+			submitContent($(this),function(response){
+				console.log(response);
+				if(response.extra_data.status == brake_status) {
+					brake_action(response);
+				} else {
+					success_message = response.message;
+					loopLoad(response.redirect, params, brake_status, brake_action);
+				}
+			},params);
+		});
+	}
+
+	$('.load-content').on('click','[data-ajax=1]', function(e){
+		e.preventDefault();
+		submitContent($(this).parents('form'), $(this).data('response'));
+	});
+
+	$('.load-content').on('click','.follow_link', function(e){
+		e.preventDefault();
+		var url = $(this).attr('href');
+		loadContent(url, null, function(response){
+
+		});
+	});
+</script>

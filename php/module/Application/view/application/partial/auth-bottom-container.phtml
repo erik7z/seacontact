@@ -1,0 +1,66 @@
+<?php 
+	$check_form_element = (isset($check_form_element))? $check_form_element : 'form:not(#auth_form)';
+	$page_url = (isset($page_url))? $page_url : $this->routeMatch()->getUrl();
+?>
+
+<div class="col-md-12 auth_container mt">
+	<h4 class="text-muted"><b><?=$this->translate('Enter');?></b></h4>
+	<hr />
+	<div class="row">
+		<div class="col-md-3 text-center">
+			<h5 class="mb0 mt0"><a href="<?=$this->url('sc/social_auth');?>"><?=$this->translate('Login with social networks');?></a></h5>
+			<?=$this->partial('application/partial/auth-social-links');?>
+		</div>
+		<div class="col-md-5 pt pb">
+			<div class="form-horizontal">
+				<?=$this->partial('application/partial/auth-form', ['action' => $this->url('sc/auth', [], ['query' => ['redirect' => $page_url]])]);?>
+			</div>
+		</div>
+		<div class="col-md-4 text-center">
+			<?=$this->partial('application/partial/auth-links');?>
+		</div>
+	</div>
+</div>
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'auth_modal',
+					'modal_title' => $this->translate('Authorisation'),
+					'modal_size' => 'md',
+					'show_header' => 0,
+					'show_footer' => 0
+));?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#auth_modal']);?>
+<?=$this->partial('application/js/social-auth-scripts', ['modal_name' => '#auth_modal']);?>
+
+<script type="text/javascript">
+
+	$('body').on('click', '#auth_form [type=submit]', function(e){
+		e.preventDefault();
+		var form = $(this).parents('form');
+		var formData = form.serialize();
+		var url = form.attr('action');
+		$.post(url, formData, function(response) {
+			if(response.success == 1) {
+				if(typeof(tinyMCE) != 'undefined') tinyMCE.triggerSave();
+				<?php if(isset($check_form_element)):?>
+					var form_content = $('<?=$check_form_element;?>').val();
+					if(form_content == 'undefined') window.location.reload();
+					else {
+						$.notify({message: response.message },notify_success_settings);
+						$('.auth_container').slideUp('slow');
+					}
+				<?php else: ?>
+					window.location.reload();
+				<?php endif ?>
+			} else {
+				if(response.code == '401') {
+					$.notify({message: response.message },notify_warning_settings);
+				} else if(response.code == '777'){
+					form.replaceWith($(response.data).find('#auth_form'));
+					$.notify({message: 'Login Failed' },notify_warning_settings);
+				} 
+				console.log(response);
+			}
+		}, 'json');
+	});		
+
+</script>

@@ -1,0 +1,275 @@
+<?php if(!isset($collapsed)) $collapsed = 'in';?>
+<?php 
+	if(isset($status) && $status == 'incoming') {
+		$bg = 'info';
+	}
+	else if(isset($status) && $status == 'outgoing') {
+		$bg = 'info';
+		$user_info_psn = 'col-md-push-10';
+		$mail_content_psn = 'col-md-pull-2';
+	}
+	else $bg = 'white';
+?>
+
+<div class="row">
+	<div class="col-md-2 <?=$user_info_psn;?> text-center">
+		<div class="row">
+			<div class="col-md-12">
+				<?php $avatar = (zgetUserAvatar($this->vars(), 'author_') != _IMGWWW_._AVABLANKUSER_) ? zgetUserAvatar($this->vars(), 'author_') : zgetUserAvatar($this->vars());?>
+				<img src="<?=_ADDRESS_.$this->basePath($avatar);?>" class="img-circle" width="40px" height="40px" alt="<?=$author_name;?>">
+				<?php if ($from_mail): ?>
+					<h6 class="from_mail"><?=$from_mail;?></h6>
+				<?php endif ?>
+				<?php $avatar = (zgetUserName($this->vars(), 'author_') != null) ? zgetUserName($this->vars(), 'author_') : zgetUserName($this->vars());?>
+				<?php 
+					if(zgetUserName($this->vars(), 'author_')) $displayed_name = zgetUserName($this->vars(), 'author_');
+					else if($author_name) $displayed_name = $author_name;
+					else $displayed_name = $from_name;
+				?>
+				<h6 class="author_name"><?=$displayed_name;?></h6>
+				<?php if ($login || $user_id): ?>
+					<?=$this->translate('User Page');?> :
+					<a href="<?=_ADDRESS_.zgetUserLogin($this->vars());?>">
+						<h5 class="author_name"><?=zgetUserName($this->vars());?></h5>
+					</a>
+					<?=$this->translate('User Profile');?>:
+					<?php $section = ($type == \Application\Model\UserTable::TYPE_COMPANY) ? \Application\Model\UserTable::TYPE_COMPANY : \Application\Model\UserTable::TYPE_USER;?>
+					<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => $section, 'id' => $user_id));?>">
+						<h5 class="author_name">id<?=$user_id;?></h5>
+					</a>
+				<?php endif ?>
+
+
+			</div>
+
+		</div>
+	</div>
+	<div class="col-md-10 <?=$mail_content_psn;?> ">
+		<div class="row">
+			<div class="col-md-11 <?php if($status == 'outgoing'):?>col-md-push-1 text-right<?php endif?>">
+				<div class="box no-margin">
+							<div class="box-header">
+								<div class="row">
+									<div class="col-md-2 <?php if($status == 'outgoing'):?>col-md-push-10 text-right<?php endif?>">
+										<p class="bg-warning">To:</p>
+									</div>
+									<div class="col-md-10 <?php if($status == 'outgoing'):?>col-md-pull-2 text-right<?php endif?>">
+										<p >
+										<?php $mail_to = json_decode($mail_to);?>
+										<?php if (count($mail_to) > 0): ?>
+											<?php foreach ($mail_to as $to): ?>
+												<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'new-mail'], 
+															['query' => ['mail_box' => $this->mail_box, 'mail_to' => $to->email, 'reply_on_id' => $unique_id]]);?>">
+													<button type="button" class="btn btn-xs btn-default" >
+													  <span class="fa fa-envelope-o" aria-hidden="true"></span> 
+													  <?php if (isset($to->name)): ?>
+													  	<?=$to->name;?>
+													  <?php endif ?> 
+													  (<?=$to->email;?>)
+													</button>
+												</a>
+											<?php endforeach ?>
+										<?php endif ?>
+
+										</p>
+									</div>
+								</div>
+								<?php $mail_cc = json_decode($mail_cc);?>
+								<?php if (count($mail_cc) > 0): ?>
+									<div class="row">
+										<div class="col-md-2 <?php if($status == 'outgoing'):?>col-md-push-10 text-right<?php endif?>">
+											<p class="bg-warning">Cc:</p>
+										</div>
+										<div class="col-md-10 <?php if($status == 'outgoing'):?>col-md-pull-2 text-right<?php endif?>">
+											<p >
+												<?php foreach ($mail_cc as $to): ?>
+													<a href="<?=$this->url('admin/actions', array('controller' => 'mailbox', 'action' => 'new-mail'), 
+																array('query' => array('mail_box' => $this->mail_box, 'mail_to' => $to->email, 'reply_on_id' => $unique_id)));?>">
+														<button type="button" class="btn btn-xs btn-default" >
+														  <span class="fa fa-envelope-o" aria-hidden="true"></span> 
+														  <?php if (isset($to->name)): ?>
+														  	<?=$to->name;?>
+														  <?php endif ?> 
+														  (<?=$to->email;?>)
+														</button>
+													</a>
+												<?php endforeach ?>
+											</p>
+										</div>
+									</div>
+								<?php endif ?>
+								<div class="row">
+									<div class="col-md-2 <?php if($status == 'outgoing'):?>col-md-push-10 text-right<?php endif?>">
+										<p class="bg-warning">From:</p>
+									</div>
+									<div class="col-md-10 <?php if($status == 'outgoing'):?>col-md-pull-2 text-right<?php endif?>">
+										<p >
+											<a href="<?=$this->url('admin/actions', array('controller' => 'mailbox', 'action' => 'new-mail'), 
+												array('query' => array('mail_box' => $this->mail_box, 'mail_to' => $from_mail, 'reply_on_id' => $unique_id)));?>">
+												<button type="button" class="btn btn-xs btn-default" >
+												  <span class="fa fa-envelope-o" aria-hidden="true"></span> <?=$from_name;?> (<?=$from_mail;?>)
+												</button>
+											</a>
+											
+										</p>
+									</div>
+								</div>
+								<div class="mailbox-controls with-border text-center">
+									<span class="pull-left">
+										<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox'], ['query' => ['filters' => ['mail_box' => $mail_box, 'folder' => $folder]]]);?>">
+										  <button class="btn btn-default btn-xs" title="<?=$folder;?>">
+										  	<i class="fa fa-folder-o"></i> <?=$folder;?>
+										  </button>
+										</a>
+									</span>
+				                    <div class="btn-group">
+					                    <a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'to-trash', 'id' => $unique_id], ['query' => ['mail_box' => $this->mail_box, 'redirect_folder' => $this->folder]]);?>">
+					                      <button class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?=$this->translate('Delete');?>">
+					                      	<i class="fa fa-trash"></i> <?=$this->translate('Delete');?>
+					                      </button>
+					                    </a>
+					                    <a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'new-mail'], 
+					                    	['query' => ['mail_box' => $this->mail_box, 'reply_on_id' => $unique_id, 'forward' => 1]]);?>">
+					                      <button class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?=$this->translate('Forward');?>">
+					                      	<i class="fa fa-share"></i> <?=$this->translate('Forward');?>
+					                      </button>
+					                    </a>
+					                    <a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'new-mail'], 
+					                    	['query' => ['mail_box' => $this->mail_box, 'mail_to' => $from_mail, 'reply_on_id' => $unique_id]]);?>">
+					                      <button class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?=$this->translate('Reply');?>">
+					                      	<i class="fa fa-reply"></i> <?=$this->translate('Reply');?>
+					                      </button>
+					                    </a>
+					                    <a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'new-mail'], 
+					                    	['query' => ['mail_box' => $this->mail_box, 'reply_on_id' => $unique_id, 'reply_all' => 1]]);?>">
+					                      <button class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?=$this->translate('Reply All');?>">
+					                      	<i class="fa fa-reply-all"></i> <?=$this->translate('Reply All');?>
+					                      </button>
+					                    </a>
+				                    </div><!-- /.btn-group -->
+				                    <span class="pull-right">
+				                    	<?php if (isset($q_options['filters']['show_source'])): ?>
+				                    		<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'view', 'id' => $unique_id]);?>">
+				                    		  <button class="btn btn-info btn-xs" title="<?=$this->translate('Show Source');?>">
+				                    		  	<i class="fa fa-newspaper-o"></i> <?=$this->translate('Show Original');?>
+				                    		  </button>
+				                    		</a>
+				                    	<?php else: ?>
+				                    		<a href="<?=$this->url('admin/actions', ['controller' => 'mailbox', 'action' => 'view', 'id' => $unique_id], ['query' => ['filters' => ['show_source' => 1]]]);?>">
+				                    		  <button class="btn btn-default btn-xs" title="<?=$this->translate('Show Source');?>">
+				                    		  	<i class="fa fa-newspaper-o"></i> <?=$this->translate('Show Source');?>
+				                    		  </button>
+				                    		</a>
+				                    	<?php endif ?>
+				                    </span>
+				                </div>
+							</div>
+
+				</div>
+				<div class="panel-group mb1" id="accordion_<?=$unique_id;?>" role="tablist" aria-multiselectable="true">
+				  <div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingOne">
+				      <h4 class="panel-title">
+				      	<a role="button" data-toggle="collapse" data-parent="#accordion_<?=$unique_id;?>" href="#collapseOne_<?=$unique_id;?>" aria-expanded="true" aria-controls="collapseOne">
+				          <b><?=$subject;?></b>
+				        </a>
+				        <small><?=zformatDateTimeYear($time);?></small>
+				      </h4>
+				    </div>
+				    <div id="collapseOne_<?=$unique_id;?>" class="panel-collapse collapse <?=$collapsed;?>" role="tabpanel" aria-labelledby="headingOne">
+				      <div class="panel-body">
+			      		<?php if (isset($q_options['filters']['show_source'])): ?>
+			      			<?php if (isset($raw_header) && $raw_header): ?>
+			      				<?=$raw_header;?>
+			      			<?php else: ?>
+			      				No raw header for this message <br/>
+			      			<?php endif ?>
+			      			<?php if (isset($raw_content) && $raw_content): ?>
+			      				<?=$raw_content;?>
+			      			<?php else: ?>
+			      				No raw content for this message <br/>
+			      			<?php endif ?>
+			      		<?php else: ?>
+			      			<p>
+			      				<?php if ($html && $html != ''): ?>
+			      					<?=nl2br(html_entity_decode($html));?>
+			      				<?php else: ?>
+			      					<?=nl2br(html_entity_decode($text));?>
+			      				<?php endif ?>
+			      			</p>	
+			      		<?php endif ?>
+						      
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				<?php $attachments = json_decode($attachments);?>
+				<?php if (count($attachments) > 0): ?>
+					<div class="box">
+						<div class="box-footer">
+							<p >
+								<?php foreach ($attachments as $attachment): ?>
+										<a href="<?=_ADDRESS_._MAILSWWW_.$generated_id.'/'.$attachment;?>">
+											<button type="button" class="btn btn-xs btn-success" >
+												<?=$attachment;?>
+											</button>
+										</a>
+								<?php endforeach ?>
+							</p>
+						</div>
+					</div>
+				<?php endif ?>
+				<?php if (isset($mail_accounts)): ?>
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<div class="form-inline">
+
+								<div class="form-group">
+									<div class="input-group">
+										<form action="<?=$this->url('admin/actions', array('controller' => 'mailbox', 'action' => 'with-selected'), array('query' => array('redirect_folder' => $this->folder)));?>" method="post">
+											<input type="hidden" name="mail_<?=$unique_id;?>" value="<?=$unique_id;?>" />
+											<div class="input-group">
+												<select name="folder_name" class="form-control input-sm">
+													<option selected="selected">--<?=$this->translate('Move to folder');?>--</option>
+													<?php foreach ($mail_accounts as $account): ?>
+														<optgroup label="<?=$account['mail_box'];?>">
+															<?php $folders = json_decode($account['folders']);?>
+															<?php if(is_array($folders)):?>
+																<?php foreach ($folders as $folder): ?>
+																	<option value="<?=$account['mail_box'];?>:<?=$folder->folder_full;?>"><?=$folder->folder;?></option>
+																<?php endforeach ?>
+															<?php endif?>
+														</optgroup>
+													<?php endforeach ?>
+												</select>
+											</div>
+											<div class="input-group">
+												<button class="form-control btn btn-xs btn-primary input-sm" name="submit" type="submit" value="Move" >
+													<i class="fa fa-check"></i> <?=$this->translate('Move');?>
+												</button>
+											</div>
+										</form>
+									</div>
+
+									<div class="input-group">
+										<a  href="<?=$this->url('admin/actions', array('controller' => 'mailbox', 'action' => 'to-trash', 'id' => $unique_id), array('query' => array('mail_box' => $this->mail_box, 'redirect_folder' => $this->folder)));?>" > 
+											<button class="form-control btn btn-xs btn-warning input-sm" type="button">
+												<i class="glyphicon glyphicon-trash"></i> <?=$this->translate('Delete');?>
+											</button>
+										</a>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				<?php endif ?>
+			</div>
+			<div class="col-md-1 <?php if($status == 'outgoing'):?>col-md-pull-11<?php endif?>">
+				
+			</div>
+		</div>
+		<hr />
+	</div>
+	
+</div>

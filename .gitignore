@@ -1,0 +1,17 @@
+!php/cron/f_users.txt
+!php/public_html/index.php
+!php/public_html/robots.txt
+.DS_Store
+.env
+.idea
+_misc
+db/data
+db/db
+db/dump
+dump
+nginx/ssl
+php/cron
+php/data
+php/public_html
+php/vendor
+redis/data

@@ -1,0 +1,47 @@
+<div id="home" class="auth_page">
+    <div class="headerLine">
+        <?= $this->partial('landing-menu');?>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3><?=$this->translate('Welcome');?></h3>
+                    <div class="fr">
+                        <div style="display: inline-block;">
+                            <div class="form-horizontal">
+                                <?=$this->partial('application/partial/auth-form');?>
+                                <?php if ($this->msgs()): ?>
+                                    <div class="form-group">
+                                        <div class="col-md-12 text-center">
+                                            <div class="system-messages">
+                                                <?= $this->msgs();?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif ?>
+                                <div class="form-group">
+                                    <div class="col-md-6 col-md-offset-3 text-center">
+                                        <?=$this->partial('application/partial/auth-links');?>
+                                        <span class="help-block bg-warning pt pb">
+                                            <h5 class="mb0 mt0"><a href="<?=$this->url('sc/social_auth');?>"><?=$this->translate('Login with social networks');?></a></h5>
+                                            <?=$this->partial('application/partial/auth-social-links');?>
+                                        </span>
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?=$this->partial('landing-social');?>
+            </div>
+        </div>
+    </div>
+</div>
+<?=$this->partial('application/modal',array(
+                    'modal_name' => 'auth_modal',
+                    'modal_title' => $this->translate('Authorisation'),
+                    'modal_size' => 'md',
+                    'show_header' => 0,
+                    'show_footer' => 0
+));?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#auth_modal']);?>
+<?=$this->partial('application/js/social-auth-scripts', ['modal_name' => '#auth_modal', 'auth_redirect' => $this->url('sc')]);?>

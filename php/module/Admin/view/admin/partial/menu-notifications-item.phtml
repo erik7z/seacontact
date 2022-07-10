@@ -1,0 +1,56 @@
+<?php 
+  $not_count = count($item_notifications); 
+  $controller = null;
+  $action = null;
+?>
+
+<?php if ($not_count > 0): ?>
+  <li class="notification_item">
+      <a href="#">
+        <i class="<?=$item_header_icon;?>"></i>
+        <?=$not_count;?> 
+        <?=$item_header_text;?>
+      </a>
+      <ul>
+      <?php  foreach ($item_notifications as $notification): ?>
+  
+        <?php 
+         if($item_type == 'vacancy') {
+            $link_name = $notification['title'];
+            $controller = 'vacancies';
+            $action = 'vacancy';
+            $id = $notification['not_section_id'];
+         } else if($item_type == 'user') {
+            $link_name = zgetUserName($notification);
+            $controller = 'userdb';
+            $action = 'user';
+            $id =  $notification['user_id'];
+            if($notification['not_type'] == \Application\Model\AdminNotifTable::NOT_TYPE_ADMIN_NOTE) {
+              $id = $notification['not_section_id'];
+              $link_name = ''.$id.'  <small>(by '.$link_name.')</small>';
+            }
+         } else if($item_type == 'company') {
+            $link_name = $notification['company_name'];
+            $controller = 'userdb';
+            $action = 'company';
+            $id = $notification['not_section_id'];
+         } else if($item_type == 'task') {
+            $link_name = $notification['title'];
+            $controller = 'tasks';
+            $action = 'view';
+            $id = $notification['not_section_id'];
+         }
+        ?>
+        <li>
+          <a href="<?=$this->url('admin/actions', array('controller' => $controller, 'action' => $action, 'id' => $id));?>">
+            <?=$link_name;?>
+          </a><span class="small text-success">
+            <?=zformatDateTime($notification['time']);?>
+          </span>
+          <p class="small"><?=$notification['not_message'];?></p>
+          
+        </li>
+      <?php endforeach ?>
+      </ul>
+  </li>
+<?php endif ?>

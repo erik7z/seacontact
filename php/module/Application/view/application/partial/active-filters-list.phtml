@@ -1,0 +1,20 @@
+<div class="row">
+	<div class="col-md-12">
+		<?php foreach ($q_options['filters'] as $key => $value) :?>
+				<?php if (is_array($value)): ?>
+					<?php for ($i=0; $i < count($value); $i++) :?>
+						<?=$this->partial('admin/partial/filter-button', ['filters' => $q_options['filters'], 'label' => $q_options['filters'], 'value' => $value[$i], 'key' => $key]);?>
+					<?php endfor;?>
+				<?php else: ?>
+					<?=$this->partial('admin/partial/filter-button', ['filters' => $q_options['filters'], 'label' => $key, 'value' => $value]);?>
+				<?php endif ?>
+		<?php endforeach;?>
+		<?php if(!empty($q_options['filters'])) {?>
+			<a href="<?=$this->routeMatch()->getUrl();?>">
+				<button type="button" class="btn btn-xs btn-danger" aria-label="<?=$this->translate('Remove Filters');?>" >
+				  <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span> <?=$this->translate('Remove Filters');?>
+				</button>
+			</a>
+		<?php }?>
+	</div>
+</div>

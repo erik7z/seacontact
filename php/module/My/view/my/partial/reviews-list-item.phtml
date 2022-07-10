@@ -1,0 +1,103 @@
+
+<div class="row data-block news-entry ship-entry">
+	<div class="col-md-12">
+		<div class="row ship-name">
+			<div class="col-md-12">
+				<h4><?=$ship_name;?></h4>
+			</div>
+		</div>					
+		<div class="row">
+			<ul class="pe-social col-md-1 social-labels">
+			  <li><a href="#0"><i class="pe-so-facebook pe-bg pe-hover  pe-2x"></i></a></li>
+			  <li><a href="#0"><i class="pe-so-vk pe-bg pe-hover  pe-2x"></i></a></li>
+			  <li><a href="#0"><i class="pe-so-linkedin pe-bg pe-hover  pe-2x"></i></a></li>
+			</ul>
+			<div class="col-md-11">
+				<div class="row">
+					<div class="drop-shadow col-md-12">
+						<div class="row">
+							<div class="col-md-4 ship-avatar">
+
+								<div class="row">
+									<?php if(isset($ship_photos)) {
+										$photos = json_decode($ship_photos);
+										for ($i=0; $i < count($photos); $i++) {
+											if($i > 3) break;
+											$cols = ($i == 0)? 12:4;
+										?>
+											<img src="<?=$this->basePath('/'._PICSWWW_.$photos[$i]->thumb);?>" class="col-md-<?=$cols;?>"/>
+											<?php if(count($photos) < 2) {?>
+												<button class="btn btn-sm btn-default" value="">
+													<span class="fa fa-camera"></span>
+													<?=$this->translate('Add More Photos');?>
+												</button>
+											<?php } ?>
+										<?php }
+									} else { ?>
+										<img src="<?=$this->basePath('/'._PICSWWW_.'ship_blank.png');?>" class="col-md-12"/>
+										<button class="btn btn-sm btn-default" value="">
+											<span class="fa fa-camera"></span>
+											<?=$this->translate('Add More Photos');?>
+										</button>
+									<?php }	?>			
+								</div>
+
+							</div>
+							<div class="col-md-6">
+								<div class="row data-text">
+									<div class="col-md-12 ">
+										<h3><?=$title;?></h3>
+										<p><?=$text;?></p>									
+									</div>
+								</div>
+
+								<div class="row data-pics">
+									<?php if(isset($review_photos) && ('' != $review_photos)) :?>
+										<?php $photos = json_decode($review_photos);
+											for ($i=0; $i < count($photos); $i++) {
+											if($i > 5) break;?>
+											<div class="col-md-4">
+												<img src="<?=$this->basePath('/'._PICSWWW_.$photos[$i]->thumb);?>" width="100%" />
+											</div>
+										<?php } ?>
+									<?php endif?>
+								</div>						
+							</div>
+						<div class="col-md-2 data-avatar">
+							<a href="<?=$this->basePath($author_login);?>">
+								<img src="<?=$this->basePath('/'._PICSWWW_.$author_avatar);?>" />
+								<h4><?=$author_name;?></h4>
+							</a>
+						</div>								
+						</div>
+					</div> <!-- -->
+					<div class="activity-block  col-md-12">
+						<div class="row">
+							<div class="col-md-2 likes">
+								<a href="#">
+									<span class="icon li_heart icon-sm"></span>
+									<span class="count">3821</span>
+								</a>
+							</div>
+							<div class="col-md-2 comments">
+								<a href="#">
+									<span class="icon li_bubble icon-sm"></span>
+									<span class="count">875</span>
+								</a>
+							</div>
+							<div class="col-md-2 time">
+								<span class="icon linea-basic-clock"></span>
+								<span class="date">Yesterday</span>
+							</div>
+						</div> <!-- activity-block  -->		
+					</div>						
+				</div>
+			</div>
+<!-- 			<ul class="col-md-1 pe-social data-type">
+			  <li class="ship-type">
+			  	<i class="pe-7s-anchor pe-2x"></i>
+			  </li>
+			</ul>	 -->					
+		</div> <!-- row -->					
+	</div>							
+</div> <!-- row ship-entry -->

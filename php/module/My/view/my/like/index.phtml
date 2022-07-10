@@ -1,0 +1,5 @@
+<?php if(count($likes_data)) :?>
+	<?php foreach ($likes_data as $liker): ?>
+		<?=$this->partial('my/partial/liker-item', ['liker' => $liker]);?>
+	<?php endforeach ?>
+<?php endif?>

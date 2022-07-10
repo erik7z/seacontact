@@ -1,0 +1,14 @@
+<div style="width: 100%;">
+	<div style="position: relative; float: left;text-align: center;">
+		<a href="<?=_ADDRESS_.zgetUserLogin($company_info);?>">
+			<img src="<?=zgetUserAvatar($company_info);?>" style="height: 150px; padding-top: 1em;" />
+			<h4><?=zgetUserName($company_info);?></h4>
+		</a>
+	</div>
+	<div style="position: relative; float: left; padding-left: 1em;">
+		<h4 style="text-align: center;"><?=$this->translate('Company Information');?>:</h4>
+		<?=$this->partial('company/partial/company-info', ['company' => $company_info, 'show_avatar' => 0]);?>
+	</div>
+</div>
+<div style="clear:both;">
+</div>

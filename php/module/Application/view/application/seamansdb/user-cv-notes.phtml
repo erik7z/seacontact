@@ -1,0 +1,231 @@
+<?php
+	$controller =  $this->routeMatch()->getParam('controller');
+	if(strpos(strtolower($controller), 'seamansdb') !== false) {
+		$route = 'sc/seamansdb/actions';
+		$controller = 'seamansdb';
+	} else {
+		$route = 'admin/actions';
+		$controller = 'userdb';
+	}
+?>
+
+
+<div class="row">
+	<?php
+		$form = $this->form;
+		$form->prepare();
+		$form->setAttribute('class', 'form-horizontal');
+		$form->setName('user_cv_notes_form');
+		$fieldset = $form->get('user_cv_notes');
+		echo $this->form()->openTag($form);
+	?>
+	<fieldset class="col-md-12">
+		<div class="form-group">
+			<div class="col-md-9">
+				<?=$this->formLabel($fieldset->get('user_notes'));?>
+				<?=$this->formElement($fieldset->get('user_notes')->setAttribute('class', 'form-control'));?>
+				<?=$this->formElementErrors($fieldset->get('user_notes'));?>
+			</div>
+			<div class="col-md-3">
+				<div class="form-group">
+					<div class="col-md-12">
+						<?=$this->formLabel($fieldset->get('visibility'));?>
+						<?=$this->formElement($fieldset->get('visibility')->setAttribute('class', 'form-control'));?>
+						<?=$this->formElementErrors($fieldset->get('visibility'));?>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-12">
+						<?=$this->formLabel($form->get('submit'));?>
+						<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary form-control add_note'));?>
+							<span class="fa fa-plus"></span> 
+				 			 <?=$this->translate('Add Note');?>
+						<?=$this->formButton()->closeTag();?>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</fieldset>
+	<?= $this->form()->closeTag();?>
+</div>
+
+<div class="row">
+	<fieldset class="col-md-12">
+		<h4 class="text-center"><?=$this->translate('Fast Notes:');?></h4>
+		<hr class="mt0 mb05" />
+		<div class="row">
+			<?php if ($this->isPermitted('application\controller\seamansdb.notes-call-fail')): ?>
+				<div class="col-md-2 fast_notes_link pt05">
+					<a href="<?=$this->url($route, ['controller' => $controller, 'action' => 'notes-call-fail', 'id' => $user_id]);?>">
+						<button class="btn btn-danger btn-responsive btn-xs form-control"><i class="fa fa-bell-slash-o"></i> <?=$this->translate('Call Fail');?></button>
+					</a>
+				</div>
+			<?php endif ?>
+			<?php if ($this->isPermitted('application\controller\seamansdb.notes-ask-salary')): ?>
+				<div class="col-md-3 fast_notes_form pt05">
+					<form method="get" action="<?=$this->url($route, ['controller' => $controller, 'action' => 'notes-ask-salary', 'id' => $user_id]);?>">
+						<div class="input-group">
+						  <?=$this->formElement($fast_form->get('user')->get('minimum_salary')->setAttribute('class','form-control'));?>
+					      <span class="input-group-btn">
+					      	<button type="submit" class="btn btn-warning "><i class="fa fa-dollar"></i> <small><?=$this->translate('Salary');?></small></button>
+					      </span>
+					    </div><!-- /input-group -->
+					</form>
+
+				</div>
+			<?php endif ?>
+			<?php if ($this->isPermitted('application\controller\seamansdb.notes-ask-position')): ?>
+				<div class="col-md-5 fast_notes_form pt05">
+					<form method="get" action="<?=$this->url($route, ['controller' => $controller, 'action' => 'notes-ask-position', 'id' => $user_id]);?>">
+						<div class="input-group">
+						  <?=$this->formElement($fast_form->get('user')->get('desired_rank')->setAttribute('class','form-control'));?>
+					      <span class="input-group-btn">
+					      <button type="submit" class="btn btn-primary"><i class="fa fa-line-chart"></i> <small><?=$this->translate('Position');?></small></button>
+					      </span>
+					    </div><!-- /input-group -->
+				    </form>
+				</div>
+			<?php endif ?>
+			<?php if ($this->isPermitted('application\controller\seamansdb.notes-readiness')): ?>
+				<div class="col-md-2 fast_notes_link pt05">
+					<div class="btn-group">
+					  <button class="btn btn-info btn-sm form-control dropdown-toggle" type="button" data-toggle="dropdown">
+					  <i class="fa fa-clock-o"></i> <?=$this->translate('Readiness');?> <span class="caret"></span>
+					 </button>
+					  <ul class="dropdown-menu">
+					   <li><a href="<?=$this->url($route, ['controller' => $controller, 'action' => 'notes-readiness', 'id' => $user_id],['query' => ['months' => 1]]);?>"><?=sprintf($this->translate('In %s Month(s)'), 1);?></a></li>
+					   <li><a href="<?=$this->url($route, ['controller' => $controller, 'action' => 'notes-readiness', 'id' => $user_id],['query' => ['months' => 2]]);?>"><?=sprintf($this->translate('In %s Month(s)'), 2);?></a></li>
+					   <li><a href="<?=$this->url($route, ['controller' => $controller, 'action' => 'notes-readiness', 'id' => $user_id],['query' => ['months' => 3]]);?>"><?=sprintf($this->translate('In %s Month(s)'), 3);?></a></li>
+					   <li><a href="<?=$this->url($route, ['controller' => $controller, 'action' => 'notes-readiness', 'id' => $user_id],['query' => ['months' => 6]]);?>"><?=sprintf($this->translate('In %s Month(s)'), 6);?></a></li>
+					  </ul>
+					</div>
+				</div>
+			<?php endif ?>
+		</div>
+		
+		<?php if ($this->isPermitted('application\controller\seamansdb.notes-cv-updated')): ?>
+			<div class="row">
+				<div class="col-md-4 col-md-offset-4 pt05 fast_notes_link">
+					<a href="<?=$this->url($route, ['controller' => $controller, 'action' => 'notes-cv-updated', 'id' => $user_id]);?>">
+						<button class="btn btn-success btn-responsive btn-xs form-control"><i class="fa fa-bolt"></i> <?=$this->translate('Cv Updated');?></button>
+					</a>
+				</div>
+			</div>
+		<?php endif ?>
+		<hr class="mt05"/>
+	</fieldset>
+
+</div>
+
+
+<h4 class="text-center"><?=$this->translate('Latest Notes:');?></h4>
+<div class="notes_content">
+	<div class="row pb">
+		<div class="col-md-12 text-center cv_notes_switch">
+			<?=$this->partial('application/partial/cv_notes_switch');?>
+		</div>
+	</div>
+	<?php if(count($data_list)) :?>
+		<?php foreach ($data_list as $cv_note) :?>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-2 text-center">
+							<?php $avatar = ($cv_note->author_avatar) ? _PICSWWW_.$cv_note->author_avatar : _IMGWWW_._AVABLANKUSER_;?>
+							<a href="<?=$this->url('sc/userinfo', array('user' => zgetUserLogin($cv_note, 'author_'), 'controller' => null)); ?>">
+								<img src="<?=$this->basePath($avatar);?>" class="img-circle" width="40px" height="40px" alt="<?=$cv_note->author_name;?>">
+								<h6 class="author_name"><?=zgetUserName($cv_note, 'author_');?></h6>
+							</a>
+						</div>
+						<div class="col-md-9">
+							<blockquote class="bg-info">
+								<p ><?=$cv_note->text;?></p>
+								<?php if ($cv_note->type == 'notification'): ?>
+									<?php if ($cv_note->section == 'vacancy'): ?>
+										<small class="text-right">
+											<?php 
+												$vacancy_link = ($this->isPermitted('admin\controller\vacancies.vacancy')) ?
+													$this->url('admin/actions', array('controller' => 'vacancies', 'controller' => $controller, 'action' => 'vacancy', 'id' => $cv_note->section_id))
+													:
+													$this->url('sc/vacancies/actions', array('controller' => 'vacancy', 'controller' => $controller, 'action' => 'view', 'id' => $cv_note->section_id));
+											?>
+											<a href="<?=$vacancy_link;?>">
+												<?=$this->translate('View Vacancy');?>
+											</a>
+										</small>
+									<?php endif ?>
+									<?php if ($cv_note->section == \Application\Model\AdminNotifTable::NOT_SECTION_CREWING): ?>
+										<small class="text-right">
+											[crewing]
+										</small>
+									<?php endif ?>
+									<?php if ($cv_note->section == 'mail' && $this->isPermitted('admin\controller\mailbox')): ?>
+										<small class="text-right">
+											<a href="<?=$this->url('admin/actions', array('controller' => 'mailbox' , 'action' => 'view', 'id' => $cv_note->section_id));?>">
+												<?=$this->translate('Read Mail');?>
+											</a>
+										</small>										
+									<?php endif ?>
+									<?php if ($cv_note->section == 'company'): ?>
+										<small class="text-right">
+											<?php 
+												$company_link = ($this->isPermitted('admin\controller\userdb.company')) ?
+													$this->url('admin/actions', array('controller' => 'userdb', 'controller' => $controller, 'action' => 'company', 'id' => $cv_note->section_id))
+													:
+													$this->basePath('id'.$cv_note->section_id);
+											?>
+											<a href="<?=$company_link;?>">
+												<?=$this->translate('See Company');?>
+											</a>
+										</small>
+									<?php endif ?>
+
+								<?php endif ?>
+								<footer>
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-eye-open"></span> 
+										<?=zgetNotesVisibility($cv_note->visibility);?>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="time"><?=zformatDateTimeYear($cv_note->time);?></span>
+									</div>
+								</div>
+									
+								</footer>
+							</blockquote>
+						</div>
+
+						<div class="col-md-1">
+							<?php if ($cv_note['id'] && $this->isPermitted('application\controller\seamansdb.delete-cv-note', $cv_note->owner_id)): ?>
+								<?php $delete_url = (strpos($this->routeMatch()->getRoute(), 'admin') !== false)? 
+										$this->url('admin/actions', array('controller' => 'userdb', 'controller' => $controller, 'action' => 'delete-cv-note', 'id' => $cv_note['id'])) 
+										:
+										$this->url($route, array('controller' => $controller, 'action' => 'delete-cv-note', 'id' => $cv_note['id']));
+								?>
+								<a class="delete_cvnote" href="<?=$delete_url;?>" >
+									<button type="button" class="btn btn-md btn-default" >
+										<span class="glyphicon glyphicon-trash"></span>
+									</button>
+								</a>
+							<?php endif ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endforeach;?>
+		<div class="row">
+			<div class="col-md-12 text-center custom_pagination">
+				<?=$this->partial('application/partial/custom_pagination');?>
+			</div>
+		</div>
+	<?php endif; ?>
+</div>
+
+<script type="text/javascript">
+	$('select:not(.no_chosen)').chosen({
+		disable_search_threshold: 10,
+		search_contains: 1
+	});
+</script>

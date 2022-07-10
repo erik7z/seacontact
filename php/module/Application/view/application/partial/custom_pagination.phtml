@@ -1,0 +1,121 @@
+
+
+<?php 
+
+$show_count_select = (isset($show_count_select))? $show_count_select : 1;
+$show_prev = (isset($show_prev))? $show_prev : 1;
+$show_next = (isset($show_next))? $show_next : 1;
+$show_first = (isset($show_first))? $show_first : 1;
+$show_last = (isset($show_last))? $show_last : 1;
+
+$total_results = (isset($total_results))? $total_results : 1;
+$active_page = (isset($page))? $page : ((isset($q_options['_page']))? $q_options['_page'] : 1);
+$limit = (isset($limit))? $limit : ((isset($q_options['_limit']))? $q_options['_limit'] : 10);
+$filters = (isset($filters))? $filters : ((isset($q_options['filters']))? $q_options['filters'] : []);
+
+$pages_count = ceil($total_results / $limit);
+$display_pages = ($pages_count > 10) ?  10 : $pages_count;
+
+$route_name = (isset($route_name))? $route_name : $this->routeMatch()->getRoute();
+$route_params = (isset($route_params))? $route_params : $this->routeMatch()->getRouteParams();
+
+$predicat = (isset($predicat))? $predicat : '';  
+$q_page_text = $predicat.'_page';
+$q_limit_text = $predicat.'_limit';
+
+$query_params = ['query' => [
+$q_page_text => $active_page,
+$q_limit_text => $limit,
+'filters' => $filters,
+]];
+
+if(isset($q_options['_order'])) $query_params['query']['_order'] = $q_options['_order'];
+if(isset($q_options['up'])) $query_params['query']['up'] = $q_options['up'];
+if(isset($q_options['layout'])) $query_params['query']['layout'] = $q_options['layout'];
+?>
+
+<div class="row" data-name="custom_pagination">
+  <div class="col-md-12 text-center pt05" >
+    <!-- if pages count  -->
+    <?php if ($pages_count > 1):?>
+      <?php 
+        $left = $active_page - 1;
+        $right = $pages_count - $active_page;
+        if ($left < floor($display_pages / 2)) $start = 1;
+        else $start = $active_page - floor($display_pages / 2);
+        $end = $start + $display_pages - 1;
+        if ($end > $pages_count) {
+          $start -= ($end - $pages_count);
+          $end = $pages_count;
+          if ($start < 1) $start = 1;
+        }
+      ?>
+      <nav>
+        <ul class="pagination">
+          <?php if ($active_page != 1) : ?>
+            <li>
+              <?php $query_params['query'][$q_page_text] = 1 ;?>
+              <?php if ($show_first): ?>
+                <li><a href="<?=$this->url($route_name, $route_params,$query_params);?>" aria-label="<?=$this->translate('First Page');?>"><span class="fa fa-angle-double-left"></span></a></li>
+              <?php endif ?>
+              <?php if ($show_prev): ?>
+                <li>
+                  <a href="<?php if ($active_page == 2) { ?><?=$this->url($route_name, $route_params,$query_params);?><?php } else { $query_params['query'][$q_page_text] = $active_page - 1; ?><?=$this->url($route_name, $route_params,$query_params);?><?php } ?>">
+                    <span class="fa fa-angle-left"></span>
+                  </a>
+                </li>
+              <?php endif ?>
+            </li>
+          <?php endif ?>
+
+          <?php for ($i = $start; $i <= $end; $i++) : ?>
+            <li >
+              <?php $query_params['query'][$q_page_text] = 1 ;?>
+              <?php if ($i == $active_page) { ?><span><b class="bg-info"><?=$i?></b></span><?php } else { ?><a href="<?php if ($i == 1) { ?><?=$this->url($route_name, $route_params,$query_params);?><?php } else { $query_params['query'][$q_page_text] = $i; ?><?=$this->url($route_name, $route_params,$query_params);?><?php } ?>"><?=$i?></a><?php } ?>
+            </li>
+          <?php endfor ?>
+
+          <?php if ($active_page != $pages_count) : ?>
+            <?php if ($show_next): ?>
+              <li>
+                <?php $query_params['query'][$q_page_text] = $active_page + 1; ?>
+                <a href="<?=$this->url($route_name, $route_params,$query_params);?>" aria-label="<?=$this->translate('Next');?>">
+                  <span class="fa fa-angle-right"></span>
+                </a>
+              </li>
+            <?php endif ?>
+            <?php $query_params['query'][$q_page_text] = $pages_count; ?>
+            <?php if ($show_last): ?><li><a href="<?=$this->url($route_name, $route_params,$query_params);?>"><span class="fa fa-angle-double-right"></span></a></li><?php endif ?>
+          <?php endif ?>
+        </ul>
+      </nav>
+    <?php endif ?>
+    <!-- endif pages count  -->
+
+    <?php if ($show_count_select): ?>
+      <?php //if ($total_results > $limit): ?>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <?=$this->translate('show');?>
+          </div>
+          <?php $query_params['query'][$q_page_text] = 1; ?>
+          <div class="col-md-12 text-center">
+            <?php $limits = [5, 10, 50, 100];?>
+            <?php for ($i=0; $i < count($limits); $i++) : ?>
+              <?php $query_params['query'][$q_limit_text] = $limits[$i]; ?>
+              <?php if ($i > 0): ?> | <?php endif ?>          
+              <a href="<?=$this->url($route_name, $route_params,$query_params);?>"><span <?php if($limits[$i] == $limit) :?> class="bg-info" <?php endif ?>><?=$limits[$i];?></span></a>
+            <?php endfor ?>
+          </div>
+          <div class="col-md-12 text-center pb">
+            <?=$this->translate('items per page');?>
+          </div>
+        </div>
+      <?php //endif ?>
+    <?php endif ?>
+  </div>
+</div>
+
+
+
+

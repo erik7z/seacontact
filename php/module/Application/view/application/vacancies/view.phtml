@@ -1,0 +1,103 @@
+<?php
+	$page_url = $this->url('sc/vacancies/actions', 
+		array('controller' => 'vacancy', 'action' => 'view', 'id' => $vacancy->vacancy_id)
+	);
+	$author = zgetUserName($vacancy);
+
+	$meta_title = $this->translate('Vacancy').' : '.$author.' - '.zshorterText(strip_tags(html_entity_decode($vacancy->title)), 10);
+	$meta_keywords = zshorterText(strip_tags(html_entity_decode($vacancy->tags)), 7);
+	$hash_tags = zmakeHashTagString($vacancy->tags);
+	$meta_description = '#'.zstripForHashTag($author).': '.zshorterText(strip_tags(html_entity_decode($vacancy->text)),80)."\n\r".$hash_tags;
+	$default_img = zgetUserAvatar($vacancy);
+
+	$this->headTitle()->prepend($meta_title); 
+	$this->headMeta()->appendName('title', $meta_title);
+	$this->headMeta()->appendName('keywords', $meta_keywords);
+	$this->headMeta()->appendName('description', $meta_description);
+
+	//meta tags for facebook:
+	$this->headMeta()->appendName('author', $vacancy->company_name);
+	$this->headMeta()->appendProperty('og:url', $page_url);
+	$this->headMeta()->appendProperty('og:type', 'website');
+	$this->headMeta()->appendProperty('og:title', $meta_title);
+	$this->headMeta()->appendProperty('og:keywords', $meta_keywords);
+	$this->headMeta()->appendProperty('og:description', $meta_description);
+	$this->headMeta()->appendProperty('og:author', $vacancy->company_name);
+	
+	$pics = json_decode($vacancy->pics);
+
+	if(isset($pics[0]->img) && file_exists(_PICSROOT_.$pics[0]->img)) {
+		$image_url = _ADDRESS_._PICSWWW_.$pics[0]->img;
+		$this->headLink(array('rel' => 'image_src', 'href' => $image_url), 'PREPEND');
+		$this->headMeta()->appendProperty('og:image', $image_url);
+	} else {
+		$this->headMeta()->appendProperty('og:image', $default_img);
+	}
+
+;?>
+
+<section id ="view-vacancy" class="section-vacancies container-fluid">
+	<?php
+		$this->layout()->show_breadcrumbs = true;
+	?>
+	<div class="row">
+		<div class="col-md-12">
+				<?php if($vacancy) {?>
+						<?php $vacancy->full_view = 1;?>
+						<?=$this->partial('my/partial/vacancies-list-item', $vacancy);?>
+				<?php } else { ?>
+					<h3><?=$this->translate('Vacancy not found');?></h3>
+				<?php }?>
+		</div> <!-- col-md-12 -->
+	</div> <!-- row -->
+
+	<?php if (count($vacancy->subscribers_list) > 0): ?>
+		<div class="row pt">
+			<div class="col-md-12 table-responsive">
+				<div class="box">
+					<div class="box-header bg-success text-center">
+						<h4><?=$this->translate('Vacancy Subscribers');?></h4>
+					</div>
+					<div class="box-body">
+						<table class="table table-bordered table-hover table-condensed table-favorites">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th><?=$this->translate('Name');?></th>
+									<th><?=$this->translate('Email');?></th>
+									<th><?=$this->translate('Nationality');?></th>
+									<th><?=$this->translate('Desired Rank');?></th>
+									<th><?=$this->translate('Subscribed');?></th>
+								</tr>
+							</thead>
+							<?php $i = 0;?>
+							<?php foreach($vacancy->subscribers_list as $user) {?>
+								<tr>
+									<td><?php $i++; echo $i;?></td>
+									<td class="text-center">
+										<?php $user_name = zhashUserName(zgetUserName($user), 0 , $this->isPermitted('_user_fields\name', $user->user_id));?>
+										
+										<a href="<?=$this->url('sc/userinfo', array('user' =>  zgetUserLogin($user), 'controller' => 'cv', 'action' => null, 'id' => null));?>">
+											<img style="max-height: 50px;" alt="<?=$user_name;?>" src="<?=zgetUserAvatar($user);?>"><br />
+											<?=$user_name;?>
+										</a>
+									</td>
+									<td>
+										<?php $user_email = zhashInfo($user->email, 2, $this->isPermitted('_user_fields\email', $user->user_id));?>
+										<a href="mailto:<?=$user_email;?>"><?=$user_email;?></a>
+									</td>
+									<td><?=$user->nationality;?></td>
+									<td><?=$user->desired_rank;?></td>
+									<td><?=zformatDateTimeYear($user->subscribed_time);?></td>
+								</tr>			
+							<?php }?>
+						</table>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	<?php endif ?>
+</section>
+<?=$this->partial('application/image-gallery');?>

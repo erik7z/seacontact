@@ -1,0 +1,41 @@
+<section id ="all-cvs" class="section-cvs container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row pt pb">
+				<div class="col-md-4">
+					<h4>
+						<?=$this->translate('Users in company DB');?>
+						<small><?=$total_results;?></small>
+					</h4>
+				</div>
+				<div class="col-md-6">
+				</div>
+				<div class="col-md-2 text-right">
+					<?=$this->partial('application/partial/custom_layout_switch');?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+						<?php if(count($data_list) > 0) {?>
+							<?php if ($q_options['layout'] == 'list'): ?>
+								<?=$this->partial('application/partial/users-list-table', ['users' => $data_list]);?>
+							<?php else : ?>
+								<div class="row">
+									<div class="col-md-8">
+										<?=$this->partialLoop('my/partial/cv-list-item.phtml', $data_list);?>
+									</div>
+								</div>
+							<?php endif ?>
+						<?php } else { ?>
+							<h3><?=$this->translate('There is no users in company DB, add somebody from the ');?> <b><a href="<?=$this->url('sc/seamansdb');?>"><?=$this->translate('Seamans Database');?></a></b></h3>
+						<?php }?>
+				</div> <!-- col-md-12 -->
+			</div><!--  row -->
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<?=$this->partial('application/partial/custom_pagination');?>
+				</div>
+			</div>
+		</div> <!-- section col-sm-12 -->
+	</div> <!-- row -->
+</section>

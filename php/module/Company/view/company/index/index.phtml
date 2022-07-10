@@ -1,0 +1,92 @@
+<section id="company-info" class="container-fluid">
+
+	<div class="row section-content">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-12 pt">
+					<?=$this->partial('company/partial/company-info', ['company' => $this->identity()]);?>
+				</div>
+			</div>
+			<?php if ($this->identity()->role == Application\Access\AccessList::ROLE_COMPANY_UNKNOWN): ?>
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 pt05">
+						<div class="alert alert-warning small">
+							<h4 class="text-center mt0 mb05"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?=$this->translate('Your Account is not active');?></h4>
+							<ul>
+								<li class="pb"><b><?=$this->translate('Fill up your Company information');?></b></li>
+								<li class="pb"><?=$this->translate('Add your Company Logo');?></li>
+								<li class="pb"><?=$this->translate('Add License information');?></li>
+							</ul>
+							<span class="pull-right"><i><?=$this->translate('To speed up activation process please contact');?></i> <a href="mailto:office@seacontact.com">office@seacontact.com</a></span>
+							<br />
+						</div>
+					</div>
+				</div>
+			<?php endif ?>
+
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2 pt pb mb">
+				<a href="<?=$this->url('sc/vacancies/actions', ['action' => 'add']);?>" >
+					<button type="button" class="btn btn-success form-control">
+						<?=$this->translate('Add New Vacancy');?>
+					</button>
+				</a>
+					
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 user-content">
+					<h1><?=$this->translate('Company Blog');?></h1>
+					<div class="row">
+						<div class="col-md-3 col-md-offset-3 pb">
+							<button class="btn btn-primary btn-sm form-control btn-responsive" data-toggle="modal" data-social="vk" data-target="#parse_social_modal"> 
+								<i class="fa fa-vk fa-lg"></i> 
+								<?=sprintf($this->translate('Connect Account to %s'), 'Vkontakte');?>
+							</button>
+						</div>
+						<div class="col-md-3 pb">
+							<button class="btn btn-info btn-sm form-control btn-responsive" data-toggle="modal" data-social="fb" data-target="#parse_social_modal"> 
+								<i class="fa fa-facebook fa-lg"></i> 
+								<?=sprintf($this->translate('Connect Account to %s'), 'Facebook');?>
+							</button>
+						</div>
+					</div>
+					<?=$this->partial('my/partial/logbook-form.phtml', array('form' => $logbookform, 'next_pub_time' => $next_pub_time));?>
+					
+					<?=$this->partial('my/partial/news-module.phtml', array('later_news' => $later_news, 'curr_news' => $curr_news, 'q_options' => $q_options));?>
+				</div> <!-- user-content -->
+			</div>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<?=$this->partial('application/partial/custom_pagination');?>
+				</div>
+			</div>
+		</div>
+
+
+	</div> <!-- row section-content -->
+
+</section>
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'parse_social_modal',
+					'modal_size' => 'md',
+					'modal_title' => $this->translate('Get Blog from Social Networks'),
+					'modal_content' => $this->partial('my/partial/get-social-blog'),
+));?>
+<?=$this->partial('application/image-gallery');?>
+
+<!-- LOG BOOK FORM SCRIPTS  -->
+<?=$this->partial('application/js/logbook-form-scripts');?>
+<?=$this->partial('application/js/link-preview-scripts');?>
+<?=$this->partial('application/js/file_upload');?>
+<!-- /LOG BOOK FORM SCRIPTS -->
+
+<script type="text/javascript">
+	var grid = new gridMaker();
+	$('#collapseOne').on('shown.bs.collapse', function () {
+	  $('.grid-workspace-postponed').each(function(){
+	  	grid.makeGrid($(this));
+	  	$(window).resize(grid.makeGrid($(this)));
+	  });
+	})
+</script>

@@ -1,0 +1,37 @@
+<section class="row">
+	<div class="col-md-12">
+		<div class="row text-center comments_pagination">
+			<?=$this->partial('application/partial/button_pagination', [
+				'type' => 'prev', 
+				'total_results' => $total_results,
+				'offset' => $offset,
+				'view_limit' => _VIEW_COMMENT_LIMIT_,
+				'route' => 'sc/comments/actions',
+				'route_params' => [
+					'section' => $section,
+					'action' => 'get',
+					'id' => $section_id
+				]
+			]);?>
+		</div>
+		<?=$this->partialLoop('my/partial/comments-item', $data_list);?>
+		<div class="row text-center comments_pagination">
+			<?=$this->partial('application/partial/button_pagination', [
+				'type' => 'next', 
+				'total_results' => $total_results,
+				'offset' => $offset,
+				'view_limit' => _VIEW_COMMENT_LIMIT_,
+				'route' => 'sc/comments/actions',
+				'route_params' => [
+					'section' => $section,
+					'action' => 'get',
+					'id' => $section_id
+				]
+			]);?>
+		</div>
+		<?php if (isset($this->form)): ?>
+			<?=$this->partial('my/partial/comments-form');?>
+		<?php endif ?>
+
+	</div>
+</section>

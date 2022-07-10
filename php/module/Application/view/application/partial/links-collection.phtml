@@ -1,0 +1,10 @@
+<?php 
+	$links_obj = json_decode($links);
+	$l_count = count($links_obj);
+	$l_cols = ($l_count > 2)? 4 : (($l_count < 2)? 12 : 6);
+?>
+<?php for ($i=0; $i < $l_count; $i++) : ?>
+	<div class="col-md-<?=$l_cols;?>">
+		<?=$this->partial('application/partial/link-item', $links_obj[$i]);?>
+	</div>
+<?php endfor ?>

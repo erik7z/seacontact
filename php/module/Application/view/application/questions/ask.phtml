@@ -1,0 +1,41 @@
+<?php
+	$this->layout()->show_breadcrumbs = true;
+?>
+<section class="container-fluid pt">
+	<?=$this->partial('application/partial/question-form');?>
+</section>
+<?php 
+	$this->headScript()
+	->appendFile($this->basePath('vendor/tinymce/tinymce.min.js'))
+	->appendFile($this->basePath('vendor/typeahead/typeahead.bundle.js'))
+	->appendFile($this->basePath('vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'))
+	;
+	$this->headLink()
+		->appendStylesheet($this->basePath('vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css'))
+		->appendStylesheet($this->basePath('vendor/typeahead/typeahead.css'))
+		;
+?>
+
+<?=$this->partial('application/js/file_upload');?>
+<?=$this->partial('application/js/tinymce-scripts');?>
+
+<script type="text/javascript">
+    var list = ['seacontact', 'odessa'];
+    var tags = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.whitespace,
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      local: list,
+      remote: {
+        url: '/tags?q=%QUERY',
+        wildcard: '%QUERY'
+      }
+    });
+
+	$('input#tags').tokenfield({
+	  typeahead: [{hint: true,highlight: true,minLength: 1}, { source: tags }],
+	  createTokensOnBlur: true,
+	  limit: 10
+	});
+
+</script>
+<?=$this->partial('application/js/page-form-scripts', ['form_name' => '[name=question]', 'mce_element' => 'questions[text]', 'pics_upload' => 1, 'force_redirect' => 1]);?>

@@ -1,0 +1,44 @@
+<?php 
+	$identity = ($this->identity())? $this->identity()->id : null;
+?>
+<section id="contacts">
+	<div id="contacts-search">
+		<div class="container-fluid pt">
+			<div  class="row">
+				<div id="content-filters" class="col-md-4 col-md-push-8">
+					<?=$this->partial('admin/partial/user-filter-form', ['form' => $form, 'q_options' => $q_options, 'vertical' => 1]);?>
+				</div> <!-- content-filters col-md-3 -->
+
+				<div class="col-md-8 col-md-pull-4" data-name="page_content_list">
+					<?php if (count($data_list)): ?>
+						<h4 class="text-center" data-name="page_title"><strong class="text-danger"><?=$total_results;?></strong> <?=$this->translate('Users found');?></h4>
+					<?php endif ?>
+					<?php $count = 0;?>
+					<?php foreach ($data_list as $user) : ?>
+						<?php $count++; ?>
+						<?php if($user['user_id'] == $identity) continue; ?>
+						<?php echo $this->partial('my/contacts-list-item', array('_page' => 'search', 'user' => $user)); ?>
+					<?php endforeach ?>
+					<?php if($count==0) {?>
+					<?php if ($this->routeMatch()->getAction() == 'collegues'): ?>
+		 				<h4>
+		 					<?=$this->translate('We didnt found any new collegues, please add more contracts to your ');?>
+							<b><a href="<?=$this->url('sc/cv/actions', array('action' => 'experience'));?>"><?=$this->translate('Experience');?></a></b>
+		 				</h4> 
+					<?php else: ?>
+						<h4>
+							<?=$this->translate('There is no users matching search request');?>
+						</h4> 
+					<?php endif ?>
+
+					<?php } ?>		
+				</div> <!-- col-md-9 -->
+
+
+			</div> <!-- row -->
+			<?=$this->partial('application/partial/custom_pagination');?>
+		</div> <!-- container-fluid -->
+	</div> <!-- contacts-collegues -->
+</section>
+
+<?=$this->partial('application/js/page_content_list_scripts', ['show_low_priority' => 1]);?>

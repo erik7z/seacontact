@@ -1,0 +1,47 @@
+<?php if ($v): ?>
+	<div class="row" data-name="form_submit">
+		<div class="col-md-12 text-center pb05">
+			<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success input-sm btn-sm form-control'));?>
+				<span class="glyphicon glyphicon-filter"></span> 
+				<?=$form->get('submit')->getLabel();?>
+			<?=$this->formButton()->closeTag();?>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" data-name="clean_filters">
+
+		<?php if (count($q_options['filters'])): ?>
+			<div class="row pb" >
+				<div class="col-md-12 text-center">
+					<a href="<?=$this->routeMatch()->getUrl();?>">
+						<button type="button" class="btn btn-xs btn-danger " aria-label="<?=$this->translate('Remove Filters');?>" >
+						  <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span> <?=$this->translate('Remove Filters');?>
+						</button>
+					</a>
+				</div>
+			</div>
+		<?php endif ?>
+		</div>
+	</div>
+
+<?php endif ?>
+
+<?php if (!$v): ?>
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success input-sm btn-sm form-control'));?>
+				<span class="glyphicon glyphicon-filter"></span> 
+				<?=$form->get('submit')->getLabel();?>
+			<?=$this->formButton()->closeTag();?>
+		</div>
+	</div>
+<?php endif ?>
+<?php if ($v): ?>
+	<div class="row hide show_options" >
+		<div class="col-md-12 text-center">
+			<button type="button" class="btn btn-sm btn-info" data-action="more_options" aria-label="<?=$this->translate('Show More Options');?>" >
+			  <span class="fa fa-unsorted" aria-hidden="true"></span> <?=$this->translate('More/Less options');?>
+			</button>
+		</div>
+	</div>
+<?php endif ?>

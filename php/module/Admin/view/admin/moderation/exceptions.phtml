@@ -1,0 +1,60 @@
+<section classs="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box">
+				<div class="box-header bg-info">
+					<div class="row">
+						<div class="col-md-2"><h4><?=$this->translate('Exceptions');?></h4></div>
+						<div class="col-md-9 text-center">
+						</div>
+					</div>
+				</div>
+				<div class="box-body table-responsive">
+					<table class="table table-bordered table-hover table-condensed table-favorites">
+						<thead>
+							<tr>
+								<th class="col-md-1"><?=$this->translate('User Id');?></th>
+								<th class="col-md-1"><?=$this->translate('Message');?></th>
+								<th class="col-md-1"><?=$this->translate('Url');?></th>
+								<th class="col-md-1">i++</th>
+								<th class="col-md-1"><?=$this->translate('Ip');?></th>
+								<th class="col-md-1"><?=$this->translate('Time');?></th>
+								<th class="col-md-2"><?=$this->translate('File/Line');?></th>
+								<th class="col-md-3"><?=$this->translate('Trace');?></th>
+							</tr>
+						</thead>
+						<?php foreach($data_list as $item):?>
+							<tr>
+								<td><?=$item->user_id;?></td>
+								<td><?=$item->message;?></td>
+								
+								<td>
+									<?php 
+										$url = $this->url($item->route,
+										['controller' => $item->route, 'action' => $item->action, 'section' => $item->section, 'user' => $item->user, 'id' => $item->action_id],
+										['query' => $item->query]
+										);
+									?>
+									<a href="<?=$url?>"><?=$url;?></a>
+								</td>
+								<td><?=$item->count;?></td>
+								<td><?=$item->ip;?></td>
+								<td><?=zformatDateTime($item->time);?></td>
+								<td><?=$item->file;?> : <?=$item->line;?></td>
+								<td>
+									<?=$item->code;?> <br />
+									<pre><?=$item->trace;?></pre>
+								</td>
+							</tr>			
+						<?php endforeach ?>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+	<div class="col-md-12 text-center">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+	</div>
+</section>

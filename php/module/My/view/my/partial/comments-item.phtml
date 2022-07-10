@@ -1,0 +1,107 @@
+<?php
+	$rating = $up_votes - $down_votes;
+	$source = (isset($source))? $source : 'local';
+	$login = (isset($login) && $login)? $login : null;
+	$user_page = ($login)? $this->url('sc/userinfo', array('user' => zgetUserLogin($this->vars()), 'controller' => null)) : $soc_page;
+	$avatar = zgetUserAvatar($this->vars(), '', 1);
+	if(!$avatar) $avatar = zgetUserAvatar($this->vars(), 'soc_');
+	$user_name = zgetUserName($this->vars());
+	if(!$user_name) $user_name = html_entity_decode(zgetUserName($this->vars(), 'soc_'));
+	$can_edit = ($source == 'local' && $this->isPermitted('my\controller\comments.edit', $user_id))? 1 : 0;
+	$can_delete = ($this->isPermitted('my\controller\comments.delete', null, $id)) ? 1 : 0;
+?>
+
+<?php 
+	if($source == 'vk') $comm_del_url = $this->url('sc/comments/actions', ['action' => 'delete', 'id' => $id], ['query' => ['source' => 'vk']]);
+	else $comm_del_url = $this->url('sc/comments/actions', ['action' => 'delete', 'id' => $id]);
+?>
+
+<div class="row comment-item labels-block">
+	<div class="col-md-12 col-xs-12 ">
+		<div class="row">
+			<div class="col-md-2 col-xs-12 text-center pt05">
+				<a href="<?= $user_page; ?>" title="<?=$user_name;?>">
+					<img src="<?=$avatar;?>" width="25px" height="25px" class="img-circle"/>
+				</a>
+				<br />
+				<?php if ($login): ?>
+					<a href="<?=$user_page;?>">
+						<b><span class="text-info" style="font-size:10px;"><?=$user_name;?></span></b>
+					</a>
+				<?php else: ?>
+					<span class="text-muted" style="font-size:10px;"><?=$user_name;?></span>
+				<?php endif ?>
+				
+
+			</div>
+			<div class="col-md-9 col-sm-11 col-xs-10 text-left">
+				<div class="row">
+					<div class="col-md-12 pl pt05">
+						<p class="mb05 comment-text">
+							<?=html_entity_decode($comment);?>
+						</p>
+						<span class="pull-right small">
+							<?php if ($can_edit): ?>
+								[
+								<a href="#" class="edit_comment" data-section="<?=$section;?>" data-id="<?=$section_id;?>"  data-comment="<?=$id;?>">
+									<span class="fa fa-pencil text-info"></span>
+								</a>
+								]
+							<?php endif ?> 	
+
+							<?php if ($can_delete): ?>
+								&nbsp;
+								[
+								<a href="<?=$comm_del_url;?>" class="delete_comment" data-section="<?=$section;?>" data-id="<?=$section_id;?>"  data-comment="<?=$id;?>">
+									<span class="fa fa-trash-o text-muted"></span>
+								</a>
+								]
+							<?php endif ?>
+						</span>
+						<span class="pull-left small">
+							<?php if ($source == 'vk'): ?>
+								<i class="fa fa-vk text-muted"></i>&nbsp;
+							<?php endif ?>
+
+							<span class="small text-info"><?=zformatDateTime($time);?></span>
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<?php if(isset($pics) && $pics) :?>
+							<?=$this->partial('application/partial/pics-grid', ['pics' => $pics, 'gallery_id' => '#comment_'.$id, 'flag_obj' => 0]);?>
+						<?php endif	?>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-md-1 col-sm-1 col-xs-2 text-center" >
+				<ul class="list-unstyled comment_rating">
+					<?php if($source == 'local' && $this->isPermitted('my\controller\comments.change-rating', $user_id) && $vote_status != 'up') :?>
+						<li class="small">
+							<a href="<?=$this->url('sc/comments/actions', ['action' => 'change-rating','id' => $id], ['query' => ['rating' => 'up']]);?>" data-section="<?=$section;?>" data-id="<?=$section_id;?>"  class="text-success comment_rating">
+								<i class="fa fa-arrow-up text-muted op05"></i>
+							</a>
+						</li>
+					<?php endif?>
+					<li>
+						<?php $color = ($rating > 0)? 'success' : 'danger';?>
+						<span class="text-<?=$color;?>"><b><?=($rating == 0)? '&nbsp;' : $rating;?></b></span>
+					</li>
+					<?php if($source == 'local' && $this->isPermitted('my\controller\comments.change-rating', $user_id) && $vote_status != 'down') :?>
+						<li class="small">
+							<a href="<?=$this->url('sc/comments/actions', ['action' => 'change-rating','id' => $id], ['query' => ['rating' => 'down']]);?>" data-section="<?=$section;?>" data-id="<?=$section_id;?>"  class="text-danger comment_rating">
+								<i class="fa fa-arrow-down text-muted op05"></i>
+							</a>
+						</li>
+					<?php endif?>
+					<?php if ($source == 'vk' && $rating): ?><span class="small"><i class="fa fa-heart text-info"></i></span><?php endif ?>
+				</ul>
+
+			</div>
+		</div>
+	</div>
+
+</div>

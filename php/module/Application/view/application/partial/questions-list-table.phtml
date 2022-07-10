@@ -1,0 +1,85 @@
+<div class="col-md-12 table-responsive">
+	<div class="box">
+		<div class="box-body">
+			<table class="table table-hover table-condensed">
+				<?php foreach($data_list as $question) {?>
+					<?php
+						$user_url = $this->url('sc/userinfo', array('user' =>  zgetUserLogin($question), 'controller' => null));
+						$user_name = zhashUserName(zgetUserName($question), 0, $this->isPermitted('_user_fields\name', $question->user));
+						$question_url = $this->url('sc/questions/actions', 
+							array('action' => 'view', 'id' => $question->question_id)
+						);
+						if(isset($question->data)) {
+							$data = json_decode($question->data); 
+							$question = array_merge((array)$data[0], (array)$question);
+							$question = (object) $question;
+						}
+					?>
+					<tr data-xhrctr="question_<?=$question->question_id;?>">
+						<td class="text-center col-md-1">
+							<?=$this->partial('my/partial/news-item-avatar.phtml', ['user_info' => $question, 'avatar_size' => 24, 'anonym' => $question->anonym, 'small_text' => 1]);?>
+						</td>
+						<td class="col-md-8">
+							<a href="<?=$question_url;?>">
+								<div class="row">
+									<div class="col-md-12 pb05">
+										<?php if ($question->answered): ?>
+											<button class="btn btn-xs btn-success" title="<?=$this->translate('Has correct answer');?>">
+												<span class="fa fa-check"></span>
+											</button>
+										<?php endif ?>
+
+										<?=zshorterText(strip_tags(html_entity_decode($question->title)), 10);?>
+										<br /><small class="text-muted"><?=zshorterText(strip_tags(html_entity_decode($question->text)), 15);?></small>
+									</div>
+									<div class="col-md-6 small">
+										<?php if ($question->post_vk_wall && $question->post_vk_id): ?>
+											<span class= text-muted"><i class="fa fa-share-alt"></i> </span> <i class="fa fa-vk text-info"></i>
+										<?php endif ?>
+										<small class="text-info"><?=zgetTimePosted($question->time);?></small>
+									</div>
+									<div class="col-md-6 text-right small">
+										<span class="">
+											<?php if($this->isPermitted('application\controller\questions.edit', $question->user_id, $question->id)): ?>
+												[<a href="<?= $this->url('sc/questions/actions', array('action' => 'edit','id' => $question->id)); ?>" class="edit_question" data-id="<?=$question->id;?>" target="_parent">
+													<span class="fa fa-pencil text-info "></span>
+												</a>]
+											<?php endif ?> 	
+											<?php if($this->isPermitted('application\controller\questions.delete', $question->user_id, $question->id)): ?>
+												&nbsp;
+												[<a href="<?= $this->url('sc/questions/actions', array('action' => 'delete','id' => $question->id)); ?>" target="_parent" data-xhrdelete="delete_question" data-xhrtarg="question_<?=$question->question_id;?>">
+													<span class="fa fa-trash-o text-muted"></span>
+												</a>]
+											<?php endif ?>
+										</span>
+									</div>
+								</div>
+							</a>
+						</td>
+						<td class="text-left col-md-2">
+							<div class="pt05">
+								<span class="small text-muted"><i class="fa fa-bolt"></i> <?=$this->translate('Answers');?></span>:
+								<span class="text-muted"><small><?=(isset($question->answers) && $question->answers)? $question->answers : 0;?></small></span>
+							</div>
+							<div class="pt05">
+								<span class="small text-muted"><i class="fa fa-users"></i> <?=$this->translate('Subscribers');?></span>:
+								<b><small title="<?=$this->translate('Subscribers');?>" class="pt05 text-muted subscribers_count"><?=($question->subscribers)? $question->subscribers : 0;?></small></b>
+							</div>
+							<?php if($this->isPermitted('application\controller\questions.toggle-subscribe', $question->user)) :?>
+								<div class="pt05">
+									<?=$this->partial('my/partial/btn-action', ['type' => 'question', 'link' => $this->url('sc/questions/actions', array('action' => 'toggle-subscribe', 'id' => $question->question_id)), 'id' => $question->question_id, 'status' => $question->subscribe_status, 'form_control' => 0, 'show_text' => 0, 'responsive' => 0]);?>
+								</div>
+							<?php endif ?>
+						</td>
+						<td class="text-center col-md-1">
+							<ul class="list-inline pt05 pr05">
+								<div class="data-edit" data-xhrctr="question_rating_<?=$question->id;?>"><?=$this->partial('my/partial/question-rating.phtml', $question);?></div>
+							</ul>
+						</td>
+					</tr>			
+				<?php }?>
+			</table>
+		</div>
+	</div>
+
+</div>

@@ -1,0 +1,136 @@
+<?php if ($this->identity()->login): ?>
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<?php $parsing_tags = _SOCIAL_PARSE_KEYWORD_.strtolower($this->identity()->login);?>
+			<h4><?=$this->translate('Now you can easily get your blog from');?> <b><span class="social_name"></span></b></h4>
+			<p>
+				<?=sprintf($this->translate('Just put <span class="text-danger">%s </span> to your text when posting something in'), $parsing_tags);?> <span class="social_name"></span> <?=$this->translate('and all these posts would be transfered to');?> <span class="text-info">Seacontact</span>
+			</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 small pt">
+			<a href="<?=$this->url('sc/social/actions', ['action' => 'parse-vk']);?>" class="parse_link">
+				<button class="btn btn-primary btn-sm form-control btn-responsive parse_social"> 
+					<i class="fa fa-refresh"></i>
+					<?=$this->translate('Get Blog From');?> <b><span class="social_name"></span></b>
+				</button>
+			</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 pt text-center">
+			<span class="parse_status"></span>
+		</div>
+	</div>
+	<form name="vk_captcha" class="row hide" action="<?=$this->url('sc/social/actions', ['action' => 'parse-vk']);?>" method="get">
+		<input type="hidden" name="captcha_sid" />
+		<div class="col-md-6 text-right captcha_img"></div>
+		<div class="col-md-4 pt text-left">
+			<div class="input-group">
+				<input type="text" name="captcha_key" class="form-control input-sm" />
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-info btn-sm input-sm"><?=$this->translate('Send');?></button>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3 small pt refresh_page hide">
+			<a href="<?=$this->url('sc/home')?>">
+				<button class="btn btn-success btn-sm form-control btn-responsive" > 
+					<i class="fa fa-refresh"></i>
+					<?=$this->translate('Refresh');?>
+				</button>
+			</a>
+		</div>
+	</div>
+<?php else: ?>
+	<h4><a href="<?=$this->url('sc/settings');?>#login_change"><?=$this->translate('Please set up your <b>Login</b>');?></a></h4>
+<?php endif ?>
+
+
+<script type="text/javascript">
+	var base_url = "<?=$this->url('sc/social');?>";
+	var parse_action = 'parse-vk';
+	var social_name = 'Vkontakte';
+	var public = '';
+	$('#parse_social_modal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget);
+		var social = button.data('social');
+		var modal = $(this);
+		var public = button.data('public');
+		
+		if(social == 'vk') {
+			$('.social_name').html('Vkontakte');
+			parse_action = 'parse-vk';
+			social_name = 'Vkontakte';
+		}else if(social == 'vk-public') {
+			$('.social_name').html('VK Publics');
+			parse_action = 'parse-vk?public_id='+public;
+			social_name = 'Vkontakte';
+		} else if (social == 'fb') {
+			$('.social_name').html('Facebook');
+			parse_action = 'parse-fb';
+			social_name = 'Facebook';
+		}
+		$('.parse_link').attr('href', base_url+'/'+parse_action);
+	});
+
+	var $parse_btn = $('.parse_social');
+
+	function parseSocialBLog(data)
+	{
+		$('.parse_status').html('<?=$this->translate("Getting wall from");?>'+' '+social_name);
+		$parse_btn.attr('disabled', true);
+		
+		$.get(base_url+'/'+parse_action, data, function(response, xhr, bhf){
+			if(response.success == 1) {
+				response.message = response.message+' <br /><?=$this->translate("You can refresh your page now, to see whats new");?>';
+				$('.refresh_page').removeClass('hide');
+			} else if(response.code == '705'){
+					response.message = '<span class=\"text-danger\">'+ response.message  + '</span> <br /><?=sprintf($this->translate("You will be redirected to your social account in <b>%s</b> seconds..."), 5);?>'
+					$('.parse_status').html(response.message);
+					setTimeout(function() {
+						window.location.href = response.redirect;
+					}, 4000);
+				
+			} else if(response.code == '14') {
+				$('.captcha_img').html('').append('<img src="'+response.extra_data.captcha_img+'"></img>');			
+				$('input[name=captcha_key]').val('');
+				$('input[name=captcha_sid]').val(response.extra_data.captcha_sid);				
+
+				$('form[name=vk_captcha]').removeClass('hide');
+			}
+			$('.parse_status').html(response.message);
+			$parse_btn.attr('disabled', false);
+			console.log(bhf);
+		}, 'json');
+	}
+
+	$parse_btn.on('click', function(e){
+		$('.parse_status').html('');
+		$('.refresh_page').addClass('hide');
+		e.preventDefault();
+		parseSocialBLog();
+	});
+
+
+	$('form[name=vk_captcha]').submit(function(e){
+		e.preventDefault();
+		$('form[name=vk_captcha]').addClass('hide');
+		parseSocialBLog($(this).serializeArray());
+	});
+
+	$('#parse_social_modal').on('show.bs.modal', function () {
+		$('.parse_status').html('');
+		$('.refresh_page,form[name=vk_captcha]').addClass('hide');
+	  });
+
+	var popupSuccess = function ($message, $code) {
+	 	parseSocialBLog();
+	};
+	var popupFail = function ($message, $code) {
+		$('.parse_status').html($message + '<br />'+ '<?=$this->translate("You should confirm login and requested rights in your Social network request");?>');
+	};
+</script>

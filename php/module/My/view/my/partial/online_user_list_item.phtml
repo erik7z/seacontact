@@ -1,0 +1,10 @@
+<div class="row friend_item">
+    <div class="col-sm-3 avatar">
+        <a href="<?=$this->basePath(zgetUserLogin($user));?>">
+            <img src="<?=zgetUserAvatar($user);?>" />
+        </a>
+    </div>
+    <div class="col-sm-9 name">
+        <h6><a href="/<?=zgetUserLogin($user);?>"><?=zgetUserName($user);?></a></h6>
+    </div>
+</div>

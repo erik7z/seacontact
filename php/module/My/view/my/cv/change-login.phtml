@@ -1,0 +1,21 @@
+<section class="info_personal">
+	<h2>Change login</h2>
+	
+	<h3> Here you can change your login / page address </h3>
+
+<?php
+$form = $this->form;
+$form->prepare();
+$form->setAttribute('action', $this->url('sc/settings/actions',
+array('action' => 'login')));
+$form->setAttribute('method', 'post');
+echo $this->form()->openTag($form);
+?>
+<?= $this->formCollection($form); ?>
+<?php echo $this->form()->closeTag() ?>
+<br />
+<p>Your page address now : <a href="http://www.seacontact.com/<?=$this->current_login; ?>">seacontact.com/<?=$this->current_login; ?></a></p>
+</hr>
+	<a href="<?= $this->url('sc/cv'); ?>" >Back </a>
+
+</section>

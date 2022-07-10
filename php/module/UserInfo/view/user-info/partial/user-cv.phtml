@@ -1,0 +1,519 @@
+<?php $plain_cv = (isset($plain_cv)) ? $plain_cv : false;?>
+<div class="row pt">
+	<div class="table-responsive">
+		<table class="table table-bordered">
+			<?php if ($plain_cv): ?>
+				<thead class="company_info">
+					<tr>
+						<td class="company_logo" colspan="2" style="text-align: right; padding-right: 0px; border-right: none; width: 40%;">
+							<img src="<?=_ADDRESS_NO_SLASH_.'/img/logo-main.png';?>" width="70px" class="hidden-sm hidden-xs">
+						</td>
+						<td  class="company_name" colspan="2" style="text-align: left; padding-left: 20px; padding-top: 5px; border-left: none;width: 60%;">
+							<h2 class="sitename-large"><span class="text-blue">SEA</span>CONTACT</h2>
+							<h4><a href="<?=_ADDRESS_;?>"><?=_SITENAME_;?></a></h4>
+							<h5 class="sitename-description"><?=$this->translate('WORLDWIDE SEAFARERS COMMUNITY');?></h5>
+						</td>
+					</tr>
+					<tr class="company_contacts">
+						<td colspan="4">
+							<a href="mailto:<?=$this->siteInfo()->contact_email;?>"><?=$this->siteInfo()->contact_email;?></a> &nbsp; &nbsp; 
+							<a href="tel:<?=$this->siteInfo()->contact_phone;?>"><?=$this->siteInfo()->contact_phone;?></a>  &nbsp; &nbsp;
+							<a href="tel:<?=$this->siteInfo()->contact_mobile;?>"><?=$this->siteInfo()->contact_mobile;?></a> &nbsp; &nbsp;
+							<a href="tel:<?=$this->siteInfo()->contact_mobile_2;?>"><?=$this->siteInfo()->contact_mobile_2;?></a> &nbsp; &nbsp;
+							<a href="mailto:<?=$this->siteInfo()->email;?>"><?=$this->siteInfo()->email;?></a>
+						</td>
+					</tr>
+				</thead>
+			<?php endif ?>
+			<tbody>
+				<tr class="cv_header">
+					<td colspan="4" class="text-center">
+						<h1><?=$this->translate('Application Form');?></h1>
+						<?php $user_url = $this->url('sc/userinfo', array('user' =>  zgetUserLogin($user), 'controller' => 'cv'));?>
+						<?php if ($plain_cv): ?><a href="<?=$user_url;?>"><?=$user_url;?></a> <?php endif ?>
+						<?php if (!$plain_cv): ?>
+							<a href="?format=print&lang=ru" target="_blank">
+								<button type="button" id="cv_file_print" class="btn btn-xs btn-default">
+									<span class="glyphicon glyphicon-print"></span> RU
+								</button>
+							</a>
+							<a href="?format=print&lang=en" target="_blank">
+								<button type="button" id="cv_file_print" class="btn btn-xs btn-default">
+									<span class="glyphicon glyphicon-print"></span> EN
+								</button>
+							</a>
+							&nbsp; | &nbsp; 
+							<a href="?format=pdf&lang=ru"  target="_blank">
+								<button type="button" id="cv_file_download" class="btn btn-xs btn-default">
+									<span class="glyphicon glyphicon-floppy-save"></span> RU
+								</button>
+							</a>
+							<a href="?format=pdf&lang=en"  target="_blank">
+								<button type="button" id="cv_file_download" class="btn btn-xs btn-default">
+									<span class="glyphicon glyphicon-floppy-save"></span> EN
+								</button>
+							</a>
+						<?php endif ?>
+
+					</td>
+				</tr>				
+				<tr>
+					<td class="text-center" colspan="1">
+						<img src="<?=zgetUserAvatar($user);?>" width="150px"/>
+					</td>
+					<td class="text-center" colspan="3">
+						<h1><?=zhashUserName(zgetUserName($user), 0, $this->isPermitted('_user_fields\full_name', $user->id));?></h1>
+						<?=$this->translate('Position Applied For');?>:
+						<h1><?=$user->desired_rank;?></h1>
+						<p>
+							<strong><?=$this->translate('CV Last Updated');?> : </strong> <?=(isset($user->cv_last_update) && $user->cv_last_update) ? zformatDateYear($user->cv_last_update) : $this->translate('Not Stated');?>
+							<?php if (isset($user->views) && $user->views): ?>
+								<br />
+								<strong><?=$this->translate('Viewed');?> : </strong> <?=$user->views;?>
+							<?php endif ?>
+						</p>
+					</td>
+				</tr>
+				<?php if (!$plain_cv): ?>
+					<?php $my_id = ($this->identity())? $this->identity()->id : null;?>
+					<?php if ($user->id != $my_id): ?>
+						<tr>
+							<td class="row" colspan="4">
+								<div class="col-md-12">
+								    <div class="form-group">
+								    	<?php 
+								    		$show_unlock_info = ($this->isPermitted('application\controller\seamansdb.unlock-user-info', $user->id))? 1 : 0;
+								    		// $show_msg_btn = ($this->isPermitted('my\controller\messages.pm', $user->id))? 1 : 0;
+								    		$show_msg_btn = 1;
+
+								    		$btn_width = ($show_unlock_info && $show_msg_btn)? 6 : 12;
+								    	?>
+									    	<?php if ($show_unlock_info): ?>
+										        <div class="col-md-<?=$btn_width;?>  pb pt">
+
+											            <?php if ($this->isPermitted('_user_fields', $user->id)): ?>
+											                <button class="btn btn-success btn-xs form-control">
+											                    <span class="glyphicon glyphicon-ok"></span>
+											                    <?=$this->translate('Already In Company Db');?>
+											                </button>
+											            <?php else: ?>
+											                <a  class="unlock_info" data-user="<?=$user->id;?>" href="<?=$this->url('sc/seamansdb/actions', array('controller' => 'cvs', 'action' => 'unlock-user-info', 'id' => $user->id));?>">
+											                    <button class="btn btn-warning btn-xs form-control" >
+											                        <span class="fa fa-unlock"></span>
+											                        <?=$this->translate('Unlock Contact Information');?>
+											                    </button>
+											                </a>
+											            <?php endif ?>
+										        </div>
+									        <?php endif ?>
+									        <?php if($show_msg_btn) {?>
+									        	<div class="col-md-<?=$btn_width;?> pb pt">
+									        		<?=$this->partial('my/partial/contacts-btn-msg', array('text' => $this->translate('Send Message (user will be informed by email)'), 'class' => 'form-control', 'user' => $user));?>
+									        	</div>
+									        <?php } ?>
+									        <?php if ($this->isPermitted('application\controller\seamansdb.user-cv-notes')): ?>
+
+						        	        	<div class="col-md-12">
+						        		        	<?php if($user_last_note) :?>
+						        		        		<div class="well well-sm">
+							        		        		<div class="row">
+								        		        		<div class="col-md-12 text-center">
+								        		        			<h4><?=$this->translate('Latest Note');?> :</h4>
+								        		        		</div>
+							        		        			<div class="col-md-2 text-center">
+							        		        				<a href="<?= $this->url('sc/userinfo', array('user' => zgetUserLogin($user_last_note, 'author_'), 'controller' => null)); ?>">
+							        		        					<img src="<?=zgetUserAvatar($user_last_note, 'author_');?>" class="img-circle" width="32px" height="32px" alt="<?=$user_last_note->author_name;?>"><br />
+							        		        					<?=zgetUserName($user_last_note, 'author_');?>
+							        		        				</a>
+							        		        			</div>
+							        		        			<div class="col-md-7">
+								        		        			<div class="alert alert-warning" role="alert">
+		        		        				        				<?=$user_last_note->text;?><br />
+		        		        				        				<strong><?=zformatDateTimeYear($user_last_note->time);?></strong>
+		        		        				        			</div>
+		        		        			        			</div>
+		        		        			        			<div class="col-md-3">
+		        		        			        				<button type="button" class="btn btn-md form-control btn-default user_cv_notes">
+		        		        			        					<span class="fa fa-edit"></span> <?=$this->translate('See All Notes');?>
+		        		        			        				</button>
+		        		        			        			</div>
+							        	        			</div>
+						        		        		</div>
+						        		        	<?php else :?>
+						        		        		<div class="well well-sm">
+    		        		        		        		<div class="row">
+    		        			        		        		<div class="col-md-12 text-center">
+    		        			        		        			<h4><?=$this->translate('User Cv Notes');?> :</h4>
+    		        			        		        		</div>
+    		        			        		        		<div class="col-md-12">
+    		        			        		        			<button type="button" class="btn btn-md form-control btn-default user_cv_notes">
+    		        			        		        				<span class="fa fa-edit"></span> <?=$this->translate('Add Note');?>
+    		        			        		        			</button>
+    		        			        		        		</div>
+    		        			        		        	</div>
+						        		        		</div>
+						        		        	<?php endif?>
+						        	        	</div>
+									       	<?php endif?>
+
+								    </div>                     
+								</div>
+							</td>
+						</tr>
+					<?php endif ?>
+				<?php endif ?>
+			</tbody>
+		</table>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th colspan="4">
+						<legend>
+							<?=$this->translate('Main Information');?>
+							<?php if (!$plain_cv): ?>
+								<?php if ($this->isPermitted('my\controller\cv', $user->id)): ?>
+									<a href="<?=$this->url('sc/cv/actions', array('action' => 'personal'));?>">
+										<button type="button" class="btn btn-success btn-xs">
+											<span class="glyphicon glyphicon-pencil"></span> <?=$this->translate('Edit Main Information');?>
+										</button>
+									</a>
+								<?php endif ?>
+							<?php endif ?>
+						</legend>
+					</th>
+
+				</tr>
+			</thead>
+			<tbody class="main_info">
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Full Name');?>
+					</td>
+					<td colspan="3">
+						<?=zhashUserName(zgetUserName($user), 0, $this->isPermitted('_user_fields\name', $user->id));?>
+					</td>
+				</tr>
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Contact Mobile');?>
+					</td>
+					<td>
+						<?=zhashInfo($user->contact_mobile, 0,$this->isPermitted('_user_fields\contact_mobile', $user->id));?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Contact Phone');?>
+					</td>
+					<td>
+						<?=zhashInfo($user->contact_phone, 0,$this->isPermitted('_user_fields\contact_phone', $user->id));?>
+					</td>						
+				</tr>
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Email');?>
+					</td>
+					<td>
+						<?=zhashInfo($user->email, 2, $this->isPermitted('_user_fields\email', $user->id));?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Website');?>
+					</td>
+					<td colspan="3">
+						<?php if (isset($user->info_website) && $user->info_website): ?>
+							<?=zhashInfo($user->info_website,0, $this->isPermitted('_user_fields\website', $user->id));?>
+						<?php endif ?>
+					</td>
+				</tr>
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Position Applied For');?>
+					</td>
+					<td>
+						<?=$user->desired_rank;?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('English Knowledge');?>
+					</td>
+					<td>
+						<?=zenglishLevel($user->english_knowledge);?>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Minimum Salary');?>
+					</td>
+					<td>
+						<?=zhashInfo($user->minimum_salary, 0, $this->isPermitted('_user_fields\minimum_salary', $user->id));?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Readiness Date');?>
+					</td>
+					<td>
+						<?=$user->readiness_date;?>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Sex');?>
+					</td>
+					<td>
+						<?=$user->sex;?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Date Of Birth');?>
+					</td>
+					<td>
+						<?=$user->dob;?>
+					</td>
+				</tr>
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Nationality');?>
+					</td>
+					<td>
+						<?=$user->nationality;?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Place Of Birth');?>
+					</td>
+					<td>
+						<?php if (isset($user->place_of_birth) && $user->place_of_birth): ?>
+							<?=$user->place_of_birth;?>
+						<?php endif ?>
+					</td>
+				</tr>
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Place Of Residence');?>
+					</td>
+					<td>
+						<?=$user->place_of_residence;?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Home Address');?>
+					</td>
+					<td>
+						<?=zhashInfo($user->home_address, 0, $this->isPermitted('_user_fields\home_address', $user->id));?>
+					</td>
+				</tr>
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Visa USA');?>
+					</td>
+					<td>
+						<?=zgetVisaStatus($user->visa_usa);?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Visa USA Expiry');?>
+					</td>
+					<td>
+						<?=$user->visa_usa_exp;?>
+					</td>
+				</tr>
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Visa Shenghen');?>
+					</td>
+					<td>
+						<?=zgetVisaStatus($user->visa_shenghen);?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Visa Shenghen Expiry');?>
+					</td>
+					<td>
+						<?=$user->visa_shenghen_exp;?>
+					</td>
+				</tr>
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Marital Status');?>
+					</td>
+					<td>
+						<?=zhashInfo($user->marital_status, 0, $this->isPermitted('_user_fields\marital_status', $user->id));?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Next Of Kin');?>
+					</td>
+					<td>
+					<?php if (isset($user->next_of_kin) && $user->next_of_kin): ?>
+						<?=zhashInfo($user->next_of_kin, 0, $this->isPermitted('_user_fields\next_of_kin', $user->id));?>
+					<?php endif ?>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th colspan="5">
+						<legend>
+							<?=$this->translate('Education');?>
+						</legend>
+					</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="col-title">
+						<?=$this->translate('Academy Name');?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Country');?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('From');?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('To');?>
+					</td>
+					<td class="col-title">
+						<?=$this->translate('Diploma');?>
+					</td>
+				</tr>
+				<?php foreach ($user_education as $education) {?>
+				<tr>
+					<td>
+						<?=$education->name;?>
+					</td>
+					<td>
+						<?=$education->country;?>
+					</td>
+					<td>
+						<?=date('Y', $education->from);?>
+					</td>
+					<td>
+						<?=date('Y', $education->to);?>
+					</td>
+					<td>
+						<?=zhashInfo($education->diploma, 0, $this->isPermitted('_edu_fields\diploma', $user->id));?>
+					</td>
+				</tr>
+
+				<?php }?>
+			</tbody>
+		</table>
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th colspan="8">
+						<legend>
+							<?=$this->translate('Documents');?>
+							<?php if (!$plain_cv): ?>
+								<?php if ($this->isPermitted('my\controller\cv', $user->id)): ?>
+									<a href="<?=$this->url('sc/cv/actions', array('action' => 'docs'));?>">
+										<button type="button" class="btn btn-success btn-xs">
+											<span class="glyphicon glyphicon-pencil"></span> <?=$this->translate('Edit Documents');?>
+										</button>
+									</a>
+								<?php endif ?>
+							<?php endif ?>
+						</legend>
+					</th>
+
+				</tr>
+			</thead>
+
+			<thead class="col-title">
+				<tr>
+					<td>#</td>
+					<td>Title</td>
+					<td>Number</td>
+					<td>Type</td>
+					<td>Grade</td>
+					<td>Issued</td>
+					<td>Expiry</td>
+					<td>Place</td>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->user_docs as $count => $doc) {?>
+					<tr>
+						<td><?=$count+1;?></td>
+						<td class="col-sm-2"><?=$doc['title'];?></td>
+						<td class="col-sm-2"><?=zhashInfo($doc['number'], 0, $this->isPermitted('_docs_fields\number', $user->id));?></td>
+						<td class="col-sm-1">
+						<?php
+							echo ($doc['type'] == 1)? $this->translate('Passport') : $this->translate('Certificate');
+						?>
+						</td>
+						<td class="col-sm-1"><?=$doc['grade'];?></td>
+						<td class="col-sm-2"><?=$doc['issue_date'];?></td>
+						<td class="col-sm-2"><?=$doc['expiry_date'];?></td>
+						<td class="col-sm-2"><?=$doc['issue_place'];?></td>
+					</tr>					
+				<?php }?>
+			</tbody>
+		</table>
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th colspan="10">
+						<legend>
+							<?=$this->translate('Experience');?>
+							<?php if (!$plain_cv): ?>
+								<?php if ($this->isPermitted('my\controller\cv', $user->id)): ?>
+									<a href="<?=$this->url('sc/cv/actions', array('action' => 'experience'));?>">
+										<button type="button" class="btn btn-success btn-xs">
+											<span class="glyphicon glyphicon-pencil"></span> <?=$this->translate('Edit Experience');?>
+										</button>
+									</a>
+								<?php endif ?>
+							<?php endif ?>
+						</legend>
+					</th>
+
+				</tr>
+			</thead>
+
+			<thead class="col-title">
+				<tr>
+					<td >#</td>
+					<td>Ship Name</td>
+					<td>Type</td>
+					<td>Flag</td>
+					<td>DWT</td>
+					<td>BHP</td>
+					<td>From</td>
+					<td>To</td>
+					<td>Rank</td>
+					<td>Company</td>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($user_experience as $count => $contract) {?>
+					<tr>
+						<td><?=$count+1;?></td>
+						<td class="col-sm-2"><?=zhashInfo($contract['ship_name'], 0, $this->isPermitted('_experience_fields\ship_name', $user->id));?></td>
+						<td class="col-sm-2"><?=$contract['ship_type'];?></td>
+						<td class="col-sm-1"><?=$contract['flag'];?></td>
+						<td class="col-sm-1"><?=$contract['dwt'];?></td>
+						<td class="col-sm-1"><?=$contract['bhp'];?></td>
+						<td class="col-sm-2"><?=$contract['date_from'];?></td>
+						<td class="col-sm-2"><?=$contract['date_to'];?></td>
+						<td class="col-sm-1"><?=zhashInfo($contract['rank'], 0, $this->isPermitted('_experience_fields\rank', $user->id));?></td>
+						<td class="col-sm-2"><?=zhashInfo($contract['company'], 0, $this->isPermitted('_experience_fields\company', $user->id));?></td>
+					</tr>					
+				<?php }?>
+			</tbody>
+		</table>
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th colspan="5">
+						<legend><?=$this->translate('Other information');?></legend>
+					</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><h5><?=$this->translate('User Notes');?></h5></td>
+					<td colspan="4"><p><?=zhashInfo($user->user_notes, 0, $this->isPermitted('_user_fields\user_notes', $user->id));?></p></td>
+				</tr>					
+			</tbody>
+		</table>			
+	</div>
+</div> <!-- row -->

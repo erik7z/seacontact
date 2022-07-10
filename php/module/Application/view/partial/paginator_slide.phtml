@@ -1,0 +1,29 @@
+<?php
+    $controller = (isset($controller))? $controller : null;
+    $action = (isset($action))? $action : null;
+    $user = (isset($user))? $user : null; 
+?>
+<?php if ($this->pageCount): ?>
+    <nav >
+        <ul class="pagination">
+            <li <?php echo!isset($this->previous) ? 'class="disabled"' : ''; ?>>
+                <a href="<?php echo $this->url($route, array('controller' => $controller, 'action' => $action, 'user' => $user), array('query' => array_merge($query, array('_page' => $this->first)))); ?>" >&laquo;</a></li>
+            <li <?php echo!isset($this->previous) ? 'class="disabled"' : ''; ?>>
+                <a href="<?php echo $this->url($route, array('controller' => $controller, 'action' => $action, 'user' => $user), array('query' => array_merge($query, array('_page' => $this->previous)))); ?>" aria-label="Previous"><span aria-hidden="true">&lsaquo;</span></a></li>
+
+            <!-- Numbered page links -->
+            <?php foreach ($this->pagesInRange as $page): ?>
+                <li <?php echo $page == $this->current ? 'class="active"' : ''; ?>><a href="<?php echo $this->url($route, array('controller' => $controller, 'action' => $action, 'user' => $user), array('query' => array_merge($query, array('_page' => $page)))); ?>">
+                        <?php echo $page; ?>
+                    </a></li>
+            <?php endforeach; ?>
+
+            <!-- Next page link -->
+            <li <?php echo!isset($this->next) ? 'class="disabled"' : ''; ?>>
+                <a href="<?php echo $this->url($route, array('controller' => $controller, 'action' => $action, 'user' => $user), array('query' => array_merge($query, array('_page' => $this->next)))); ?>" aria-label="Next"><span aria-hidden="true">&rsaquo;</span></a></li>
+            <!-- Last page link -->
+            <li <?php echo!isset($this->next) ? 'class="disabled"' : ''; ?>>
+                <a href="<?php echo $this->url($route, array('controller' => $controller, 'action' => $action, 'user' => $user), array('query' => array_merge($query, array('_page' => $this->last)))); ?>">&raquo;</a></li>
+        </ul>
+    </nav>                    
+<?php endif; ?>

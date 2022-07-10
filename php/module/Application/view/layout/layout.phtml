@@ -1,0 +1,509 @@
+<?= $this->doctype(); ?>
+<?php $role = (isset($this->identity()->role))?  $this->identity()->role : \Application\Access\AccessList::ROLE_GUEST;?>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<?php if($this->userInfo()) {
+		$user_name = ($this->userInfo()->type == 'company') ? zgetUserName($this->userInfo()) : zhashUserName(zgetUserName($this->userInfo()), 0 , $this->isPermitted('_user_fields\full_name', $this->userInfo()->id) );
+		$this->headTitle()->prepend($user_name); 
+	}?>
+	<?= $this->headTitle($this->currentPageLabel().' SEACONTACT ')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+	<?php
+
+	$this->headMeta()->appendName('description', $this->translate('Seafarers Community | Vacancies | Blogs | Question and Answers | Social Network For Seamans'));
+	$meta = $this->headMeta()->getValue();
+	$a = 0;
+	foreach ($meta as $value) {
+		if(isset($value->name) && $value->name == 'author') $a++;
+	}
+	if($a == 0) {
+		echo $this->headMeta()
+		->appendName('viewport', 'width=device-width, initial-scale=1.0')
+		->appendName('author', _SITENAME_)
+		->appendHttpEquiv('X-UA-Compatible', 'IE=edge');
+	} else {
+		echo $this->headMeta()
+		->appendName('viewport', 'width=device-width, initial-scale=1.0')
+		->appendHttpEquiv('X-UA-Compatible', 'IE=edge');
+	}
+
+
+	?>
+
+	<!-- Styles -->
+	<?= $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.png'))
+	->prependStylesheet('/vendor/animate.css/animate.css')
+	->prependStylesheet('/css/fonts.css')
+	->prependStylesheet('/css/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css')
+	->prependStylesheet('/css/fonts/pe-icon-7-stroke/css/helper.css')
+	->prependStylesheet('/css/fonts/pe-icon-social/css/pe-icon-social.css')
+	->prependStylesheet('/css/fonts/pe-icon-social/css/helper.css')
+	->prependStylesheet('/css/fonts/pe-icon-social/css/social-style.css')
+	->prependStylesheet('/css/fonts/linecons/style.css')
+	->prependStylesheet('/css/fonts/linea/_basic/styles.css')
+	->prependStylesheet('/css/fonts/linea/_ecommerce/styles.css')
+	->prependStylesheet('http://fonts.googleapis.com/css?family=Roboto:400,300,700|Open+Sans:700')
+	->prependStylesheet('/css/fonts/font-awesome/css/font-awesome.css')
+	->prependStylesheet('/vendor/twbs/bootstrap/dist/css/bootstrap.min.css')
+
+	->appendStylesheet('/vendor/chosen/chosen.min.css')
+	->appendStylesheet('/vendor/bootstrap-linkpreview/library/css/bootstrap-linkpreview.css')
+
+
+	->appendStylesheet('/css/content-main.css'._SCRIPTS_VER_)
+	->appendStylesheet('/css/content-main-default.css'._SCRIPTS_VER_)
+
+	;?>
+	<?= $this->headStyle();?>
+
+
+	<!-- Scripts -->
+	<?= $this->headScript()
+	->prependFile('/js/html5shiv.js')
+	->prependFile('/js/respond.min.js')
+	->prependFile('/js/modernizr.js')
+	->prependFile('/vendor/twbs/bootstrap/dist/js/bootstrap.min.js')
+	->prependFile('/js/jquery-2.1.3.min.js')
+
+	->appendFile('/vendor/bootstrap-notify/bootstrap-notify.min.js')
+	->appendFile('/vendor/chosen/chosen.jquery.js')
+	->appendFile('/vendor/bootstrap-linkpreview/library/js/bootstrap-linkpreview.min.js')
+
+	->appendFile('/js/main.js'._SCRIPTS_VER_)
+	->appendFile('http://vk.com/js/api/share.js?93')
+
+	;?>
+
+
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-68597581-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+	
+	<script type="text/javascript" src="http://platform.linkedin.com/in.js">
+		api_key:   77z0oq1xmbw13v
+		authorize: true
+		lang: en_US
+	</script>
+
+</head>
+
+<body>
+	
+	<div id="vk_api_transport"></div>
+
+	<div id="bg-bg" class="hidden-xs">
+		<div id="top-bg">
+		</div>      
+	</div>
+	<div id="layout-layout">
+		<div id="bg-main" class="container-fluid">
+			<div id="wrapper" class="container">
+				<div id="header" class="row">
+					<?php if(strpos($this->routeMatch()->getParam('menu'), 'nomenu') === false || $this->identity()) {?>
+						<div id="profile" class="col-sm-7">
+							<?php if ($this->identity()): ?>
+								<div id="logout">
+									<a href="<?=$this->url('sc/exit');?>" alt="exit"><span alt="exit" class="glyphicon glyphicon-off icon-sm"></span></a>
+								</div>
+							<?php endif ?>
+							<?php 
+								if($this->identity()) { 
+									$ava_size['size'] = 'small';
+									echo $this->partial('my/profile-avatar'); 
+								} else $ava_size['size'] = 'big';
+
+								if($this->userInfo()) {
+									if($this->identity() && $this->userInfo()->id == $this->identity()->id) {}
+									else echo $this->partial('userinfo/profile', $ava_size);
+								} else echo $this->partial('my/profile'); 
+							?>
+						</div>
+					<?php } else {?>
+					<?php $show_breadcrumbs = true;?>
+						<div class="col-sm-7">
+						</div>
+					<?php } ?>  
+					<div id="logo-text" class="col-sm-3">
+						<div class="row">
+							<h1 class="sitename-large"><span class="text-blue">SEA</span>CONTACT</h1>
+							<h3 class="sitename-description"><?=$this->translate('WORLDWIDE SEAFARERS COMMUNITY');?></h3>
+						</div>
+						<?php if (!$this->identity()): ?>
+							<div class="row">
+								<a href="<?=$this->url('sc/home', array(), array('fragment' => 'registration'));?>">
+									<button class="btn btn-xs btn-info" type="submit"><?=$this->translate('Registration');?></button>
+								</a>
+								<a href="<?=$this->url('sc/auth',[]);?>">
+									<button class="btn btn-xs btn-success" type="submit"><?=$this->translate('Enter');?></button>
+								</a>
+							</div>
+						<?php endif ?>
+					</div>
+					<div id="logo" class="col-sm-2">
+						<div class="row pt ml pl">
+							<a href="<?=$this->url(null, ['lang' => 'en'], [], true);?>" alt="english"><img src="/img/icons/flag_uk.png" width="20px"></a>
+							<a href="<?=$this->url(null, ['lang' => 'ru'], [], true);?>" alt="russian"><img src="/img/icons/flag_ru.png" width="20px"></a>
+						</div>
+						<div class="row">
+							<a href="<?=_ADDRESS_;?>">
+								<img src="<?= $this->basePath('img/logo-main.png') ?>" id="main-logo" alt="main logo" class="hidden-sm hidden-xs">
+							</a>
+						</div>
+					</div>  
+				</div>
+
+
+				<div id="middle" class="row">
+					<div id="left-menu" class="col-sm-2">
+						<!--  
+						<div class="form-group search-field">
+							<label class="sr-only" for="search_field"><?=$this->translate('Search');?></label>
+							<input type="search" class="form-control" placeholder="<?=$this->translate('search...');?>" id="search_field" name="search_field"/>
+						</div>
+						-->
+					<br />
+					<?php
+						if($this->siteInfo()->identity) {
+							$msgs_count = ($this->fresh_msgs)? $this->fresh_msgs : $this->siteInfo()->new_msgs;
+							$this->navigation('navigation')->menu($this->navigation()->findOneBy('menu_id', 'home'))->set('label', $this->translate('My Page'));
+							$this->navigation('navigation')->menu($this->navigation()->findOneBy('menu_id', 'messages'))->set('notifications', $this->siteInfo()->new_msgs);
+							$this->navigation('navigation')->menu($this->navigation()->findOneBy('menu_id','contacts_incoming'))->set('notifications', $this->siteInfo()->new_contacts);
+							$this->navigation('navigation')->menu($this->navigation()->findOneBy('menu_id','contacts'))->set('notifications', $this->siteInfo()->new_contacts);
+							$this->navigation('navigation')->menu($this->navigation()->findOneBy('menu_id','notifications'))->set('notifications', $this->siteInfo()->new_notif);
+						}
+						$this->navigation('navigation')->setRole($role);
+						echo $this->navigation('navigation')
+						->menu($this->navigation()->findOneBy('menu_id','main_menu'))
+						->setUlClass('nav nav-pills nav-stacked left-menu-items')
+						->setPartial('partial/navigation-bootstrap-3/navigation.phtml');
+					?> 
+					<?php if (strpos($this->routeMatch()->getRoute(), 'messages') === false): ?>
+						<?php if ($this->siteInfo()->identity): ?>
+							<?php $this->siteInfo()->updateUserActivity();?>
+							<?php if($this->isPermitted('my\controller\contacts')) :?>
+								
+								<?php if(count($this->siteInfo()->online_friends) > 0)  { ?>
+								<div class="row left-menu-block friends">
+									<div class="col-sm-12">
+										<div class="row">
+											<div class="col-sm-12">
+												<h5 class="block-header-link"><a href="<?=$this->url('sc/contacts');?>"><?=$this->translate('FRIENDS ONLINE');?> (<?=$this->siteInfo()->online_friends_count;?>)</a></h5>
+												<div class="hidden-sm hidden-xs">
+													<hr />
+													<?php foreach ($this->siteInfo()->online_friends as $friend) :?>
+														<?=$this->partial('my/partial/online_user_list_item', ['user' => $friend]);?>
+													<?php endforeach ?>
+												</div>
+											</div>
+										</div>
+										<hr />
+										<div class="row">
+											<div class="col-sm-offset-4 col-sm-8 block-footer">
+												<h5 class="small"><a href="<?=$this->url('sc/contacts');?>"><?=$this->translate('View All');?></a></h5>
+											</div>                                
+										</div>
+									</div>
+
+								</div> <!-- row left-menu-block friends -->
+								<?php } ?>
+							<?php endif ?>
+						<?php endif ?>
+
+						<?php $online_seamans = $this->siteInfo()->online_seamans;?>
+						<?php if (count($online_seamans)): ?>
+							<?php 
+								$online_seamans_url = ($this->identity() && $this->identity()->type == \Application\Model\UserTable::TYPE_USER)?
+											$this->url('sc/contacts/actions',['action' => 'search'],['query' => ['filters' => ['online' => 'online']]]) :
+											$this->url('sc/seamansdb',[],['query' => ['filters' => ['online' => 'online'], 'without_exp' => 1]]);
+							?>
+							<div class="row left-menu-block friends">
+								<div class="col-sm-12 ">
+									<h5 class="block-header-link">
+										<a href="<?=$online_seamans_url;?>">
+											<?=$this->translate('Seamans Online');?> (<?=$this->siteInfo()->online_seamans_count;?>)
+										</a>
+									</h5>
+									<div class="hidden-sm hidden-xs">
+										<hr class="mt0 mb0" />
+										<?php foreach ($online_seamans as $seaman): ?>
+											<?=$this->partial('my/partial/online_user_list_item', ['user' => $seaman]);?>
+										<?php endforeach ?>
+									</div>
+									<?php if ($this->siteInfo()->online_seamans_count > count($online_seamans)): ?>
+										<span class="pull-right">
+											<h5 class="small"><a href="<?=$online_seamans_url;?>"><?=$this->translate('View All');?> (<?=$this->siteInfo()->online_seamans_count;?>)</a></h5>
+										</span>
+									<?php endif ?>
+
+								</div>
+							</div>
+						<?php endif ?>
+						<?php $online_companies = $this->siteInfo()->online_companies;?>
+						<?php if (count($online_companies)): ?>
+							<div class="row left-menu-block friends">
+								<div class="col-sm-12   ">
+									<h5 class="block-header-link">
+										<a href="<?=$this->url('sc/companiesdb',[],['query' => ['filters' => ['online' => 'online']]]);?>">
+											<?=$this->translate('Companies Online');?> (<?=$this->siteInfo()->online_companies_count;?>)
+										</a>
+									</h5>
+									<div class="hidden-sm hidden-xs">
+										<hr />
+										<?php foreach ($online_companies as $company): ?>
+											<?=$this->partial('my/partial/online_user_list_item', ['user' => $company]);?>
+										<?php endforeach ?>
+									</div>
+									<?php if ($this->siteInfo()->online_companies_count > count($online_companies)): ?>
+										<span class="pull-right">
+											<h5 class="small"><a href="<?=$this->url('sc/companiesdb',[],['query' => ['filters' => ['online' => 'online']]]);?>"><?=$this->translate('View All Companies');?> (<?=$this->siteInfo()->online_companies_count;?>)</a></h5>
+										</span>
+									<?php endif ?>
+								</div>
+								<hr />
+							</div>
+						<?php endif ?>
+						<?php if ($this->siteInfo()->online_guests): ?>
+							<div class="row left-menu-block friends">
+								<div class="col-sm-12   ">
+									<h5 class="block-header-link"><?=$this->translate('Guests Online');?> (<?=$this->siteInfo()->online_guests;?>)</h5>
+								</div>
+								<hr />
+							</div>
+						<?php endif ?>
+						
+						<div class="row left-menu-block hidden-sm hidden-xs">
+							<div class="col-md-12  pt">
+								<h5><?=$this->translate('Follow us in');?> <b>LinkedIn</b></h5>
+								<script type="IN/CompanyProfile" data-id="10163464" data-format="hover" data-text="Seacontact"></script>
+							</div>
+							<div class="col-md-12 pt">
+								<h5><?=$this->translate('Follow us in');?> <b>Vkontakte</b></h5>
+								<script type="text/javascript" src="//vk.com/js/api/openapi.js?121"></script>
+								<div id="vk_groups"></div>
+								<script type="text/javascript">
+									VK.Widgets.Group("vk_groups", {mode: 0, width: "165", height: "250", color1: 'FFFFFF', color2: '2B587A', color3: '5B7FA6'}, 101763341);
+								</script>
+							</div>
+							<div class="col-md-12 pt">
+								<h5><?=$this->translate('Follow us in');?> <b>Facebook</b></h5>
+								<div class="row pl05">
+									<div class="fb-page" data-href="https://www.facebook.com/club.seacontact/" data-width="150" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/club.seacontact/"><a href="https://www.facebook.com/club.seacontact/">Seacontact</a></blockquote></div></div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row left-menu-block  hidden-sm hidden-xs ">
+							<div class="col-sm-12 text-center">
+								<h5 class="block-header-link"><?=$this->translate('Our Partners');?></h5>
+								<a href="http://www.omctf.od.ua">
+									<img src="/<?=_IMGWWW_.'banners/omctf.jpg';?>" width="100px" alt="<?=$this->translate('Maritime Colledge Of Technical Fleet');?>"/>
+								</a>
+								<br />
+								<br />
+								<a href="http://www.navlib.net">
+									<img src="/<?=_IMGWWW_.'banners/navlib.jpg';?>" width="100px" alt="<?=$this->translate('Library For Seafarers');?>"/>
+								</a>
+								<br />
+
+							</div>
+						</div>
+					<?php else: ?>
+						<script type="text/javascript">
+							$('#top-bg').css('height', '870px');
+						</script>
+					<?php endif ?>
+
+
+				</div> <!-- left-menu -->
+				<div id="main-content" class="col-sm-9">
+					<div class="row" id="user-menu">
+						<div class="col-md-12">
+							<?php 
+
+							if($this->userInfo()) {
+								$nav_source = ($this->userInfo()->type == \Application\Model\UserTable::TYPE_USER) ? 'user_navigation' : 'company_navigation';
+								echo $this->navigation($nav_source)
+								->menu()->setUlClass('nav nav-pills nav-justified')->setRole($role);
+							}
+
+							// If we are in the friends section display select for type of friends
+							if(strpos($this->routeMatch()->getMatchedRouteName(), 'contacts') !== false) {
+								$this->navigation('navigation')->setRole($role);
+										//setOnlyActiveBranch(true)->setRenderParents(false)
+								echo $this->navigation('navigation')
+								->menu($this->navigation()->findOneBy('menu_id','contacts'))
+								->setUlClass('nav nav-pills nav-justified')
+								->setPartial('partial/navigation-bootstrap-3/navigation.phtml');
+							}
+							?>
+						</div>
+
+					</div>
+					<?php if(isset($show_breadcrumbs) || $this->page_filters) {?>
+					<div class="row main-breadcrumb">
+						<div class="pull-left pl">
+							<div class="breadcrumbs">
+								<h4 class="mb0"><?=$this->navigation('navigation')->breadcrumbs()->setMinDepth(0)->setRole($role);?></h4>
+							</div>
+						</div>
+						<div class="pull-right text-right pt pr">
+							<?=$this->page_filters;?>
+						</div>
+						<div class="col-md-12">
+							<hr class="mt05 mb05"/>
+						</div>
+					</div>
+					<?php }?>
+					
+					
+					<?= $this->content; ?>
+
+					<?php if (!$this->identity()): ?>
+						<div class="row">
+							<?=$this->partial('application/partial/auth-bottom-container');?>
+						</div>
+					<?php endif ?>
+
+				</div>
+				<div id="right-menu" class="col-sm-1">
+					<?php
+					$this->navigation('navigation')->setRole($role);
+					echo $this->navigation('navigation')
+					->menu($this->navigation()->findOneBy('menu_id', 'my_menu')->setVisible(true))
+					->setUlClass('nav nav-pills nav-stacked')
+					->setPartial('partial/navigation-bootstrap-3/navigation.phtml');
+					?>
+				</div>
+			</div>
+			<div id="footer" class="row">
+				<div class="col-md-12 text-center">
+						<!-- 
+
+							<ul id="footer-links">
+								<li><a href="mailto:office@seacontact.com"><?=$this->translate('Help');?></a></li>
+								<li><a href="#"><?=$this->translate('Rules');?></a></li>
+								<li><a href="<?=$this->url('sc/home', array(), array('fragment' => 'about'));?>"><?=$this->translate('About');?></a></li>
+								<li><a href="<?=$this->url('sc/companyinfo', array('user' => 'seacontact'));?>"><?=$this->translate('Contact');?></a></li>
+								<li><a href="#"><?=$this->translate('Mobile App');?></a></li>
+							</ul>
+
+						-->
+						<br />
+						<h6 >&copy; 2014 - <?= date('Y'); ?> SEACONTACT.COM <?= $this->translate('All Rights Reserved.') ?></h6>
+					</div>
+				</div>
+				<!-- /container -->
+			</div>
+		</div>
+	</div>
+
+	<script>
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId      : '956454421068622',
+				xfbml      : true,
+				version    : 'v2.5'
+			});
+		};
+
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+
+
+
+		/* --------------- Vkontakte -------------------*/
+
+		window.vkAsyncInit = function() {
+			VK.init({
+				apiId: 5148062,
+				onlyWidgets: false
+			});
+		};
+
+		setTimeout(function() {
+			var el = document.createElement("script");
+			el.type = "text/javascript";
+			el.src = "//vk.com/js/api/openapi.js";
+			el.async = true;
+			document.getElementById("vk_api_transport").appendChild(el);
+		}, 0);
+		
+		$(document).ready(function(){
+
+
+			// function updateWrappers()
+			// {
+			//   var max_height = Math.max($('#left-menu').height(), $('#right-menu').height());
+			//   max_height = Math.max(max_height, $('#main-content').height()) + 40;
+			//   $('#main-content').css('height', max_height);
+			// }
+
+			// setTimeout(function() {
+			// 	updateWrappers();
+			// }, 1000);
+			// $(window).resize(function(){
+			// 	updateWrappers();
+			// });
+
+			$('.share_facebook').on('click', 'i', function(){
+				var page_url = $(this).data('url');
+				FB.ui({
+					method: 'share',
+					href: page_url,
+				}, function(response){});
+			}); 
+
+			$('.share_linkedin').on('click', 'i', function(){
+				var page_url = $(this).data('url');
+				IN.UI.Share().params({
+					url: page_url
+				}).place();
+			}); 
+
+			$('select:not(.no_chosen)').chosen({
+				disable_search_threshold: 10,
+				search_contains: 1
+			});
+
+	<?php if($this->flashMessenger()->hasCurrentSuccessMessages()) :?>
+		$.notify({
+			message: '<?=zstripNl(addslashes($this->flashMessenger()->renderCurrent("success")));?>' 
+		},notify_success_settings);
+		<?php $this->flashMessenger()->clearCurrentMessages('success');?>
+	<?php endif ?>
+	<?php if($this->flashMessenger()->hasSuccessMessages()) :?>
+		$.notify({
+			message: '<?=zstripNl(addslashes($this->flashMessenger()->render("success")));?>' 
+		},notify_success_settings);
+	<?php endif ?>
+	<?php if($this->flashMessenger()->hasCurrentErrorMessages()) :?>
+		$.notify({
+			message: '<?=zstripNl(addslashes($this->flashMessenger()->renderCurrent("error")));?>' 
+		},notify_error_settings);
+		<?php $this->flashMessenger()->clearCurrentMessages('error');?>
+	<?php endif ?>
+	<?php if($this->flashMessenger()->hasErrorMessages()) :?>
+		$.notify({
+			message: '<?=zstripNl(addslashes($this->flashMessenger()->render("error")));?>' 
+		},notify_error_settings);
+	<?php endif ?>
+});
+
+
+</script>
+
+</body>
+</html>

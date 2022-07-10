@@ -1,0 +1,36 @@
+<div class="page-content">
+	<?php
+		$form = $this->form;
+		$form->prepare();
+		$form->setAttribute('class', 'form-horizontal');
+		echo $this->form()->openTag($form);
+	?>
+	<fieldset class="col-md-12">
+		<div class="form-group">
+			<div class="col-md-4">
+				<?=$this->formLabel($form->get('mail_box'));?>
+				<?=$this->formElement($form->get('mail_box')->setAttribute('class', 'form-control input-sm '));?>
+				<?=$this->formElementErrors($form->get('mail_box'));?>
+			</div>
+			<div class="col-md-5">
+				<?=$this->formLabel($form->get('folder_name'));?>
+				<?=$this->formElement($form->get('folder_name')->setAttribute('class', 'form-control input-sm '));?>
+				<?=$this->formElementErrors($form->get('folder_name'));?>
+			</div>
+			<div class="col-md-3">
+				<?=$this->formLabel($form->get('priority'));?>
+				<?=$this->formElement($form->get('priority')->setAttribute('class', 'form-control input-sm '));?>
+				<?=$this->formElementErrors($form->get('priority'));?>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-12">
+				<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control input-md create_folder'));?>
+					<span class="fa fa-plus-square"></span> 
+		 			 <?=$form->get('submit')->getLabel();?> 
+				<?=$this->formButton()->closeTag();?>
+			</div>
+		</div>
+	</fieldset>
+	<?= $this->form()->closeTag();?>
+</div>

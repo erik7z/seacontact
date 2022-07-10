@@ -1,0 +1,142 @@
+<?php
+	$form = $this->form;
+	$form->prepare();
+	$form->setAttribute('class', 'form-horizontal');
+	$form->setName('user_experience_form');
+	$fieldset = $form->get('user_experience');
+	echo $this->form()->openTag($form);
+?>
+<?php if ($fieldset->has('id')): ?>
+	<?= $this->formRow($fieldset->get('id')); ?>
+<?php endif ?>
+<fieldset class="col-md-12">
+	<div class="form-group">
+	<?php if ($fieldset->has('ship_name')): ?>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('ship_name'));?>
+			<?=$this->formElement($fieldset->get('ship_name')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('ship_name'));?>
+		</div>
+	<?php endif ?>
+	<?php if ($fieldset->has('ship_type')): ?>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('ship_type'));?>
+			<?=$this->formElement($fieldset->get('ship_type')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('ship_type'));?>
+		</div>
+	<?php endif ?>
+	<?php if ($fieldset->has('date_from')): ?>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('date_from'));?>
+			<?=$this->formElement($fieldset->get('date_from')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('date_from'));?>
+		</div>
+	<?php endif ?>
+	<?php if ($fieldset->has('date_to')): ?>	
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('date_to'));?>
+			<?=$this->formElement($fieldset->get('date_to')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('date_to'));?>
+		</div>
+	<?php endif ?>
+	</div>
+	<div class="form-group">
+	<?php if ($fieldset->has('rank')): ?>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('rank'));?>
+			<?=$this->formElement($fieldset->get('rank')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('rank'));?>
+		</div>
+	<?php endif ?>
+	<?php if ($fieldset->has('rank_text')): ?>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('rank_text'));?>
+			<?=$this->formElement($fieldset->get('rank_text')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('rank_text'));?>
+		</div>
+	<?php endif ?>
+	</div>
+</fieldset>
+<fieldset class="col-md-12">
+	<div class="form-group">
+	<?php if ($fieldset->has('flag')): ?>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('flag'));?>
+			<?=$this->formElement($fieldset->get('flag')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('flag'));?>
+		</div>
+	<?php endif ?>
+	<?php if ($fieldset->has('ship_built')): ?>	
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('ship_built'));?>
+			<?=$this->formElement($fieldset->get('ship_built')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('ship_built'));?>
+		</div>
+	<?php endif ?>
+	<?php if ($fieldset->has('dwt')): ?>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('dwt'));?>
+			<?=$this->formElement($fieldset->get('dwt')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('dwt'));?>
+		</div>
+	<?php endif ?>
+	<?php if ($fieldset->has('grt')): ?>
+		<div class="col-md-3">
+			<?=$this->formLabel($fieldset->get('grt'));?>
+			<?=$this->formElement($fieldset->get('grt')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('grt'));?>
+		</div>
+	<?php endif ?>
+	</div>									
+	<div class="form-group">
+
+	<?php if ($fieldset->has('engine')): ?>	
+		<div class="col-md-4">
+			<?=$this->formLabel($fieldset->get('engine'));?>
+			<?=$this->formElement($fieldset->get('engine')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('engine'));?>
+		</div>
+	<?php endif ?>
+	<?php if ($fieldset->has('bhp')): ?>
+		<div class="col-md-2">
+			<?=$this->formLabel($fieldset->get('bhp'));?>
+			<?=$this->formElement($fieldset->get('bhp')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('bhp'));?>
+		</div>
+	<?php endif ?>
+	</div>									
+	<div class="form-group">
+	<?php if ($fieldset->has('company')): ?>
+		<div class="col-md-6">
+			<?=$this->formLabel($fieldset->get('company'));?>
+			<?=$this->formElement($fieldset->get('company')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('company'));?>
+		</div>
+	<?php endif ?>
+	<?php if ($fieldset->has('trading_area')): ?>
+		<div class="col-md-6">
+			<?=$this->formLabel($fieldset->get('trading_area'));?>
+			<?=$this->formElement($fieldset->get('trading_area')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('trading_area'));?>
+		</div>
+	<?php endif ?>
+	</div>
+	<div class="form-group">
+	<?php if ($fieldset->has('text')): ?>
+		<div class="col-md-12">
+			<?=$this->formLabel($fieldset->get('text'));?>
+			<?=$this->formElement($fieldset->get('text')->setAttribute('class','form-control'));?>
+			<?=$this->formElementErrors($fieldset->get('text'));?>
+		</div>
+	<?php endif ?>
+	</div>
+</fieldset>
+
+<div class="col-md-7 col-md-offset-5">
+	<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary save_exp'));?>
+		<?=$form->get('submit')->getLabel();?>
+		<span class="glyphicon glyphicon-send"></span> 
+	<?=$this->formButton()->closeTag();?>
+</div>
+
+<?= $this->form()->closeTag();?>

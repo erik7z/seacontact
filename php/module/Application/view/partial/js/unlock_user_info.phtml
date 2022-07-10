@@ -1,0 +1,36 @@
+<?php 
+	$default_bind = (isset($default_bind))? $default_bind : 1;
+?>
+
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'unlock_info_modal',
+					'modal_size' => 'md',
+					'modal_title' => $this->translate('Unlock Contacts Information'),
+));?>
+
+<script type="text/javascript">
+	<?php if ($default_bind): ?>
+		$('body').on('click', '.unlock_info', function(e){
+			e.preventDefault();
+			unlockUserInfo($(this).data('user'), $(this));
+		});	
+	<?php endif ?>
+
+	function unlockUserInfo(user_id, $link, success_action){
+		var modal_w = $('#unlock_info_modal');
+		$.get('/seamansdb/unlock-user-info/'+user_id, function(response) {
+			if(response.success == true) {
+				var $button = $link.find('button');
+				$button.removeClass('btn-warning').addClass('btn-success');
+				$button.html('');
+				$('<span></span>', {class: 'glyphicon glyphicon-ok'}).appendTo($button);
+				$button.parents('.user-entry').find('.user_name').html(response.extra_data.name);
+				// if(success_action == 'undefined' || success_action == undefined) window.location.reload(); 
+				// else success_action();
+			} else {
+				modal_w.find('.load-content').html(response.data);
+				modal_w.modal('show');
+			}
+		}, 'json');
+	}
+</script>

@@ -1,0 +1,20 @@
+<?php if ($this->identity()): ?>
+    <span id="my-profile-name">
+        <a href="<?=$this->basePath($this->identity()->login);?>">
+         	<?= zgetUserName($this->identity()); ?>
+        </a>
+    </span>
+<?php endif ?>
+<span class="user-section-bc">  
+    <?php
+        $role = ($this->identity())? $this->identity()->role : \Application\Access\AccessList::ROLE_GUEST;
+		echo ' >> '.$this->navigation('navigation')->breadcrumbs()->setMinDepth(0)->setMaxDepth(3)->setRole($role);
+    ?>
+    <br/ >
+</span>
+<?php if ($this->identity()): ?>
+    <div class="my-address">
+    	<?php $user_address = ($this->identity()->login)? $this->identity()->login : 'id'.$this->identity()->id;?>
+    	<h4 class="hidden-xs hidden-sm"><?=$this->url('sc').$user_address;?></h4>
+    </div>
+<?php endif ?>

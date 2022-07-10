@@ -1,0 +1,59 @@
+<section class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-md-12 <?=($this->identity())? 'pt' : '';?>">
+				<div class="row">
+					<div class="col-md-2">
+						<button type="button" class="btn btn-info btn-sm form-control" aria-label="<?=$this->translate('Search');?>" data-toggle="modal" data-target="#filterUsersModal">
+						  <span class="glyphicon glyphicon-search" aria-hidden="true"></span> <?=$this->translate('Search');?>
+						</button>
+					</div>
+					<div class="col-md-8 text-center" data-name="results_count">
+						<h4>
+							<?=(count($q_options['filters']) > 0)? $this->translate('Companies in this request') : $this->translate('Total Companies');?>:
+							<span class="text-danger"><?=$total_results;?></span>
+						</h4>
+					</div>
+					<div class="col-md-2 text-center">
+						<?=$this->partial('application/partial/custom_layout_switch');?>
+					</div>
+				</div>
+			<div class="row">
+				<div class="col-md-12">
+						<?php if(count($data_list) != 0) {?>
+							<?php if ($q_options['layout'] == 'thumb'): ?>
+								<div class="row">
+									<div class="col-md-4 col-md-push-8" id="content-filters">
+										<?=$this->partial('admin/partial/user-filter-form', ['form' => $form, 'q_options' => $q_options, 'vertical' => 1]);?>
+									</div>
+									<div class="col-md-8 col-md-pull-4" data-name="page_content_list">
+										<?php foreach ($data_list as $company): ?>
+											<?php 
+												$company->small_view = 1;
+												$company->slide_comments = 1;
+											?>
+											<?=$this->partial('application/partial/companies-list-item.phtml', $company);?>
+										<?php endforeach ?>
+									</div>
+								</div>
+							<?php else :?>
+							<?= $this->partial('application/partial/companies-list-table.phtml');?>
+							<?php endif ?>
+						<?php } else { ?>
+							<h3><?=$this->translate('There is no companies matching request');?></h3>
+						<?php }?>
+				</div>
+			</div>
+			<?=$this->partial('application/partial/custom_pagination');?>
+		</div>
+	</div>
+</section>
+<?php if ($q_options['layout'] == 'thumb'): ?>
+	<?=$this->partial('application/js/page_content_list_scripts', ['show_low_priority' => 1]);?>
+<?php endif ?>
+<?=$this->partial('application/modal',array(
+					'modal_name' => 'filterUsersModal',
+					'modal_size' => 'md',
+					'modal_title' => $this->translate('Search in Companies Database'),
+					'modal_content' => $this->partial('admin/partial/user-filter-form', ['form' => $form, 'q_options' => $q_options, 'vertical' => 1]),
+));?>

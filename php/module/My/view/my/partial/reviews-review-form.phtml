@@ -1,0 +1,194 @@
+<?php $this->headScript()->appendFile($this->basePath('/js/liTranslit/js/jquery.liTranslit.js')); ?>
+<script>
+	$(function(){
+	  $('.anyClass').liTranslit($('.title-link'));
+	})
+</script>
+
+<?php
+	$form = $this->form;
+	$form->prepare();
+	$form->setAttribute('class', 'form-horizontal');
+	echo $this->form()->openTag($form);
+	$review_fields = $form->get('ships-reviews');
+?>
+
+<div class="row form-data">
+
+	<div class="col-md-12">
+		<?php if($this->action = 'edit') :?> 
+			<?=$this->formElement($review_fields->get('id'));?>
+		<?php endif ?>
+		<div class="form-group">
+			<div class="col-md-8">
+				<?=$this->formLabel($review_fields->get('ship_id'));?>
+				<?=$this->formElement($review_fields->get('ship_id')->setAttribute('class','form-control'));?>
+				<?=$this->formElementErrors($review_fields->get('ship_id'));?>
+			</div>
+			<div class="col-md-4">
+				<?=$this->formLabel($review_fields->get('rate'));?>
+				<?=$this->formElement($review_fields->get('rate')->setAttribute('class','form-control'));?>
+				<?=$this->formElementErrors($review_fields->get('rate'));?>
+			</div>
+		</div>
+		<?php if(isset($ship) && !empty($ship)) :?>
+			<div class="row ship-data">
+				<div class="col-md-5 ship-photos">
+					<div class="row">
+						<?php if('' != $ship['photos']) {
+							$photos = json_decode($ship['photos']);
+							for ($i=0; $i < count($photos); $i++) {
+								if($i > 3) break;
+								$cols = ($i == 0)? 12:4;
+							?>
+								<img src="<?=$this->basePath('/'._PICSWWW_.$photos[$i]->thumb);?>" class="col-md-<?=$cols;?>"/>
+								<?php if(count($photos) < 2) {?>
+									<button class="btn btn-sm btn-default" value="">
+										<span class="fa fa-camera"></span>
+										Add More Photos
+									</button>
+								<?php } ?>
+							<?php }
+						} else { ?>
+							<img src="<?=$this->basePath('/'._PICSWWW_.'ship_blank.png');?>" class="col-md-12"/>
+							<button class="btn btn-sm btn-default" value="">
+								<span class="fa fa-camera"></span>
+								Add More Photos
+							</button>
+						<?php }	?>			
+					</div>
+				</div>	
+				<div class="col-md-4 ship-info">
+					<h2><?=$ship['ship_name'];?></h2>
+					<table>
+						<tr>
+							<th>TYPE</th>
+							<td><?=$ship['type'];?></td>
+						</tr>
+						<tr>
+							<th>IMO</th>
+							<td><?=$ship['imo'];?></td>
+						</tr>
+						<tr>
+							<th>CALLSIGN</th>
+							<td><?=$ship['callsign'];?></td>
+						</tr>
+						<tr>
+							<th>FLAG</th>
+							<td><?=$ship['flag'];?></td>
+						</tr>
+						<tr>
+							<th>BUILT</th>
+							<td><?=$ship['built'];?></td>
+						</tr>
+						<tr>
+							<th>DWT</th>
+							<td><?=$ship['dwt'];?></td>
+						</tr>
+						<tr>
+							<th>LENGTH</th>
+							<td><?=$ship['length'];?></td>
+						</tr>
+						<tr>
+							<th>BREADTH</th>
+							<td><?=$ship['breadth'];?></td>
+						</tr>
+						<tr>
+							<th>SPEED</th>
+							<td><?=$ship['speed'];?> Kts</td>
+						</tr>
+					</table>
+				</div>
+				<div class="col-md-3 right-section">
+					<button type="button" class="btn btn-primary" >Edit Ship Data</button>
+				</div>
+			</div><!-- row ship-data -->
+		<?php endif ?>
+
+		<div class="form-group review-title">
+			<div class="col-md-6">
+				<?=$this->formLabel($review_fields->get('title'));?>
+				<?=$this->formElement($review_fields->get('title')->setAttribute('class','form-control anyClass'));?>
+				<?=$this->formElementErrors($review_fields->get('title'));?>
+			</div>
+			<div class="col-md-6">
+				<?=$this->formLabel($review_fields->get('link'));?>
+				<?=$this->formElement($review_fields->get('link')->setAttribute('class','form-control title-link'));?>
+				<?=$this->formElementErrors($review_fields->get('link'));?>
+			</div>
+		</div>	<!-- review-title -->			
+		<div class="row review-text">
+			<div class="col-md-8">
+				<div class="form-group">
+					<div class="col-md-12">
+						<?=$this->formLabel($review_fields->get('text'));?>
+						<?=$this->formElement($review_fields->get('text')->setAttribute('class','form-control'));?>
+						<?=$this->formElementErrors($review_fields->get('text'));?>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label for="was-onboard">Was On Board:</label>
+				<fieldset name="was-onboard">
+					<div class="form-group">
+						<div class="col-md-12">
+							<?=$this->formLabel($review_fields->get('date_from'));?>
+							<br />
+							<?=$this->formElement($review_fields->get('date_from')->setAttribute('class','form-control'));?>
+							<?=$this->formElementErrors($review_fields->get('date_from'));?>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-12">
+							<?=$this->formLabel($review_fields->get('date_to'));?>
+							<br />
+							<?=$this->formElement($review_fields->get('date_to')->setAttribute('class','form-control'));?>
+							<?=$this->formElementErrors($review_fields->get('date_to'));?>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-12">
+							<?=$this->formLabel($form->get('pics')->get('img'));?>
+							<?=$this->formElement($form->get('pics')->get('img')->setAttribute('class','form-control'));?>
+							<?=$this->formElementErrors($form->get('pics')->get('img'));?>
+						</div>
+					</div>						
+				</fieldset>
+			</div>
+		</div> <!-- review-text -->
+		<div class="row review-photos">
+			<div class="col-md-8">
+
+				<?php if($form->has('old_pics')) :?>
+					<?php $old_pics = $form->get('old_pics'); ?>
+						<?= $this->formLabel($old_pics); ?>
+						<div class="row">
+							<?php foreach ($old_pics->getElements() as $pic) { ?>
+								<div class="col-md-4 old-photo">
+									<img src="<?= '/'._PICSWWW_.$pic->getAttribute('data-thumb'); ?>" />
+									<?= $this->formElement($pic);?>
+								</div>
+							<?php } ?>
+						</div>
+				<?php endif ?>
+			</div>
+			<div class="col-md-4">
+
+			</div>
+		</div> <!-- review-photos -->
+		<div class="row review-footer">
+			<div class="col-md-offset-9 col-md-3">
+				<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary'));?>
+					<span class="fa fa-save fa-lg"></span> 
+					<?=$form->get('submit')->getLabel();?>
+				<?=$this->formButton()->closeTag();?>
+			</div>
+		</div>	
+	</div>
+
+</div> <!-- row form-data -->
+
+
+<?php
+	echo $this->form()->closeTag();			
+?>

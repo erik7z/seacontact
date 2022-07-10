@@ -1,0 +1,92 @@
+<?php $user_url = $this->url('sc/userinfo', array('user' =>  zgetUserLogin($this->vars()), 'controller' => 'cv'));?>
+<?php 
+    $land_view = ($this->routeMatch()->getMatchedRouteName() == 'sc/home')? 1 : 0;
+?>
+
+<?php if ($land_view): ?> <div class="col-md-4" style="min-height: 200px;"><?php endif ?>
+    <div class="row data-block user-entry">
+        <div class="col-md-12 col-xs-12 block-content">
+            <div class="row">
+                <div class="<?=($land_view)? '' : 'drop-shadow'?> col-md-12">
+                    <div class="row">
+                        <div class="col-md-3 data-avatar text-center">
+                            <a href="<?=$user_url;?>">
+                                <img style="max-width: 70px" alt="<?=zhashUserName(zgetUserName($this->vars()), 0, $this->isPermitted('_user_fields\full_name', $id));?>" src="<?=zgetUserAvatar($this->vars());?>" />
+                            </a>
+                            <h5>
+                                <b><?=$desired_rank;?></b>
+                            </h5>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="row data-text" >
+                                <div class="col-md-12 pt">
+                                    <?php if ($desired_rank): ?>
+                                        <h4 class="mt0">
+                                            <b>
+                                                <a href="<?=$user_url;?>" class="user_name">
+                                                    <?=zhashUserName(zgetUserName($this->vars()), 0, $this->isPermitted('_user_fields\full_name', $id));?>
+                                                </a>
+                                            </b>
+                                        </h4>
+                                    <?php endif ?>
+                                    <ul class="list-unstyled small">
+                                        <li><span class="text-success"><b><?=$this->translate('Nationality');?> :</b></span> <?=($nationality)? $nationality : $this->translate('Not Stated');?></li>
+                                        <li><span class="text-success"><b><?=$this->translate('FLEET');?> :</b></span> <?=($ship_type)? $ship_type : $this->translate('No Experience Records');?></li>
+                                        <li><span class="text-success"><b><?=$this->translate('Experience');?> :</b></span> <?=($contracts)? $contracts.' '.$this->translate('Contract(s)') : $this->translate('No Experience Records');?></li>
+                                        <li><span class="text-success"><b><?=$this->translate('CV Updated');?> :</b></span> <?=($cv_last_update) ? zformatDate($cv_last_update) : $this->translate('Not Stated') ;?></li>
+                                        <?php if (isset($office_note)): ?>
+                                            <li><b><span class="text-success"><?=$this->translate('Latest Note');?> :</b></span> 
+                                                <li>
+                                                    <b><?=zformatDateTimeYear($office_note_time);?></b>
+                                                    <?=$office_note;?>
+                                                </li>
+                                            </li>
+                                        <?php endif ?>
+                                    </ul>
+                                    <!-- <p><?php if (isset($user_notes)): ?><?=zhashInfo($user_notes, 0, $this->isPermitted('_user_fields\user_notes', $id));?><?php endif ?></p> -->
+                                </div>
+                            </div>         
+                        </div>
+                        <div class="col-md-4 text-center pt">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <a href="<?=$user_url; ?>">
+                                            <button class="btn btn-default btn-sm btn-responsive">
+                                                <span class="glyphicon glyphicon-eye-open"></span>
+                                                <?=$this->translate('View full CV');?>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <?php if (isset($userinfo_unlocked) && $userinfo_unlocked == true): ?>
+                                            <button class="btn btn-success btn-sm btn-responsive">
+                                                <span class="glyphicon glyphicon-ok"></span>
+                                                <?=$this->translate('Already In Company Db');?>
+                                            </button>
+                                        <?php else: ?>
+                                            <a  class="unlock_info" data-user="<?=$id;?>" href="<?=$this->url('sc/seamansdb/actions', array('action' => 'unlock-user-info', 'id' => $id));?>">
+                                                <button class="btn btn-warning btn-sm btn-responsive" >
+                                                    <span class="fa fa-unlock"></span>
+                                                    <?=$this->translate('Unlock Contact Information');?>
+                                                </button>
+                                            </a>
+                                        <?php endif ?>
+
+                                    </div>
+                                    <?php if (!$this->identity()): ?>
+                                        <div class="col-md-12 pt05">
+                                            <?=$this->partial('my/partial/contacts-btn-msg', ['user_id' => $id, 'responsive' => 1]);?>
+                                        </div>
+                                    <?php endif ?> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>               
+            </div> 
+        </div>
+    </div> 
+<?php if ($land_view): ?> </div><?php endif ?>

@@ -1,0 +1,216 @@
+<?php
+	$user_id = (isset($user_id)) ? $user_id : $user;
+	// $this->id = $this->question_id;
+	$this->section = \Application\Model\NewsTable::SECTION_QUESTIONS;
+	$this->page_url = $this->url('sc/questions/actions', 
+		array('action' => 'view', 'id' => $this->id)
+	);
+	$page_url = $this->page_url;
+	$subs_link = $this->url('sc/questions/actions', array('action' => 'toggle-subscribe', 'id' => $this->id));
+	$full_view = (isset($full_view))? $full_view : 0;
+
+	$this->small_view = (isset($small_view))? $small_view : 1;
+	$this->total_comments = (isset($total_comments))? $total_comments : null;
+	$this->likes = null;
+?>
+
+<div class="row data-block news-entry question-entry" data-xhrctr="question_<?=$this->id;?>">
+	<?php if (!$this->small_view): ?>
+		<ul class="pe-social col-md-1 col-xs-12 social-labels text-right">
+			<li class="share share_facebook" title="<?=$this->translate('share in');?> Facebook">
+				<i class="pe-so-facebook pe-bg pe-hover pe-2x" data-url="<?=$page_url;?>"></i>
+			</li>
+			<li class="share" title="<?=$this->translate('share in');?> Vkontakte">
+				<a href="http://vk.com/share.php?url=<?=$page_url;?>" target="_blank">
+					<i class="pe-so-vk pe-bg pe-hover pe-1x" data-url="<?=$page_url;?>"></i>
+				</a>
+			</li>
+			<li class="share share_linkedin" title="<?=$this->translate('share in');?> LinkedIn">
+				<i class="pe-so-linkedin pe-bg pe-hover pe-2x" data-url="<?=$page_url;?>"></i>
+			</li>
+		</ul>
+	<?php endif ?>
+	<?php $cont_width = ($this->small_view) ? 11 : 10; ?>
+	<div class="col-md-<?=$cont_width;?> col-xs-11 block-content">
+		<div class="row">
+			<?php $bg = ($time > time())? 'style="background-color: #EFF5FB;"' : '';?>
+			<div class="drop-shadow col-md-12" <?=$bg;?>>
+				<div class="row">
+					<div class="col-md-7 col-md-offset-2">
+						<a href="<?=$this->page_url;?>" class="read_more_link" data-section="questions" data-id="<?=$this->id;?>">
+							<h3><?=$title;?></h3>
+						</a>
+					</div>
+					<div class="col-md-3 text-center pt05">
+						<?=$this->partial('application/partial/counters_block');?>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2 data-avatar">
+						<?php $avatar_size = ($this->small_view)? 32 : 70;?>
+						<?=$this->partial('my/partial/news-item-avatar.phtml', ['user_info' => $this->vars(), 'avatar_size' => $avatar_size, 'anonym' => $this->anonym]);?>
+					</div>
+					<div class="col-md-<?=($this->small_view)? 10 : 7;?>">
+						<div class="row data-text" >
+							<div class="col-md-12 ">
+								<?php 
+									$text = htmlspecialchars_decode($text);
+								 	$is_plain_text = ($text == strip_tags($text))? 1 : 0;
+								 	$text = (isset($full_view) && $full_view == 1)? $text : zhtml_cut($text, 600);
+								?>
+								<?php if ($is_plain_text): ?><p><?php endif ?>
+									<?=$text;?>
+								<?php if ($is_plain_text): ?></p><?php endif ?>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 pb">
+								<span class="pull-left small">
+									<?php if($this->isPermitted('application\controller\questions.edit', $user_id, $this->id)): ?>
+										[
+										<a href="<?= $this->url('sc/questions/actions', array('action' => 'edit','id' => $this->id)); ?>" class="edit_question" data-id="<?=$this->id;?>" target="_parent">
+											<span class="fa fa-pencil text-info"></span>
+										</a>
+										]
+									<?php endif ?> 	
+
+									<?php if($this->isPermitted('application\controller\questions.delete', $user_id, $this->id)): ?>
+										&nbsp;
+										[
+										<a href="<?= $this->url('sc/questions/actions', array('action' => 'delete','id' => $this->id)); ?>" target="_parent" data-xhrdelete="delete_question" data-xhrtarg="question_<?=$this->id;?>">
+											<span class="fa fa-trash-o text-muted"></span>
+										</a>
+										]
+									<?php endif ?>
+								</span>
+							</div>
+						</div>
+						<div class="row ">
+							<div class="col-md-12">
+								<?php if(isset($pics)) :?>
+									<?php $pics = json_decode($pics);?>
+									<?php $grid = ($time > time()) ? '-postponed' : '';?>
+									<?=$this->partial('application/partial/pics-grid', ['pics' => $pics, 'grid_id' => $grid, 'gallery_id' => '#question_pics_'.$this->id]);?>
+								<?php endif	?>
+							</div>	
+						</div>
+						<div class="row pt">
+							<div class="col-md-12 tags pb">
+								<?php if (isset($post_vk_wall) && $post_vk_wall && isset($post_vk_id) && $post_vk_id): ?>
+									<span class="small text-muted"><i class="fa fa-share-alt"></i> </span> <i class="fa fa-vk text-info"></i>
+								<?php endif ?>
+								<?php if($tags) $tags = explode(',', $tags);?>
+								<?=$this->partial('application/partial/tags-collection', ['tags' => $tags]);?>
+							</div>
+						</div>
+						<?php if (!$full_view): ?>
+							<div class="row">
+								<div class="col-md-6 pt pb">
+									<a href="<?=$this->page_url;?>" class="read_more_link" data-section="questions" data-id="<?=$this->id;?>">
+										<i class="fa fa-angle-double-right"></i> <strong class="small"><?=$this->translate('Read more');?></strong>
+									</a>
+								</div>
+								<?php if ($this->small_view): ?>
+									<div class="col-md-6">
+										<?php if($this->isPermitted('application\controller\questions.toggle-subscribe', $this->user)) :?>
+											<?php if ($this->identity() && $this->identity()->id == $this->user): ?>
+												<!-- show nothing -->
+											<?php else: ?>
+												<?=$this->partial('my/partial/btn-action', ['type' => 'question', 'link' => $subs_link, 'id' => $this->id, 'status' => $subscribe_status]);?>
+											<?php endif ?>
+										
+										<?php endif ?>
+									</div>
+								<?php endif ?>
+							</div>
+						<?php endif ?>	
+
+					</div>
+					<?php if (!$this->small_view): ?>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-12 text-center">
+									<?php if ($answered == 1): ?>
+										<div class="alert alert-success mt05" role="alert">
+										  <span class="fa fa-check" aria-hidden="true"></span>
+										  <span class="sr-only"><?=$this->translate('Status');?> :</span>
+										  <?=$this->translate('Answer Found');?>
+										</div>
+									<?php else : ?>
+										<!-- <div class="alert alert-warning" role="alert">
+										  <span class="fa fa-cogs" aria-hidden="true"></span>
+										  <span class="sr-only"><?=$this->translate('Status');?> :</span>
+										  <?=$this->translate('Not Found');?>
+										</div> -->
+									<?php endif ?>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 pb">
+									<?php if($this->isPermitted('application\controller\questions.toggle-subscribe', $this->user)) :?>
+										<?php if ($this->identity() && $this->identity()->id == $this->user): ?>
+											<!-- show nothing -->
+										<?php else: ?>
+											<?=$this->partial('my/partial/btn-action', ['type' => 'question', 'link' => $subs_link, 'id' => $this->id, 'status' => $subscribe_status]);?>
+										<?php endif ?>
+									<?php endif ?>
+								</div>
+								<?php if (!$full_view): ?>
+									<div class="col-md-12 pb">
+										<a href="<?=$this->url('sc/questions/actions', 
+											array('action' => 'view', 'id' => $this->id)
+										);?>" >
+											<button class="btn btn-primary form-control btn-xs btn-responsive">
+												<span class="fa fa-bolt"></span>
+												<?=$this->translate('Answer on question');?>
+											</button>
+										</a>
+									</div>
+									<!-- <div class="col-md-12 pb">
+										<a href="<?=$this->url('sc/questions/actions', 
+											array('action' => 'view', 'id' => $this->id)
+										);?>" >
+											<button class="btn btn-default form-control">
+												<span class="fa fa-eye"></span>
+												<?=$this->translate('View');?>
+											</button>
+										</a>
+									</div> -->
+								<?php else: ?>
+									<?php if ($this->isPermitted('application\controller\social.attach-wall-post')): ?>
+										<div class="col-md-12 text-center">
+											<?php $message = $this->translate('Attach Vk Post from Public');?>
+											<?php if ($this->post_vk_wall && $this->post_vk_id): ?>
+												<?php $message = $this->translate('Attach Other Post');?>
+												<i class="fa fa-vk bg-primary" style="padding: 0.2em;"></i> <span class="label label-default" style="padding: 0.2em;"><?=$this->translate('post attached');?></span>
+											<?php endif ?>
+											<button type="button" class="btn btn-primary btn-xs form-control btn-responsive mt05" data-toggle="modal" data-target="#vk_public_modal"> 	
+												<i class="fa fa-vk fa-lg"></i> 
+												<?=$message;?>
+											</button>
+										</div>
+									<?php endif ?>
+								<?php endif ?>
+							</div>
+						</div>
+					<?php endif ?>
+
+				</div>
+			</div> <!-- -->
+			<div class="activity-block col-md-12">
+				<?=$this->partial('my/partial/activity-block');?>
+			</div> 						
+		</div> <!-- row -->
+	</div>
+	<?php if (!$this->userInfo()): ?>
+		<ul class="col-md-1 col-xs-1 pe-social">
+			<?php if ($answered): ?>
+				<li class="correct-type" title="<?=$this->translate('Have correct answer');?>">
+					<span class="fa fa-check"></span>
+				</li>
+			<?php endif ?>
+			<div class="data-edit" data-xhrctr="question_rating_<?=$this->id;?>"><?=$this->partial('my/partial/question-rating.phtml');?></div>
+		</ul>
+	<?php endif ?>
+
+</div> 

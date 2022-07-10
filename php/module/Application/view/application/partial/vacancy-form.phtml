@@ -1,0 +1,256 @@
+<div class="row">
+	<?php
+		$form = $this->form;
+		$form->prepare();
+		$form->setAttribute('class', 'form-horizontal');
+		$fieldset = $form->get('vacancies');
+		echo $this->form()->openTag($form);
+	?>
+	<?= $this->formRow($fieldset->get('id')); ?>
+	<?php $vacancy_id = $fieldset->get('id')->getValue();?>
+		<fieldset class="col-md-12">
+			<div class="form-group">
+
+				<div class="col-md-7">
+					<div class="form-group">
+						<?php if ($fieldset->has('rank')): ?>
+							<div class="col-md-7">
+								<?=$this->formLabel($fieldset->get('rank'));?>
+								<?=$this->formElement($fieldset->get('rank')->setAttribute('class','form-control'));?>
+								<?=$this->formElementErrors($fieldset->get('rank'));?>
+							</div>
+						<?php endif ?>
+						<?php if ($fieldset->has('salary')): ?>
+							<div class="col-md-5">
+								<?=$this->formLabel($fieldset->get('salary'));?>
+								<div class="input-group input-group-md">
+									<?=$this->formElement($fieldset->get('salary')->setAttribute('class','form-control'));?>
+									<span class="input-group-addon"><?=$this->formElement($fieldset->get('salary_unit')->setAttribute('class','no_chosen'));?></span>
+								</div>
+								<?=$this->formElementErrors($fieldset->get('salary'));?>
+							</div>
+						<?php endif ?>
+						<?php if ($fieldset->has('ship_type')): ?>
+							<div class="col-md-8">
+								<?=$this->formLabel($fieldset->get('ship_type'));?>
+								<?=$this->formElement($fieldset->get('ship_type')->setAttribute('class','form-control'));?>
+								<?=$this->formElementErrors($fieldset->get('ship_type'));?>
+							</div>
+						<?php endif ?>
+						<?php if ($fieldset->has('contract_length')): ?>
+							<div class="col-md-4">
+								<?=$this->formLabel($fieldset->get('contract_length'));?>
+								<div class="input-group input-group-md">
+									<?=$this->formElement($fieldset->get('contract_length')->setAttribute('class','form-control'));?>
+									<span class="input-group-addon"><?=$this->formElement($fieldset->get('contract_unit')->setAttribute('class','no_chosen'));?></span>
+									
+								</div>
+								<?=$this->formElementErrors($fieldset->get('contract_length'));?>
+							</div>
+						<?php endif ?>
+					</div>
+					<div class="form-group">
+						<?php if ($fieldset->has('text')): ?>
+							<div class="col-md-12">
+								<?=$this->formLabel($fieldset->get('text'));?>
+								<?=$this->formElement($fieldset->get('text')->setAttributes(array('class' => 'form-control', 'rows' => 9)));?>
+								<?=$this->formElementErrors($fieldset->get('text'));?>
+							</div>
+						<?php endif ?>
+					</div>
+					<?php if ($fieldset->has('time')): ?>
+						<div class="form-group">
+							<div class="col-md-5">
+								<?=$this->formElement($fieldset->get('time')->setAttributes(['class' =>'form-control', 'id' => 'datetimepicker1']));?>
+								<?=$this->formElementErrors($fieldset->get('time'));?>
+							</div>
+							<div class="col-md-7 text-center">
+								<input id="switch-publish" type="checkbox" data-label-text="<?=$this->translate('Postpone Publication');?>" data-off-text="<?=$this->translate('No');?>" data-on-text="<?=$this->translate('Yes');?>" data-off-color="info">
+							</div>
+						</div>
+					<?php endif ?>
+						<div class="form-group submit_now">
+							<div class="col-md-12">
+								<button name="submit" value="publish_now" class="btn btn-success form-control" aria-label="<?=$this->translate('Publish Now');?>">
+								  <span class="fa fa-bolt" aria-hidden="true"></span> <?=$this->translate('Publish Now');?>
+								</button>	
+							</div>
+						</div>
+					<?php if ($fieldset->has('time')): ?>	
+						<div class="form-group submit_later">
+							<div class="col-md-12">
+								<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-primary form-control'));?>
+									<span class="glyphicon glyphicon-floppy-saved"></span> 
+									<?=$this->translate('Save');?>
+								<?=$this->formButton()->closeTag();?>
+							</div>
+						</div>
+					<?php endif ?>
+					<?php if ($vacancy_id): ?>
+						<div class="form-group pt">
+							<div class="col-md-12 text-center">
+								<a href="<?=$this->url('sc/vacancies/actions', array('action' => 'view', 'id' => $vacancy_id));?>" target="_blank">
+									<span class="fa fa-external-link"></span> <?=$this->translate('View vacancy page on website');?>
+								</a>
+							</div>
+						</div>
+					<?php endif ?>
+					<?php if ($this->isPermitted('_admin_\delete\vacancy') && $vacancy_id): ?>
+						<div class="form-group pt mt">
+							<div class="col-md-12 text-center">
+								<a href="<?=$this->url('admin/actions', array('controller' => 'index', 'action' => 'delete'), array('query' => array(
+													'id' => $vacancy_id, 'section' => 'vacancy'
+												)));?>">
+									<button type="button" class="btn btn-danger btn-sm" aria-label="<?=$this->translate('Delete Vacancy');?>">
+									  <span class="fa fa-trash" aria-hidden="true"></span> <?=$this->translate('Delete Vacancy');?>
+									</button>
+								</a>
+							</div>
+						</div>
+					<?php endif ?>
+
+				</div>
+				<div class="col-md-5">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<?php if ($fieldset->has('title')): ?>
+									<div class="col-md-12">
+									<?=$this->formLabel($fieldset->get('title'));?>
+									<div class="input-group input-group-md">
+										<?=$this->formElement($fieldset->get('title')->setAttribute('class','form-control'));?>
+										<span class="input-group-addon">Urgent <?=$this->formElement($fieldset->get('urgent')->setAttribute('class','no_chosen'));?></span>
+									</div>
+									<?=$this->formElementErrors($fieldset->get('title'));?>
+									</div>
+								<?php endif ?>
+							</div>
+							<div class="form-group">
+								<?php if ($fieldset->has('date_join')): ?>
+									<div class="col-md-6">
+										<?=$this->formLabel($fieldset->get('date_join'));?>
+										<?=$this->formElement($fieldset->get('date_join')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('date_join'));?>
+									</div>
+								<?php endif ?>
+								<?php if ($fieldset->has('ship_name')): ?>
+									<div class="col-md-6">
+										<?=$this->formLabel($fieldset->get('ship_name'));?>
+										<?=$this->formElement($fieldset->get('ship_name')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('ship_name'));?>
+									</div>
+								<?php endif ?>
+							</div>
+
+							<div class="form-group">
+								<?php if ($fieldset->has('ship_built')): ?>
+									<div class="col-md-6">
+										<?=$this->formLabel($fieldset->get('ship_built'));?>
+										<?=$this->formElement($fieldset->get('ship_built')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('ship_built'));?>
+									</div>
+								<?php endif ?>
+								<?php if ($fieldset->has('ship_dwt')): ?>
+									<div class="col-md-6">
+										<?=$this->formLabel($fieldset->get('ship_dwt'));?>
+										<?=$this->formElement($fieldset->get('ship_dwt')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('ship_dwt'));?>
+									</div>
+								<?php endif ?>
+							</div>
+							<div class="form-group">
+								<?php if ($fieldset->has('crew_nationality')): ?>
+									<div class="col-md-6">
+										<?=$this->formLabel($fieldset->get('crew_nationality'));?>
+										<?=$this->formElement($fieldset->get('crew_nationality')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('crew_nationality'));?>
+									</div>
+								<?php endif ?>
+								<?php if ($fieldset->has('english')): ?>
+									<div class="col-md-6">
+										<?=$this->formLabel($fieldset->get('english'));?>
+										<?=$this->formElement($fieldset->get('english')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('english'));?>
+									</div>
+								<?php endif ?>
+
+							</div>
+							<?php if ($fieldset->has('comments')): ?>
+								<div class="form-group">
+									<div class="col-md-12">
+										<?=$this->formLabel($fieldset->get('comments'));?>
+										<?=$this->formElement($fieldset->get('comments')->setAttribute('class','form-control'));?>
+										<?=$this->formElementErrors($fieldset->get('comments'));?>
+									</div>
+								</div>
+							<?php endif ?>
+							<?php if ($form->has('old_pics')): ?>
+								<?php $old_pics = $form->get('old_pics')->getElements(); ?>
+								<?php if (count($old_pics) > 0): ?>
+									<div class="form-group old_pics_field">
+										<?=$this->formLabel($form->get('old_pics'));?>
+										<div class="col-md-12">
+											<div class="row">
+												<?php foreach ($old_pics as $pic): ?>
+													<?php $pic->setAttribute('class','old_pics_element');?>
+													<?php $thumb_width = (count($old_pics) > 1)? 6 : 12;?>
+													<div class="col-md-<?=$thumb_width;?> text-right bg-thumb" style="background-image: url(<?= '/'._PICSWWW_.$pic->getAttribute('data-thumb'); ?>)">
+														<?=$this->formElement($pic);?>
+													</div>
+												<?php endforeach ?>
+												<div class="col-md-12">
+													<?=$this->formElementErrors($pic);?>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								<?php endif ?>
+							<?php endif ?>
+							<?php if ($form->has('pics')): ?>
+								<div class="form-group">
+									<div class="col-md-12 ">
+										<?=$this->formLabel($form->get('pics'));?>
+										<?=$this->formFile($form->get('pics'));?>
+										<?=$this->formElementErrors($form->get('pics'));?>
+									</div>
+								</div>
+							<?php endif ?>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="form-group">
+				<?php if ($fieldset->has('active')): ?>
+					<div class="col-md-2">
+						<span class="bg-danger"><?=$this->formLabel($fieldset->get('active'));?></span>
+						<?=$this->formElement($fieldset->get('active')->setAttribute('class','form-control'));?>
+						<?=$this->formElementErrors($fieldset->get('active'));?>
+					</div>
+				<?php endif ?>
+				<?php if ($fieldset->has('post_vk')): ?>
+					<div class="col-md-2">
+						<?=$this->formLabel($fieldset->get('post_vk'));?>
+						<?=$this->formElement($fieldset->get('post_vk')->setAttribute('class','form-control'));?>
+						<?=$this->formElementErrors($fieldset->get('post_vk'));?>
+					</div>
+				<?php endif ?>
+				<?php if ($fieldset->has('user') && $fieldset->get('user')->getAttribute('type') == 'select'): ?>
+					<div class="col-md-4">
+						<?=$this->formLabel($fieldset->get('user'));?>
+						<?=$this->formElement($fieldset->get('user')->setAttribute('class','form-control'));?>
+						<?=$this->formElementErrors($fieldset->get('user'));?>
+					</div>
+				<?php endif ?>
+				<?php if ($fieldset->has('for_company')): ?>
+					<div class="col-md-4">
+						<?=$this->formLabel($fieldset->get('for_company'));?>
+						<?=$this->formElement($fieldset->get('for_company')->setAttribute('class','form-control'));?>
+						<?=$this->formElementErrors($fieldset->get('for_company'));?>
+					</div>
+				<?php endif ?>
+			</div>
+		</fieldset>	
+	<?= $this->form()->closeTag();?>							      		
+</div><!-- row -->

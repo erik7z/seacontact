@@ -1,0 +1,176 @@
+<div id="home">
+	<div class="headerLine">
+	<?php if (!$social_reg): ?>
+		<?= $this->partial('landing-menu');?>
+	<?php endif ?>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2  text-center">
+					<h3 class="text-bg"><?=$this->translate('Complete registration');?></h3>
+					<?php if ($social_reg): ?>
+				        <h5 class="mt0 mb0" data-name="message"></h5>
+					<?php endif ?>
+					<?php
+						$form = $this->form;
+						$form->prepare();
+						$form->setAttribute('class', 'form-horizontal');
+						$fieldset = $this->form->get('user');
+						echo $this->form()->openTag($form);
+					?>
+					<?php if ($fieldset->has('email_confirmation_key')): ?>
+						<?=$this->formElement($fieldset->get('email_confirmation_key')->setAttributes(array('id' => 'email_confirmation_key','type' => 'hidden', 'class' => 'email_confirmation_key'))); ?>
+					<?php endif ?> 
+					<div class="row">
+						<fieldset class="col-md-12 text-bg">
+							<?php if ($fieldset->has('type')): ?>
+							    <div class="form-group">
+							        <div class="col-md-6 col-md-offset-3">
+								        <h4><b><?=$fieldset->get('type')->getLabel();?></b></h4>
+								        <?=$this->formElement($fieldset->get('type')->setAttribute('style','margin-left: 20px;margin-right: 5px;'));?>
+								        <div class="bg-danger"><?=$this->formElementErrors($fieldset->get('type'));?></div>
+							        </div>
+							    </div>
+							<?php endif ?> 
+							<div class="form-group">
+								<?php if ($fieldset->has('login')): ?>
+									<div class="col-md-6">
+										<?=$this->formLabel($fieldset->get('login'));?>
+										<?=$this->formElement($fieldset->get('login')->setAttributes(array('class' => 'form-control', 'aria-describedby' => 'helpBlock')));?>
+										<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('login'));?></div>
+										<span id="helpBlock" class="help-block bg-info"><?=sprintf($this->translate("Your page will be: <span style='color: blue;'>www.seacontact.com</span>/%s ,  nickname can also be used for authorisation"), '<span style="color:red">login</span>');?></span>
+									</div>
+								<?php endif ?>
+								<?php if ($fieldset->has('password')): ?>
+									<div class="col-md-6">
+										<?=$this->formLabel($fieldset->get('password'));?>
+										<?=$this->formElement($fieldset->get('password')->setAttribute('class','form-control'));?>
+										<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('password'));?></div>
+									</div>
+								<?php endif ?>
+							</div>
+							<?php if ($type == \Application\Model\UserTable::TYPE_USER): ?>
+								<div class="form-group">
+									<?php if ($fieldset->has('name')): ?>
+										<div class="col-md-6">
+											<?=$this->formLabel($fieldset->get('name'));?>
+											<?=$this->formElement($fieldset->get('name')->setAttribute('class','form-control'));?>
+											<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('name'));?></div>
+										</div>
+									<?php endif ?>
+									<?php if ($fieldset->has('surname')): ?>
+										<div class="col-md-6">
+											<?=$this->formLabel($fieldset->get('surname'));?>
+											<?=$this->formElement($fieldset->get('surname')->setAttribute('class','form-control'));?>
+											<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('surname'));?></div>
+										</div>
+									<?php endif ?>     
+								</div>
+								<div class="form-group">
+									<?php if ($fieldset->has('contact_mobile')): ?>
+										<div class="col-md-3">
+											<?=$this->formLabel($fieldset->get('contact_mobile'));?>
+											<?=$this->formElement($fieldset->get('contact_mobile')->setAttribute('class','form-control'));?>
+											<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('contact_mobile'));?></div>
+										</div>
+									<?php endif ?> 
+									<?php if ($fieldset->has('desired_rank')): ?>
+										<div class="col-md-3">
+											<?=$this->formLabel($fieldset->get('desired_rank'));?>
+											<?=$this->formElement($fieldset->get('desired_rank')->setAttribute('class','form-control'));?>
+											<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('desired_rank'));?></div>
+										</div>
+									<?php endif ?> 
+									<?php if ($fieldset->has('dob')): ?>
+										<div class="col-md-3">
+											<?=$this->formLabel($fieldset->get('dob'));?>
+											<?=$this->formElement($fieldset->get('dob')->setAttribute('class','form-control'));?>
+											<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('dob'));?></div>
+										</div>
+									<?php endif ?> 
+									<?php if ($fieldset->has('nationality')): ?>
+										<div class="col-md-3">
+											<?=$this->formLabel($fieldset->get('nationality'));?>
+											<?=$this->formElement($fieldset->get('nationality')->setAttribute('class','form-control'));?>
+											<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('nationality'));?></div>
+										</div>
+									<?php endif ?>       
+								</div>
+							<?php endif ?>
+
+							<?php if ($type == \Application\Model\UserTable::TYPE_COMPANY): ?>
+								<div class="form-group">
+									<?php if ($fieldset->has('company_name')): ?>
+										<div class="col-md-4">
+											<?=$this->formLabel($fieldset->get('company_name'));?>
+											<?=$this->formElement($fieldset->get('company_name')->setAttribute('class','form-control'));?>
+											<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('company_name'));?></div>
+										</div> 
+									<?php endif ?>      
+									<?php if ($fieldset->has('info_website')): ?>
+										<div class="col-md-4">
+											<?=$this->formLabel($fieldset->get('info_website'));?>
+											<?=$this->formElement($fieldset->get('info_website')->setAttribute('class','form-control'));?>
+											<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('info_website'));?></div>
+										</div> 
+									<?php endif ?>      
+									<?php if ($fieldset->has('contact_phone')): ?>
+										<div class="col-md-4">
+											<?=$this->formLabel($fieldset->get('contact_phone'));?>
+											<?=$this->formElement($fieldset->get('contact_phone')->setAttribute('class','form-control'));?>
+											<div class="bg-danger"><?=$this->formElementErrors($fieldset->get('contact_phone'));?></div>
+										</div> 
+									<?php endif ?>             
+								</div>
+								<div class="form-group">
+									<?php if ($fieldset->has('home_country')): ?>
+									    <div class="col-md-4">
+									        <?=$this->formLabel($fieldset->get('home_country'));?>
+									        <?=$this->formElement($fieldset->get('home_country')->setAttribute('class','form-control'));?>
+									        <div class="bg-danger"><?=$this->formElementErrors($fieldset->get('home_country'));?></div>
+									    </div>
+									<?php endif ?>        
+									<?php if ($fieldset->has('home_city')): ?>
+									    <div class="col-md-4">
+									        <?=$this->formLabel($fieldset->get('home_city'));?>
+									        <?=$this->formElement($fieldset->get('home_city')->setAttribute('class','form-control'));?>
+									        <div class="bg-danger"><?=$this->formElementErrors($fieldset->get('home_city'));?></div>
+									    </div>
+									<?php endif ?>               
+									<?php if ($fieldset->has('home_address')): ?>
+									    <div class="col-md-4">
+									        <?=$this->formLabel($fieldset->get('home_address'));?>
+									        <?=$this->formElement($fieldset->get('home_address')->setAttribute('class','form-control'));?>
+									        <div class="bg-danger"><?=$this->formElementErrors($fieldset->get('home_address'));?></div>
+									    </div>
+									<?php endif ?>                      
+								</div>
+							<?php endif ?>
+
+							<div id="captcha-field" class="form-group">
+								<?php if ($form->has('captcha')): ?>
+									<?=$this->formLabel($this->form->get('captcha'));?>
+									<div class="col-md-12">
+										<?= $this->formElement($this->form->get('captcha'));?>
+									</div>
+								<?php endif ?>     
+							</div>                
+							<div class="form-group">
+								<div class="col-md-6 col-md-offset-3">
+									<?=$this->formElement($this->form->get('submit')->setAttribute('class', 'form-control subS')->setValue($this->translate('Register'))); ?>
+								</div>       
+							</div>
+						</div>
+
+					</fieldset>         
+					<?=$this->form()->closeTag();?>
+					<div class="system-messages">
+						<?= $this->msgs();?>
+					</div>
+				</div>
+				<?php if (!$social_reg): ?>
+				    <?=$this->partial('landing-social');?>
+				<?php endif ?>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,71 @@
+<script type="text/javascript">
+	
+	$('.preview_container').slideUp();
+	$('.preview_field').linkpreview({
+	    previewContainer: ".link_preview",
+	    refreshButton: ".refresh_button",
+	    errorMessage: ' ',
+	    onSuccess: function(data, some) {
+	    	$('.preview_container').slideDown('slow');
+	    	$('input[name=link]').val(matched_link);
+	    	$('input[name=link_title]').val($('.link_preview a').text());
+	    	$('input[name=link_description]').val($('.link_preview p').text());
+	    	var image = $('.link_preview img').attr('src');
+	    	if(image == 'undefined' || image == undefined) {}
+	    	else $('input[name=link_image]').val(image);
+	    },
+	    onError: function(data) {
+	    	$('.preview_container').slideUp('slow');
+	    	$('.link_preview').html('');
+	    	$('input[name=link]').val('');
+	    }
+	});
+
+	$('.preview_container .close').click(function(){
+		$('.link_preview').html('');
+		$('.preview_container').slideUp('slow');
+	});
+
+	$('#logbook_data').on('keyup', function(e){
+		e.preventDefault();
+		parseText($(this).val());
+	});
+	var urlRegex = /(((https?:\/\/)|(www\.))?[^\s]+\.([a-zA-Z0-9\&\.\/\?:@\-_=#])+)/g; // good www and http
+	var matched_link = '';
+
+	function getMatches(string, regex, index) {
+		index || (index = 1);
+		var matches = [];
+		var match;
+		while (match = regex.exec(string)) {
+			matches.push(match[index]);
+		}
+		return matches;
+	}
+
+	function ValidURL(str) {
+		var matches = getMatches(str,urlRegex, 1);
+		if(matches.length > 0) {
+			matched_link = matches[0];
+			var http_pattern = /https?:\/\//;
+			if(!http_pattern.test(matched_link)) {
+				matched_link = 'http://'+matched_link;
+			}
+			$('.preview_field').val(matched_link);
+			$('.refresh_button').trigger('click');
+
+		} else {
+			console.log('link no match');
+		}
+		return true;
+	}
+
+	var selectTimer;        
+	var doneInterval = 500;
+	function parseText(text) {
+		clearTimeout(selectTimer);
+		selectTimer = setTimeout(function(){
+			ValidURL(text);
+		}, doneInterval);
+	}
+</script>

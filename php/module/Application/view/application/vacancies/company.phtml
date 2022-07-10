@@ -1,0 +1,50 @@
+<section id ="company-vacancies" class="section-company container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-2 pt">
+					<a href="<?=$this->url('sc/vacancies/actions', ['action' => 'add']);?>">
+						<button type="button" class="btn btn-primary"><?=$this->translate('Add New Vacancy');?></button>
+					</a>
+				</div>
+				<div class="col-md-8 text-center">
+					<h3><?=$this->translate('Company Vacancies');?></h3>
+				</div>
+				<div class="col-md-2 text-right pt">
+					<?=$this->partial('application/partial/custom_layout_switch');?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+						<?php if(count($data_list) != 0) {?>
+							<?php if ($q_options['layout'] == 'thumb'): ?>
+								<?=$this->partial('my/partial/news-module.phtml', array('later_news' => $later_vacancies, 'curr_news' => $curr_vacancies));?>
+							<?php else: ?>
+								<div class="row">
+									<?=$this->partial('application/partial/vacancies-list-table');?>
+								</div>
+							<?php endif ?>
+						<?php } else { ?>
+							<h3><?=$this->translate('You did not added any vacancies yet');?></h3>
+						<?php }?>
+				</div> <!-- col-md-12 -->
+			</div><!--  row -->
+		</div> <!-- section col-xs-12 -->
+	</div> <!-- row -->
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<?=$this->partial('application/partial/custom_pagination');?>
+		</div>
+	</div>
+</section>
+<?php	$this->headScript()->appendFile($this->basePath('vendor/twbs/bootstrap/js/collapse.js')); ?>
+<?=$this->partial('application/image-gallery');?>
+<script type="text/javascript">
+	var grid = new gridMaker();
+	$('#collapseOne').on('shown.bs.collapse', function () {
+	  $('.grid-workspace-postponed').each(function(){
+	  	grid.makeGrid($(this));
+	  	$(window).resize(grid.makeGrid($(this)));
+	  });
+	})
+</script>

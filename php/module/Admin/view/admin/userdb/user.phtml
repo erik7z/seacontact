@@ -1,0 +1,557 @@
+<section id ="cv-personal" class="section-cv container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+		
+			<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('id', 'form');
+				$form->setAttribute('class', 'form-horizontal');
+				$userFields = $form->get('user');
+				$expFields = $form->get('user_experience');
+				echo $this->form(null)->openTag($form);
+			?>
+
+			<div class="row">
+				<div class="col-md-3 text-center">
+					<?=$this->partial('admin/partial/user-profile-statistics.phtml', [
+						'user' => $user,
+						'userFields' => $userFields,
+						'cv_notes' => $cv_notes,
+						'last_note' => $last_note,
+						'mails_count' => $mails_count,
+						'in_favorites' => $in_favorites,
+						'is_banned' => $is_banned,
+						'messages_count' => $messages_count,
+						'fields' => ['cv_avatar', 'cv_last_update', 'cv_last_call', 'show_favorites','generate_cv', 'user_assignment'],
+					]);?>
+				</div>
+
+
+
+				<?= $this->formRow($userFields->get('id')); ?>
+				<div class="col-md-9">
+					<div class="box">
+						<div class="box-header bg-info">
+							<h5><?=$this->translate('User Profile');?></h5>
+						</div>
+						<div class="box-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('desired_rank'));?>
+											<?=$this->formElement($userFields->get('desired_rank')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('desired_rank'));?>
+										</div>
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('english_knowledge'));?>
+											<?=$this->formElement($userFields->get('english_knowledge')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('english_knowledge'));?>
+										</div>
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('minimum_salary'));?>
+											<?=$this->formElement($userFields->get('minimum_salary')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('minimum_salary'));?>
+										</div>
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('readiness_date'));?>
+											<?=$this->formElement($userFields->get('readiness_date')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('readiness_date'));?>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-2">
+											<?=$this->formLabel($userFields->get('name'));?>
+											<?=$this->formElement($userFields->get('name')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('name'));?>
+										</div>
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('surname'));?>
+											<?=$this->formElement($userFields->get('surname')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('surname'));?>
+										</div>
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('middle_name'));?>
+											<?=$this->formElement($userFields->get('middle_name')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('middle_name'));?>
+										</div>
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('full_name'));?>
+											<?=$this->formElement($userFields->get('full_name')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('full_name'));?>
+										</div>
+									</div>								
+									<div class="form-group">
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('sex'));?>
+											<?=$this->formElement($userFields->get('sex')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('sex'));?>
+										</div>
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('dob'));?>
+											<?=$this->formElement($userFields->get('dob')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('dob'));?>
+										</div>
+										<div class="col-md-4">
+											<?=$this->formLabel($userFields->get('nationality'));?>
+											<?=$this->formElement($userFields->get('nationality')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('nationality'));?>
+										</div>
+									</div>									
+									<div class="form-group">
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('visa_usa'));?>
+											<?=$this->formElement($userFields->get('visa_usa')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('visa_usa'));?>
+										</div>
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('visa_usa_exp'));?>
+											<?=$this->formElement($userFields->get('visa_usa_exp')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('visa_usa_exp'));?>
+										</div>
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('visa_shenghen'));?>
+											<?=$this->formElement($userFields->get('visa_shenghen')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('visa_shenghen'));?>
+										</div>
+										<div class="col-md-3">
+											<?=$this->formLabel($userFields->get('visa_shenghen_exp'));?>
+											<?=$this->formElement($userFields->get('visa_shenghen_exp')->setAttribute('class','form-control input-sm'));?>
+											<?=$this->formElementErrors($userFields->get('visa_shenghen_exp'));?>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<fieldset class="col-md-12">										
+											<legend>Contacts</legend>
+											<div class="row">
+												<div class="col-md-3">
+													<?=$this->formLabel($userFields->get('home_city'));?>
+													<?=$this->formElement($userFields->get('home_city')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('home_city'));?>
+												</div>
+												<div class="col-md-3">
+													<?=$this->formLabel($userFields->get('home_city_text'));?>
+													<?=$this->formElement($userFields->get('home_city_text')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('home_city_text'));?>
+												</div>
+												<div class="col-md-6">
+													<?=$this->formLabel($userFields->get('home_address'));?>
+													<?=$this->formElement($userFields->get('home_address')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('home_address'));?>
+												</div>
+												<div class="col-md-3">
+													<?=$this->formLabel($userFields->get('contact_mobile'));?>
+													<?=$this->formElement($userFields->get('contact_mobile')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('contact_mobile'));?>
+												</div>
+												<div class="col-md-3">
+													<?=$this->formLabel($userFields->get('contact_mobile_2'));?>
+													<?=$this->formElement($userFields->get('contact_mobile_2')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('contact_mobile_2'));?>
+												</div>
+												<div class="col-md-3">
+													<?=$this->formLabel($userFields->get('contact_phone'));?>
+													<?=$this->formElement($userFields->get('contact_phone')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('contact_phone'));?>
+												</div>
+												<div class="col-md-3">
+													<?=$this->formLabel($userFields->get('contact_phone_2'));?>
+													<?=$this->formElement($userFields->get('contact_phone_2')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('contact_phone_2'));?>
+												</div>
+												<div class="col-md-4">
+													<?=$this->formLabel($userFields->get('email'));?>
+													<?=$this->formElement($userFields->get('email')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('email'));?>
+												</div>
+												<div class="col-md-4">
+													<?=$this->formLabel($userFields->get('contact_email'));?>
+													<?=$this->formElement($userFields->get('contact_email')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('contact_email'));?>
+												</div>
+												<div class="col-md-4">
+													<?=$this->formLabel($userFields->get('info_website'));?>
+													<?=$this->formElement($userFields->get('info_website')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('info_website'));?>
+												</div>
+
+											</div>
+										</fieldset>
+									</div>
+									<div class="form-group">
+										<fieldset class="col-md-12">										
+											<legend>Family</legend>
+											<div class="row">
+												<div class="col-md-4">
+													<?=$this->formLabel($userFields->get('marital_status'));?>
+													<?=$this->formElement($userFields->get('marital_status')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('marital_status'));?>
+												</div>
+												<div class="col-md-4">
+													<?=$this->formLabel($userFields->get('next_of_kin'));?>
+													<?=$this->formElement($userFields->get('next_of_kin')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('next_of_kin'));?>
+												</div>
+												<div class="col-md-4">
+													<?=$this->formLabel($userFields->get('childrens'));?>
+													<?=$this->formElement($userFields->get('childrens')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('childrens'));?>
+												</div>
+											</div>
+										</fieldset>							
+									</div>
+									<div class="form-group">
+										<fieldset class="user_education col-md-12">
+											<legend>
+												<span ><?=$this->translate('Education');?> </span> 
+											</legend>
+											<div class="row insert_template">
+												<?php foreach ($form->get('user_education')->getIterator() as $fieldset) {?>
+													<fieldset class="col-md-12 education_item">	
+														<div class="row" style="padding-bottom: 0.5em">
+															<span class="glyphicon glyphicon-remove pull-left delete-education-entry" data-id="<?=$fieldset->get('id')->getValue();?>"></span>
+														</div>
+														<div class="form-group">
+																<?=$this->formElement($fieldset->get('id')->setAttribute('class','form-control input-sm'));?>
+															<div class="col-md-8">
+																<?=$this->formLabel($fieldset->get('name'));?>
+																<?=$this->formElement($fieldset->get('name')->setAttribute('class','form-control input-sm'));?>
+																<?=$this->formElementErrors($fieldset->get('name'));?>
+															</div>
+															<div class="col-md-4">
+																<?=$this->formLabel($fieldset->get('country'));?>
+																<?=$this->formElement($fieldset->get('country')->setAttribute('class','form-control input-sm'));?>
+																<?=$this->formElementErrors($fieldset->get('country'));?>
+															</div>
+															<div class="col-md-4">
+																<?=$this->formLabel($fieldset->get('from'));?>
+																<?=$this->formElement($fieldset->get('from')->setAttribute('class','form-control input-sm'));?>
+																<?=$this->formElementErrors($fieldset->get('from'));?>
+															</div>
+															<div class="col-md-4">
+																<?=$this->formLabel($fieldset->get('to'));?>
+																<?=$this->formElement($fieldset->get('to')->setAttribute('class','form-control input-sm'));?>
+																<?=$this->formElementErrors($fieldset->get('to'));?>
+															</div>
+															<div class="col-md-4">
+																<?=$this->formLabel($fieldset->get('diploma'));?>
+																<?=$this->formElement($fieldset->get('diploma')->setAttribute('class','form-control input-sm'));?>
+																<?=$this->formElementErrors($fieldset->get('diploma'));?>
+															</div>
+														</div>
+													</fieldset>
+													<hr />
+												<?php }?>
+												<?= $this->customCollection()->renderTemplate($form->get('user_education'));?>
+
+											</div>
+										</fieldset>
+										<div class="col-md-3 col-md-offset-9">
+											<span class="pull-right">
+												<button onClick="return add_education();" type="button" id="add_button" class="btn btn-info" ><?=$this->translate('Add More Schools');?></button>
+											</span>
+										</div>
+
+									</div>
+									
+									<?php if($user->user_files){?>
+										<div class="form-group">
+											<fieldset class="col-md-12">
+												<legend><?=$this->translate('User Scanned Documents');?></legend>
+												<div class="row">
+													<div class="col-md-3">
+														<label for="user_files_download">User Scanned Documents</label>
+														<a href="<?=_ADDRESS_._FILESWWW_.$user->user_files;?>"> 
+															<button type="button" id="user_files_download" class="btn btn-success form-control input-sm">
+															<span class="glyphicon glyphicon-floppy-save"></span>  Download Scanned Documents
+															</button>
+														</a>
+													</div>
+												</div>
+											</fieldset>											
+										</div>						
+									<?php }?>
+
+
+									<div class="form-group">
+										<fieldset class="col-md-12">
+											<legend><?=$this->translate('User Application Form');?></legend>
+											<div class="row">
+											<?php if($user->cv_file){ 
+												$md = 9;
+											?>
+												<div class="col-md-3">
+													<label for="cv_file_download"><?=$this->translate('User Application Form');?></label>
+													<a href="<?=_ADDRESS_._FILESWWW_.$user->cv_file;?>"> 
+														<button type="button" id="cv_file_download" class="btn btn-success form-control input-sm">
+														<span class="glyphicon glyphicon-floppy-save"></span> <?=$this->translate('Download User Application Form');?>
+														</button>
+													</a>
+												</div>
+											<?php } else $md = 12; ?>
+												<div class="col-md-<?=$md;?>">
+													<?=$this->formLabel($userFields->get('cv_file'));?>
+													<?=$this->formElement($userFields->get('cv_file')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('cv_file'));?>
+												</div>
+											</div>
+										</fieldset>											
+									</div>						
+
+									<div class="form-group">
+										<fieldset class="col-md-12">
+											<legend><a href="<?=$user->reference_url;?>" target="_blank"><?=$this->translate('Other information');?></a></legend>
+											<div class="row">
+												<div class="col-md-12">
+													<?=$this->formLabel($userFields->get('user_notes'));?>
+													<?=$this->formElement($userFields->get('user_notes')->setAttribute('class','form-control input-sm'));?>
+													<?=$this->formElementErrors($userFields->get('user_notes'));?>
+												</div>
+											</div>
+										</fieldset>											
+									</div>		
+									<div class="form-group">
+										<div class="col-md-12">
+											<hr />
+											<?=$this->formButton()->openTag($form->get('save')->setAttribute('class', 'btn btn-success form-control'));?>
+												<span class="glyphicon glyphicon-floppy-disk"></span>
+												Save Form
+											<?=$this->formButton()->closeTag($form);?>
+										</div>
+									</div>	
+								</div>
+
+							</div> <!-- div class="row" -->
+						</div>
+					</div>
+
+				</div> <!-- col-md-9 -->
+			</div><!--  row -->
+			<?php if ($this->isPermitted('admin\controller\userdb.user-experience')): ?>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box table-responsive">
+							<div class="box-header bg-info">
+								<h4><?=$this->translate('Experience');?></h4>
+							</div>
+							<div class="box-body">
+								<table class="table table-striped table-bordered table-experience">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Ship Name</th>
+											<th>Type</th>
+											<th>Flag</th>
+											<th>DWT</th>
+											<th>Engine</th>
+											<th>From / To</th>
+											<th>Rank</th>
+											<th>Company</th>
+											<th>Crewing</th>
+											<?php if ($this->isPermitted('_admin_\view_edited')): ?>
+												<th><i class="fa fa-floppy-o"></i></th>
+											<?php endif;?>
+											<th><span class="glyphicon glyphicon-cog pull-rigth"></span></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($user_experience as $count => $contract) {?>
+											<tr>
+												<th><?=$count+1;?></th>
+												<td class="col-sm-2"><?=$contract['ship_name'];?></td>
+												<td class="col-sm-1"><?=$contract['ship_type'];?></td>
+												<td class="col-sm-1"><?=$contract['flag'];?></td>
+												<td class="col-sm-1"><?=$contract['dwt'];?></td>
+												<td class="col-sm-1"><?=$contract['engine'];?></td>
+												<td class="col-sm-2">
+													<?=$contract['date_from'];?> -
+													<?=$contract['date_to'];?>
+												</td>
+												<td class="col-sm-1"><?=$contract['rank'];?></td>
+												<td class="col-sm-2"><?=$contract['company'];?></td>
+												<td class="col-sm-2"><?=$contract['crewing'];?></td>
+												<?php if ($this->isPermitted('_admin_\view_edited')): ?>
+													<td class="col-sm-2"><?=($contract['time'])? zgetTimePosted($contract['time']) : '';?></td>
+												<?php endif;?>
+												<td class="col-sm-1">
+													<a href="#" 
+														data-toggle="modal" 
+														data-title="<?=$this->translate('Edit Contract');?>" 
+														data-action="edit_contract"
+														data-id="<?=$contract['id'];?>" 
+														data-target="#myModal"
+													>
+														<span class="glyphicon glyphicon-pencil"></span>
+													</a>
+													<a class="delete_contract" data-id="<?=$contract['id'];?>" 
+
+													href="<?=$this->url('admin/actions', array('controller' => 'index', 'action' => 'delete'), array('query' => array(
+														'id' => $contract['id'], 'section' => 'contract'
+													)));?>" > 
+														<span class="glyphicon glyphicon-trash"></span>
+													</a>
+
+												</td>
+											</tr>					
+										<?php }?>
+									</tbody>
+								</table>
+							</div>
+							<div class="box-footer">
+								<div class="row">
+									<div class="col-md-3 col-md-offset-9">
+										<span class="pull-right">
+											<button type="button" class="btn btn-info" 
+												data-toggle="modal" 
+												data-title="<?=$this->translate('Add Contract');?>" 
+												data-action="add_contract"
+												data-target="#myModal"
+											>
+												<?=$this->translate('Add More Contracts');?>
+											</button>
+										</span>
+									</div>	
+								</div>	
+							</div>
+						</div>
+					</div>
+
+				</div>
+			<?php endif ?>
+			<?php if ($this->isPermitted('admin\controller\userdb.user-documents')): ?>
+				<div class="row">
+					<div class="col-md-12">
+					<div class="box table-responsive">
+						<div class="box-header bg-info">
+							<h4><?=$this->translate('Documents');?></h4>
+						</div>
+						<div class="box-body">
+							<table class="table table-striped table-bordered table-documents">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Title</th>
+										<th>Number</th>
+										<th>Type</th>
+										<th>Grade</th>
+										<th>Issued</th>
+										<th>Expiry</th>
+										<th>Place</th>
+										<?php if ($this->isPermitted('_admin_\view_edited')): ?>
+											<th><i class="fa fa-floppy-o"></i></th>
+										<?php endif;?>
+										<th><span class="glyphicon glyphicon-cog pull-rigth"></span></th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php foreach ($this->user_docs as $count => $doc) {?>
+										<tr>
+											<th><?=$count+1;?></th>
+											<td class="col-sm-2"><?=$doc['title'];?></td>
+											<td class="col-sm-1"><?=$doc['number'];?></td>
+											<td class="col-sm-1"><?=$doc['type'];?></td>
+											<td class="col-sm-1"><?=$doc['grade'];?></td>
+											<td class="col-sm-2"><?=$doc['issue_date'];?></td>
+											<td class="col-sm-2"><?=$doc['expiry_date'];?></td>
+											<td class="col-sm-2"><?=$doc['issue_place'];?></td>
+											<?php if ($this->isPermitted('_admin_\view_edited')): ?>
+												<td class="col-sm-2"><?=($doc['time'])? zgetTimePosted($doc['time']) : '';?></td>
+											<?php endif;?>
+											<td class="col-sm-1">
+												<a href="#" 
+													data-toggle="modal" 
+													data-title="<?=$this->translate('Edit Document');?>" 
+													data-action="edit_document" 
+													data-id="<?=$doc['id'];?>"
+													data-target="#myModal" 
+													>
+													<span class="glyphicon glyphicon-pencil"></span>
+												</a>
+												|
+												<a class="delete_document" data-id="<?=$doc['id'];?>" href="<?=$this->url('admin/actions', array('controller' => 'index', 'action' => 'delete'), array('query' => array(
+															'id' => $doc['id'], 'section' => 'document'
+														)));?>" > 
+													<span class="glyphicon glyphicon-trash"></span>
+												</a>
+
+											</td>
+										</tr>					
+									<?php }?>
+								</tbody>
+							</table>
+						</div>
+						<div class="box-footer">
+							<div class="row">
+								<div class="col-md-3 col-md-offset-9">
+									<span class="pull-right">
+										<!-- Button trigger modal -->
+										<button type="button" class="btn btn-info" 
+											data-toggle="modal" 
+											data-title="<?=$this->translate('Add Document');?>" 
+											data-action="add_document" 
+											data-target="#myModal"
+											>
+											<?=$this->translate('Add More Documents');?>
+										</button>
+									</span>
+								</div>	
+							</div>
+						</div>
+					</div>
+
+					</div>
+				</div>							
+			<?php endif ?>
+			<?php if ($this->isPermitted('admin\controller\userdb.add-work-for')): ?>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box table-responsive">
+							<div class="box-header bg-info">
+								<h4><?= $this->translate('Worked for companies');?> : <small><b><?=$wf_total_results;?></b></small></h4>
+							</div>
+							<div class="box-body">
+								<?=$this->partial('admin/partial/users-table', ['data_list' => $wf_list, 'total_results' => $wf_total_results, 'q_options' => ['t_options' => ['predicat' => 'company_', 'd_controller' => 'userdb', 'd_action' => 'remove-work-for', 'd_id_field' => 'wf_id'], 'show_fields' => ['office_note','name', 'email', 'remove']]]);?>
+							</div>
+							<div class="box-footer">
+								<div class="row">
+									<div class="col-md-3 col-md-offset-9">
+										<span class="pull-right">
+											<!-- Button trigger modal -->
+											<button type="button" class="btn btn-info" 
+												data-toggle="modal" 
+												data-title="<?=$this->translate('Add Company');?>" 
+												data-action="add_work_for" 
+												data-target="#myModal"
+												>
+												<?=$this->translate('Add Company');?>
+											</button>
+										</span>
+									</div>	
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>							
+			<?php endif ?>
+			<?= $this->form()->closeTag();?>
+
+		</div> <!-- col-md-12 -->
+	</div> <!-- row -->
+</section>
+<?php  
+	$this->headScript()->appendFile('/vendor/tinymce/tinymce.min.js')
+	->appendFile('/vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js')
+	; 
+	$this->headLink()
+	->appendStylesheet('/vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css')
+	;
+?>
+<?=$this->partial('application/modal', ['modal_name' => 'myModal']);?>
+<?=$this->partial('application/js/file_upload');?>
+<?=$this->partial('admin/js/cv_avatar_upload_init_script', ['user' => $user, 'form' => $form, 'submit_name' => 'save']);?>
+<?=$this->partial('admin/js/user_profile_delete_add_items_scripts', ['user_email' => $user->email]);?>
+<?=$this->partial('admin/js/user_profile_modal_scripts', ['user_id' => $user->id, 'user_email' => $user->email]);?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#myModal']);?>
+<?=$this->partial('application/js/cv_notes_scripts', ['modal_name' => '#myModal']);?>

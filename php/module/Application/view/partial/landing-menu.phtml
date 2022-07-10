@@ -1,0 +1,49 @@
+<div id="menuF" class="default">
+    <div class="container">
+        <div class="row">
+            <div class="logo col-md-3 hidden-sm hidden-xs">
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="<?=_ADDRESS_;?>" style="font-size: 0.7em;">
+                            <img src="/img/landing/logo-main.png" width="60px"/>
+                        </a>
+                    </div>
+                    <div class="col-md-9">
+                        <p>
+                            <a href="<?=_ADDRESS_;?>" style="font-size: 0.7em;">
+                                <h1 style="padding-bottom: 5px; margin: 0;"><span  style="color: #246faf;">SEA</span><span style="color: #fff;">CONTACT</span></h1>
+                                <h5 style="font-size: 0.5em; padding-top: 5px; color: #fff; margin: 0;"><?=$this->translate('WORLDWIDE SEAFARERS COMMUNITY');?></h5>
+                                <!-- <img src="img/landing/logo.png"> -->
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="language">
+                    <a href="<?=$this->url(null, ['lang' => 'en'], [], true);?>" alt="english"><img src="/img/icons/flag_uk.png" width="20px"></a>
+                    <a href="<?=$this->url(null, ['lang' => 'ru'], [], true);?>" alt="russian"><img src="/img/icons/flag_ru.png" width="20px"></a>
+                </div>
+ 
+                <div class="navmenu"style="text-align: center;">
+                    <ul id="menu">
+                        <li class="active" ><a href="<?=$this->url('sc/home', array(), array('fragment' => 'home'));?>"><?=$this->translate('Home');?></a></li>
+                        <li><a href="<?=$this->url('sc/vacancies');?>"><?=$this->translate('Vacancies');?></a></li>
+                        <li><a href="<?=$this->url('sc/seamansdb');?>"><?=$this->translate('CV\'s');?></a></li>
+                        <li><a href="<?=$this->url('sc/news');?>"><?=$this->translate('News');?></a></li>
+                        <li><a href="<?=$this->url('sc/home', array(), array('fragment' => 'contacts'));?>"><?=$this->translate('Contacts');?></a></li>
+                        <li class="last">
+                            <a href="<?=$this->url('sc/home', array(), array('fragment' => 'registration'));?>">
+                                <button class="btn btn-sm btn-info" style="margin-top: -5px;" type="submit"><?=$this->translate('Registration');?></button>
+                            </a>
+                            <a href="<?=$this->url('sc/auth');?>">
+                                <button class="btn btn-sm btn-success" style="margin-top: -5px;" type="submit"><?=$this->translate('Enter');?></button>
+                            </a>
+                        </li>
+                        <!--li><a href="#features">Features</a></li-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

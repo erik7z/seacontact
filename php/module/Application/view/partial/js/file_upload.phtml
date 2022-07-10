@@ -1,0 +1,69 @@
+<?php
+    $this->headScript()
+        ->appendFile('/vendor/bootstrap-fileinput/js/plugins/canvas-to-blob.min.js')
+        ->appendFile('/vendor/bootstrap-fileinput/js/fileinput.min.js')
+        ->appendFile('/vendor/bootstrap-fileinput/js/fileinput_locale_ru.js');
+
+    $this->headLink()->appendStylesheet('/vendor/bootstrap-fileinput/css/fileinput.min.css');
+?>
+
+<script type="text/javascript">
+
+    <?php $language = ($this->plugin('translate')->getTranslator()->getLocale() == 'ru_RU')? 'ru' : 'en';?>
+        var button_text = "<?=$this->translate('Attach your cv file');?>";
+        var language = "<?=$language;?>";
+        var cv_upload_settings = {
+                browseClass: "btn btn-success btn-lg",
+                browseLabel: button_text,
+                browseIcon: "<i class=\"glyphicon glyphicon-floppy-open\"></i> ",
+                buttonLabelClass: '',
+                maxFileCount: 1,
+                autoReplace: true,
+                allowedFileExtensions: ['pdf', 'doc', 'docx', 'xls', 'xslx'],
+                showCaption: false,
+                showRemove: false,
+                showUpload: false,
+                language: language,
+            };
+
+            button_text = "<?=$this->translate('Attach pictures');?>";
+        var images_upload_settings = {
+                browseClass: "btn btn-info btn-xs",
+                removeClass: "btn btn-xs",
+                browseLabel: button_text,
+                browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
+                maxFileCount: 10,
+                autoReplace: true,
+                previewSettings: {
+                    image: {width: "auto", height: "60px"},
+                },
+                allowedFileTypes: ["image"],
+                showCaption: false,
+                showUpload: false,
+                language: language,
+            };
+
+           <?php $alt = $this->translate('Your avatar');?>
+
+           var removeTitle = '<?=$this->translate("Cancel or reset changes");?>';
+           var cv_avatar_upload_settings = {
+                    overwriteInitial: true,
+                    maxFileSize: 1500,
+                    showClose: false,
+                    showCaption: false,
+                    browseLabel: '',
+                    removeLabel: '',
+                    browseClass: "btn btn-default btn-sm",
+                    removeClass: "btn btn-default btn-sm",
+                    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+                    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+                    removeTitle: removeTitle,
+                    previewSettings: {
+                        image: {width: "160px", height: "auto"},
+                    },
+                    layoutTemplates: {main2: '{preview} ' + '{browse}  {remove} '},
+                    elErrorContainer: '#kv-avatar-errors',
+                    msgErrorClass: 'alert alert-block alert-danger',
+                    allowedFileExtensions: ["jpg", "png", "gif"]
+                };
+</script>

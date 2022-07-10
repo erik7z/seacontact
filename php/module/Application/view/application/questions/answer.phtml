@@ -1,0 +1,93 @@
+<?php
+	$page_url = $this->url('sc/questions/actions', 
+		array('action' => 'answer', 'id' => $answer->answer_id)
+	);
+	$author = ($answer->anonym)? '******' : zgetUserName($answer);
+	$meta_title = $this->translate('Answer on').' : '.zshorterText(strip_tags(html_entity_decode($answer->q_text)), 10);
+	$meta_keywords = zshorterText(strip_tags(html_entity_decode($answer->q_tags)), 7);
+	$hash_tags = zmakeHashTagString($answer->tags);
+	$meta_description = '#'.zstripForHashTag($author).
+		': '.$this->translate('Answer').' '
+		.zshorterText(strip_tags(html_entity_decode($answer->text)),40)
+		.', '.$this->translate('On question').' : '
+		.zshorterText(strip_tags(html_entity_decode($answer->q_text)),40)
+		."\n"."\r".$hash_tags;
+	$default_img = zgetUserAvatar($answer);
+
+
+	$this->headTitle()->prepend($meta_title); 
+	$this->headMeta()->appendName('title', $meta_title);
+	$this->headMeta()->appendName('keywords', $meta_keywords);
+	$this->headMeta()->appendName('description', $meta_description);
+
+	//meta tags for facebook:
+	$this->headMeta()->appendName('author', $author);
+	$this->headMeta()->appendProperty('og:url', $page_url);
+	$this->headMeta()->appendProperty('og:type', 'website');
+	$this->headMeta()->appendProperty('og:title', $meta_title);
+	$this->headMeta()->appendProperty('og:keywords', $meta_keywords);
+	$this->headMeta()->appendProperty('og:description', $meta_description);
+	$this->headMeta()->appendProperty('og:author', $author);
+	
+	$pics = json_decode($answer->pics);
+
+	if(isset($pics[0]->img) && file_exists(_PICSROOT_.$pics[0]->img)) {
+		$image_url = _ADDRESS_._PICSWWW_.$pics[0]->img;
+		$this->headLink(array('rel' => 'image_src', 'href' => $image_url), 'PREPEND');
+		$this->headMeta()->appendProperty('og:image', $image_url);
+	} else {
+		$this->headMeta()->appendProperty('og:image', $default_img);
+	}
+
+;?>
+
+<section id ="view-answer" class="section-vacancies container-fluid" data-type="main_section">
+	<?php
+		$this->layout()->show_breadcrumbs = true;
+	?>
+	<div class="row">
+		<div class="col-md-12">
+				<?php if($answer) {?>
+						<?php 
+							$answer->small_view = 0;
+							$answer->full_view = 1;
+							$answer->show_question = 1;
+						?>
+						<?=$this->partial('my/partial/answer-list-item', $answer);?>
+				<?php } else { ?>
+					<h3><?=$this->translate('answer not found');?></h3>
+				<?php }?>
+		</div> <!-- col-md-12 -->
+	</div> <!-- row -->
+	<div class="row">
+		<div class="col-md-12 text-center" >
+			<h4>
+				<i class="fa fa-comments-o"></i>
+				<a href="<?=$this->url('sc/questions/actions', array('action' => 'view', 'id' => $answer->question_id));?>" >
+					<?=$this->translate('View other answers');?>
+				</a>
+			</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 pt mt">
+			<?php
+				$link = '<a href="'.$page_url.'" target="_blank"><b>'.$this->translate('link').'</b></a>';
+				$email = '<a href="mailto:?subject='.$meta_title.'&body='.$meta_title.' '.$page_url.'" ><b>'.$this->translate('email').'</b></a>';
+				$facebook = '<a href="http://www.facebook.com/sharer/sharer.php?u='.$page_url.'" ><b>'.$this->translate('facebook').'</b></a>';
+				$linkedin = '<a href="https://www.linkedin.com/shareArticle?mini=true&url='.$page_url.'"><b>'.$this->translate('linkedin').'</b></a>';
+				$vkontakte = '<a href="http://vk.com/share.php?url='.$page_url.'" target="_blank"><b>'.$this->translate('vkontakte').'</b></a>';
+			?>
+			<h4 class="pb"><?=sprintf($this->translate('You know somebody who is looking for this answer? share %s on this answer, by %s, %s, %s or %s'), $link, $email, $linkedin, $facebook, $vkontakte);?></h4>
+		</div>
+	</div>
+</section>
+<?=$this->partial('application/image-gallery');?>
+
+
+
+
+
+
+

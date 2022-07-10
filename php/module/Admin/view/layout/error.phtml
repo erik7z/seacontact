@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title> <?=$this->translate('ERROR');?> </title>
+    
+    
+    
+    
+	 <?= $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.png'))
+    	->appendStylesheet('/vendor/twbs/bootstrap/dist/css/bootstrap.min.css')
+	    ->appendStylesheet('/css/admin/login.css')
+	 ;?>
+    
+    
+    
+  </head>
+
+  <body>
+
+    <div class="wrapper">
+		<div class="container container-error">
+				<?= $this->content; ?>
+		</div>
+		
+		<ul class="bg-bubbles">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+	<?php $this->inlineScript()->prependFile($this->basePath('js/admin-login.js'))
+	                           ->prependFile($this->basePath('js/jquery-2.1.3.min.js')); ?>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+<section class="container-fluid">
+<div class="box">
+	<div class="box-header bg-info">
+		<small><?=$this->translate('Update Status For Job');?>:</small>
+		<h4> <?=$task->title;?></h4>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('class', 'form-horizontal');
+				$fieldset = $form->get('admin_tasks');
+				echo $this->form()->openTag($form);
+			?>
+				<fieldset class="col-md-12">
+					<div class="form-group">
+						<div class="col-md-9">
+							<div class="form-group">
+								<div class="col-md-12">
+									<?=$this->formLabel($fieldset->get('text'));?>
+									<?=$this->formElement($fieldset->get('text')->setAttribute('class','form-control'));?>
+									<?=$this->formElementErrors($fieldset->get('text'));?>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<div class="col-md-12">
+									<?=$this->formLabel($fieldset->get('status'));?>
+									<?=$this->formElement($fieldset->get('status')->setAttribute('class','form-control'));?>
+									<?=$this->formElementErrors($fieldset->get('status'));?>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-12">
+							<?=$this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-success form-control'));?>
+								<span class="glyphicon glyphicon-ok"></span> 
+								<?=$form->get('submit')->getLabel();?>
+							<?=$this->formButton()->closeTag();?>
+						</div>
+					</div>
+				</fieldset>
+			<?= $this->form()->closeTag();?>							      		
+		</div>
+	</div>
+</div>
+</section>

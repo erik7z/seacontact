@@ -1,0 +1,59 @@
+<?php 
+	$this->layout()->page_filters = $this->partial('my/partial/logbook-add-btn.phtml');
+?>
+<section id="logbook" class="section-logbook container-fluid" data-type="main_section">
+	
+	<div class="row <?=($this->identity())? 'pt' : '';?>">
+		<?=$this->partial('application/partial/tags-map.phtml');?>
+	</div>
+	
+	<div class="row pb05" data-xhrmenu="data_menu" data-xhrtarg="data_list">
+		<ul class="nav nav-tabs nav-justified">
+			<li role="presentation" <?php if (!($q_options['_order'])): ?> class="active" <?php endif ?>><a href="<?=$this->url('sc/logbook');?>"><?=$this->translate('All logbooks');?></a></li>
+			<li role="presentation" <?php if (isset($q_options['_order']) && $q_options['_order'] == 'views'): ?> class="active" <?php endif ?>><a href="<?=$this->url('sc/logbook',[],['query' => ['_order' => 'views']]);?>"><?=$this->translate('Most Viewed');?></a></li>
+			<li role="presentation" <?php if (isset($q_options['_order']) && $q_options['_order'] == 'total_comments'): ?> class="active" <?php endif ?>><a href="<?=$this->url('sc/logbook',[],['query' => ['_order' => 'total_comments']]);?>"><?=$this->translate('Most Commented');?></a></li>
+			<li role="presentation" <?php if (isset($q_options['_order']) && $q_options['_order'] == 'likes'): ?> class="active" <?php endif ?>><a href="<?=$this->url('sc/logbook',[],['query' => ['_order' => 'likes']]);?>"><?=$this->translate('Most Liked');?></a></li>
+		</ul>
+	</div>
+
+	<div class="row grid js-masonry data-list" data-xhrctr="data_list" 
+	data-name="logbook_list" data-masonry-options='{"itemSelector": ".masonry-grid-item" }'
+	data-limit="<?=$q_options['_limit'];?>" data-offset="<?=$q_options['_offset'];?>"
+	>
+		<?php $l_count = count($data_list);?>
+		<?php if ($l_count): ?>
+			<?php foreach ($data_list as $logbook): ?>
+				<div class="masonry-grid-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<?php $logbook->small_view = 1;?>
+					<?=$this->partial('my/partial/logbook-item.phtml', $logbook);?>
+				</div>
+			<?php endforeach ?>
+		<?php else: ?>
+			<div class="masonry-grid-item col-xs-12">
+				<h4 class="text-center text-muted"><?=$this->translate('There is no logbook matching request');?></h4>
+			</div>
+		<?php endif ?>
+
+	</div>
+	<?=$this->partial('application/partial/custom_pagination');?>
+</section>
+<?=$this->partial('application/image-gallery');?>
+
+<?php $this->headScript()->appendFile($this->basePath('vendor/masonry/dist/masonry.pkgd.min.js'));?>
+<script type="text/javascript">
+	var msnry = window.msnry = new Masonry( '.grid', {itemSelector: '.masonry-grid-item'});
+	$(function() { 
+		// setTimeout(function(){$grid.masonry();}, 500);
+		$('[data-name=custom_pagination]').hide();
+		$(window).scroll(function(){
+			masonryPreload($(this), '.data-list', window.location.href, '.masonry-grid-item');
+		});
+
+		xhrAction.complete_data_menu = function(response) {
+			var msnry = window.msnry = new Masonry( '.grid', {itemSelector: '.masonry-grid-item'});
+		}
+
+	});
+
+</script>
+

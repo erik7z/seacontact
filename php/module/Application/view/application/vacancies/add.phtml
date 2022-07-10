@@ -1,0 +1,24 @@
+<section id ="company-vacancies" class="section-company container-fluid pt">
+	<div class="row pb">
+		<div class="col-md-12 text-left">
+			<a href="<?=$this->url('sc/vacancies/actions', ['action' => 'add']);?>">
+				<button class="btn btn-<?=($this->full_form)? 'default' : 'info';?>" aria-label="<?=$this->translate('Short Form');?>">
+				  <span class="fa fa-file-text-o"></span> <?=$this->translate('Short Form');?>
+				</button>
+			</a>
+			<a href="<?=$this->url('sc/vacancies/actions', ['action' => 'add'], ['query' => ['full_form' => 1]]);?>">
+				<button class="btn btn-<?=($this->full_form)? 'info' : 'default';?>" aria-label="<?=$this->translate('Full Form');?>">
+				  <span class="fa fa-list-alt"></span> <?=$this->translate('Full Form');?>
+				</button>
+			</a>
+		</div>
+	</div>
+	<?=$this->partial('application/partial/vacancy-form', array('form' => $form));?>
+
+</section>
+<?=$this->partial('my/partial/datepicker-scripts.phtml');?>
+<?=$this->partial('application/js/file_upload');?>
+
+<script type="text/javascript">
+	$("input#pics_upload").fileinput(images_upload_settings);
+</script>

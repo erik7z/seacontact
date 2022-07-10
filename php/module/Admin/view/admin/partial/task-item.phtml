@@ -1,0 +1,163 @@
+<?php
+	$panel_color = 'default';
+	if($task->priority > 2 && $task->priority <= 5) $panel_color = 'info';
+	else if($task->priority > 5 && $task->priority <= 8) $panel_color = 'warning';
+	else if($task->priority > 8) $panel_color = 'danger';
+
+	if($task->status == \Application\Model\AdminTasksTable::STATUS_ACTIVE) $status_color = 'success';
+	else if($task->status == \Application\Model\AdminTasksTable::STATUS_CLOSED) $status_color = 'danger';
+	else if($task->status == \Application\Model\AdminTasksTable::STATUS_POSTPONED) $status_color = 'warning';
+
+	$full_view = (isset($full_view)) ? $full_view : 0;
+
+
+?>
+<div class="row">
+	<div class="col-md-10">
+		<div class="panel panel-<?=$panel_color;?>">
+			<div class="panel-heading">
+				<h3 class="panel-title"><b><?=$task->title;?></b> <span class="label label-<?=$status_color;?> pull-right"> <?=\Application\Model\AdminTasksTable::getTasksStatusList()[$task->status];?></span> </h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-9">
+						<ul class="media-list">
+							<li class="media">
+								<div class="media-left text-center">
+									<a href="<?=_ADDRESS_.zgetUserLogin($task);?>">
+										<img class="media-object" src="<?=zgetUserAvatar($task);?>" height="50px" width="50px" alt="<?=zgetUserName($task);?>" >
+									</a>
+								</div>
+								<div class="media-body">
+									<h5 class="media-heading"><a href="<?=_ADDRESS_.zgetUserLogin($task);?>"> <b> <?=zgetUserName($task);?></b></a> <small><?=zformatDateTime($task->time);?></small></h5>
+									<p>
+										<?php $text =htmlspecialchars_decode($task->text);?>
+										<?=($full_view)? $text : zshorterText($text, 30).'<br /> <a href="'.$this->url('admin/actions', ['controller' => 'tasks', 'action' => 'view', 'id' => $task->id]).'">Read more</a>';?>
+									</p>
+									<?php if (isset($task->act_text)): ?>
+										<hr />
+										<div class="media">
+											<div class="media-left media-top">
+												<a href="<?=_ADDRESS_.zgetUserLogin($task, 'act_');?>">
+													<img class="media-object" src="<?=zgetUserAvatar($task, 'act_');?>" height="30px" width="30px" alt="<?=zgetUserName($task, 'act_');?>">
+												</a>
+											</div>
+											<div class="media-body">
+												<h5 class="media-heading">
+													<a href="<?=_ADDRESS_.zgetUserLogin($task, 'act_');?>"><?=zgetUserName($task, 'act_');?></a> 
+													<small><?=zformatDateTime($task->act_time);?></small>
+												</h5>
+												<p><?=htmlspecialchars_decode($task->act_text);?></p>
+											</div>
+										</div>
+									<?php endif ?>
+
+
+								</div>
+							</li>
+
+						</ul>
+					</div>
+					<div class="col-md-3">
+						<h5><small><?=$this->translate('Due Date');?>:</small> <b class="text-danger"><?=zformatDateYear($task->due_date);?></b></h5>
+						<h5><small><?=$this->translate('Responsible');?>:</small></h5>
+						<?php if ($task->responsible): ?>
+							<?php $responsibles = json_decode($task->responsible); ?>
+							<small>
+								<ul class="list-unstyled">
+									<?php $count_resp = count($responsibles);?>
+									<?php if ($responsibles): ?>
+										<?php foreach ($responsibles as $r_user): ?>
+											<li>
+												<a href="<?=$this->url('admin/actions', ['controller' => 'tasks'], ['query' => ['filters' => ['responsible' => $r_user->user_id]]]);?>">
+												<?=zgetUserName((array)$r_user);?>
+												</a>
+												(<?=$r_user->role;?>)
+											</li>
+										<?php endforeach ?>
+										<?php if ( $count_resp < $task->count_responsible): ?>
+											<?=sprintf($this->translate('And %s more'), $task->count_responsible - $count_resp);?>
+										<?php endif ?>
+									<?php endif ?>
+								</ul>
+							</small>
+						<?php else: ?>
+							<?=$this->translate('Not Assigned');?>
+						<?php endif ?>
+						
+						
+
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-5">
+						<h5>
+							<small>
+								<b><?=$this->translate('Visible to');?> : </b>
+								<?php if ($task->visible): ?>
+									<?php $visible_for = json_decode($task->visible); ?>
+									<?php $c = 0;?>
+									<?php foreach ($visible_for as $v_user): ?>
+										<?php if($c > 0) echo ', ';?>
+										<a href="<?=_ADDRESS_.zgetUserLogin((array)$v_user);?>"><?=zgetUserName((array)$v_user);?></a>
+										(<?=$v_user->role;?>)
+										<?php $c++;?>
+									<?php endforeach ?>
+								<?php else: ?>
+									 <?=$this->translate('All Admins');?>
+								<?php endif ?>
+							</small>
+						</h5>
+					</div>
+					<div class="col-md-7 pt text-right">
+						<?php if (!$full_view): ?>
+							<a href="<?=$this->url('admin/actions', ['controller' => 'tasks', 'action' => 'view', 'id' => $task->id]);?>">
+								<button class="btn btn-default btn-xs">
+									<span class="fa fa-eye"></span> <?=$this->translate('View History');?>
+								</button>
+							</a>
+						<?php endif ?>
+						<a href="<?=$this->url('admin/actions', ['controller' => 'tasks', 'action' => 'add-activity', 'id' => $task->id]);?>" class="update_task">
+							<button class="btn btn-primary btn-xs">
+								<span class="fa fa-refresh"></span> <?=$this->translate('Update');?>
+							</button>
+						</a>
+						<?php if ($task->status != \Application\Model\AdminTasksTable::STATUS_CLOSED): ?>
+							<a href="<?=$this->url('admin/actions', ['controller' => 'tasks', 'action' => 'close', 'id' => $task->id]);?>">
+								<button class="btn btn-success btn-xs">
+									<span class="fa fa-bolt"></span> <?=$this->translate('Close Task');?>
+								</button>
+							</a>
+						<?php endif ?>
+
+					</div>
+				</div>
+				<?php if ($this->isPermitted('admin\controller\tasks.delete')): ?>
+					<div class="row">
+						<div class="col-md-12">
+							<a data-action="delete_task" data-url="<?=$this->url('admin/actions', ['controller' => 'tasks', 'action' => 'delete', 'id' => $task->id]);?>" href="#">
+								<button class="btn btn-danger btn-xs">
+									<span class="fa fa-trash"></span> <?=$this->translate('Delete Task');?>
+								</button>
+							</a>
+						</div>
+					</div>
+				<?php endif ?>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-1 text-center">
+		<?=$this->translate('Priority');?>
+		<?php if ($this->isPermitted('admin\controller\tasks.change-priority')): ?>
+			<a class="change_task_priority" href="<?=$this->url('admin/actions', ['controller' => 'tasks', 'action' => 'change-priority', 'id' => $task->id], ['query' => ['priority' => 'up']]);?>">
+				<h3><span class="fa fa-arrow-up"></span></h3>
+			</a>
+		<?php endif?>
+		<h1><?=$task->priority;?></h1>
+		<?php if ($this->isPermitted('admin\controller\tasks.change-priority')): ?>
+			<a class="change_task_priority"  href="<?=$this->url('admin/actions', ['controller' => 'tasks', 'action' => 'change-priority', 'id' => $task->id], ['query' => ['priority' => 'down']]);?>">
+				<h3><span class="fa fa-arrow-down"></span></h3>
+			</a>
+		<?php endif?>
+	</div>
+</div>

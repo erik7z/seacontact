@@ -1,0 +1,32 @@
+ <?php 
+   $active_page = (isset($page))? $page : ((isset($q_options['_page']))? $q_options['_page'] : 1);
+   $limit = (isset($limit))? $limit : ((isset($q_options['_limit']))? $q_options['_limit'] : 10);
+   $filters = (isset($filters))? $filters : ((isset($q_options['filters']))? $q_options['filters'] : []);
+   $layout = (isset($layout))? $layout : ((isset($q_options['layout']))? $q_options['layout'] : false);
+
+   $route_name = $this->routeMatch()->getRoute();
+   $route_params = $this->routeMatch()->getRouteParams();
+   $query_params = ['query' => [
+             '_page' => $active_page,
+             '_limit' => $limit,
+             'filters' => $filters,
+           ]];
+
+     if(isset($order)) $query_params['query']['_order'] = $order;
+     if(isset($order_by)) $query_params['query']['order_by'] = $order_by;
+
+?>
+
+<small><span class="text-muted"><?=$this->translate('Layout switch');?></span></small>
+<div class="btn-group pb05" role="group" aria-label="<?=$this->translate('Layout Switch');?>">
+	<?php $query_params['query']['layout'] = 'thumb';?>
+  <?php $class = ($layout &&  $layout == 'thumb') ? 'info' : 'default';?>
+	<a href="<?=$this->url($route_name, $route_params,$query_params);?>" title="<?=$this->translate('Thumbs');?>">
+	  <button type="button" class="btn btn-<?=$class;?>"><span class="fa fa-th-large" aria-hidden="true"></span></button>
+	</a>
+	<?php $query_params['query']['layout'] = 'list';?>
+	<?php $class = ($layout &&  $layout == 'list') ? 'info' : 'default';?>
+  <a href="<?=$this->url($route_name, $route_params,$query_params);?>" title="<?=$this->translate('List');?>">
+	  <button type="button" class="btn btn-<?=$class;?>"><span class="fa fa-align-justify" aria-hidden="true"></span></button>
+	</a>
+</div>

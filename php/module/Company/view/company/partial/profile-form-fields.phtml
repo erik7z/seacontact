@@ -1,0 +1,108 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="form-group">
+			<div class="col-md-8">
+				<?=$this->formLabel($companyFields->get('company_name'));?>
+				<?=$this->formElement($companyFields->get('company_name')->setAttribute('class','form-control input-sm'));?>
+				<?=$this->formElementErrors($companyFields->get('company_name'));?>
+			</div>
+			<div class="col-md-4">
+				<?php if ($companyFields->has('company_license')): ?>
+					<?=$this->formLabel($companyFields->get('company_license'));?>
+					<?=$this->formElement($companyFields->get('company_license')->setAttribute('class','form-control input-sm'));?>
+					<?=$this->formElementErrors($companyFields->get('company_license'));?>
+				<?php endif ?>
+			</div>
+			<div class="col-md-12">
+			<?php if ($companyFields->has('company_description')): ?>
+				<?=$this->formLabel($companyFields->get('company_description'));?>
+				<?=$this->formElement($companyFields->get('company_description')->setAttribute('class','form-control input-sm'));?>
+				<?=$this->formElementErrors($companyFields->get('company_description'));?>
+			<?php endif ?>
+			</div>
+
+		</div>
+
+
+		<div class="form-group">
+			<fieldset class="col-md-12">										
+				<legend>Contacts</legend>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<div class="col-md-4">
+								<?=$this->formLabel($companyFields->get('email'));?>
+								<?=$this->formElement($companyFields->get('email')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('email'));?>
+							</div>
+							<div class="col-md-4">
+								<?=$this->formLabel($companyFields->get('contact_email'));?>
+								<?=$this->formElement($companyFields->get('contact_email')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('contact_email'));?>
+							</div>
+							<div class="col-md-4">
+								<?=$this->formLabel($companyFields->get('info_website'));?>
+								<?=$this->formElement($companyFields->get('info_website')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('info_website'));?>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-3">
+								<?=$this->formLabel($companyFields->get('contact_phone'));?>
+								<?=$this->formElement($companyFields->get('contact_phone')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('contact_phone'));?>
+							</div>
+							<div class="col-md-3">
+								<?=$this->formLabel($companyFields->get('contact_phone_2'));?>
+								<?=$this->formElement($companyFields->get('contact_phone_2')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('contact_phone_2'));?>
+							</div>
+							<div class="col-md-3">
+								<?=$this->formLabel($companyFields->get('contact_mobile'));?>
+								<?=$this->formElement($companyFields->get('contact_mobile')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('contact_mobile'));?>
+							</div>
+							<div class="col-md-3">
+								<?=$this->formLabel($companyFields->get('contact_mobile_2'));?>
+								<?=$this->formElement($companyFields->get('contact_mobile_2')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('contact_mobile_2'));?>
+							</div>
+						</div>
+
+
+						<div class="form-group">
+							<div class="col-md-3">
+								<?=$this->formLabel($companyFields->get('home_country'));?>
+								<?=$this->formElement($companyFields->get('home_country')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('home_country'));?>
+							</div>
+							<div class="col-md-3">
+								<?=$this->formLabel($companyFields->get('home_city'));?>
+								<?=$this->formElement($companyFields->get('home_city')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('home_city'));?>
+							</div>
+							<div class="col-md-6">
+								<?=$this->formLabel($companyFields->get('home_address'));?>
+								<?=$this->formElement($companyFields->get('home_address')->setAttribute('class','form-control input-sm'));?>
+								<?=$this->formElementErrors($companyFields->get('home_address'));?>
+							</div>												
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="form-group">
+			<fieldset class="col-md-12">
+				<legend><?=$this->translate('Other information');?></legend>
+				<div class="row">
+					<div class="col-md-12">
+						<?=$this->formLabel($companyFields->get('user_notes'));?>
+						<?=$this->formElement($companyFields->get('user_notes')->setAttribute('class','form-control input-sm'));?>
+						<?=$this->formElementErrors($companyFields->get('user_notes'));?>
+					</div>
+				</div>
+			</fieldset>											
+		</div>							
+	</div>
+
+</div> <!-- div class="row" -->

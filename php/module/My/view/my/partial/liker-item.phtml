@@ -1,0 +1,7 @@
+<?php
+	$user_page = (isset($liker['login']) && $liker['login'])? 
+		$this->url('sc/userinfo', array('user' => zgetUserLogin($liker), 'controller' => null)) : (isset($liker['soc_page'])? $liker['soc_page'] : '#');
+	$size = (isset($size))? $size : 30;
+?>
+
+<a href='<?=$user_page;?>' target='_blank'><img src='<?=zgetUserAvatar($liker);?>' width='<?=$size;?>px' height='<?=$size;?>px' title='<?=zgetUserName($liker);?>'></a>

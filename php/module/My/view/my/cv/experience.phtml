@@ -1,0 +1,118 @@
+
+<section id ="cv-experience" class="section-cv container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-9">
+					<h2><?=$this->translate('Experience');?></h2>
+				</div>
+				<div class="right-top-button col-md-2">
+					<a href="<?=$this->url('sc/cv/actions', ['action' => 'experience-add']);?>" class="experience_add">
+						<button type="button" class="btn btn-primary" >
+							<?=$this->translate('Add More Contracts');?>
+						</button>
+					</a>
+				</div>	
+			</div>
+			<div class="row">
+				<div class="col-md-12 pt">
+					<div class="alert alert-warning alert-dismissible" role="alert">
+					  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <?=$this->translate('When entering ships name be sure to write only the clear name, without "m/v", "m/y", "lpg" etc. Do not include any special characters or symbols like (*,-:"&$#@!) and others. Only latin letters');?>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Ship Name</th>
+									<th>Type</th>
+									<th>Flag</th>
+									<th>From</th>
+									<th>To</th>
+									<th>Rank</th>
+									<th>Company</th>
+									<th><span class="glyphicon glyphicon-cog pull-rigth"></span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($user_experience as $count => $contract) {?>
+									<tr data-xhrctr="experience_<?=$contract['id'];?>">
+										<th><?=$count+1;?></th>
+										<td class="col-sm-2"><?=$contract['ship_name'];?></td>
+										<td class="col-sm-1"><?=$contract['ship_type'];?></td>
+										<td class="col-sm-1"><?=$contract['flag'];?></td>
+										<td class="col-sm-2"><?=$contract['date_from'];?></td>
+										<td class="col-sm-2"><?=$contract['date_to'];?></td>
+										<td class="col-sm-1"><?=$contract['rank'];?></td>
+										<td class="col-sm-2"><?=$contract['company'];?></td>
+										<td class="col-sm-1">
+											<a href="<?=$this->url('sc/cv/actions', ['action' => 'experience-edit', 'id' => $contract['id']]);?>" class="experience_edit">
+												<span class="glyphicon glyphicon-pencil"></span>
+											</a>
+											|
+											<a href="<?=$this->url('sc/cv/actions', ['action' => 'experience-delete', 'id' => $contract['id']]);?>" data-xhrdelete="experience_delete" data-xhrtarg="experience_<?=$contract['id'];?>"> 
+												<span class="glyphicon glyphicon-trash"></span>
+											</a>
+
+										</td>
+									</tr>					
+								<?php }?>
+							</tbody>
+						</table>
+					</div> <!-- table-responsive -->
+				</div> <!-- col-md-12 -->
+			</div><!--  row -->
+
+			<div class="row">
+				<div class="col-md-12">
+					<h4><?=$this->translate('Add experience in your cv, to get more connections');?></h4>
+				</div>
+			</div>
+			<div class="new-connections row drop-shadow mb">
+				<div class="col-md-12">
+					<?php if ($partners->count()): ?>
+						<h5><?=$this->translate('New Connections');?></h5>
+					<?php else :?>
+						<h6> <?=$this->translate('No new connections found');?></h6>
+					<?php endif ?>
+					<div class="row connections-list">
+						<?=$this->partialLoop('my/partial/partners-list-item.phtml', $partners);?>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<blockquote class="blockquote-reverse">
+								<a href="<?=$this->url('sc/contacts/actions', array('action' => 'collegues'));?>">
+									<button type="button" class="btn btn-success btn-sm" >
+										<span class="glyphicon glyphicon-link"></span> <?=$this->translate('See More Connections...');?>
+									</button>
+								</a>
+							</blockquote>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+		</div> <!-- section col-sm-12 -->
+	</div> <!-- row -->
+</section>
+
+<?=$this->partial('application/modal', ['modal_name' => 'myModal']);?>
+<?=$this->partial('application/js/load_content_ajax_submit', ['modal_name' => '#myModal']);?>
+
+
+<script type="text/javascript">
+	$('body').on('click', '.experience_add,.experience_edit', function(e){
+		e.preventDefault();
+		$('#myModal').modal('show');
+		loadContent($(this).attr('href'), null, function(){
+				$('select:not(.no_chosen)').chosen();
+		});
+	});
+</script>

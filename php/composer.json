@@ -1,0 +1,35 @@
+{
+    "name": "seacontact",
+    "description": "Application on ZF2",
+    "license": "MPL-2.0",
+    "keywords": [
+        "framework",
+        "zf2"
+    ],
+    "homepage": "http://seacontact.com/",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.5.*",
+        "evandotpro/edp-module-layouts": "dev-master",
+        "fastnloud/zf2-dkim": "dev-master",
+        "sgoranov/google-maps-tools": "dev-master#46c9eaafe54316b63b6e92830b3b78c737e62154",
+        "gowsram/g-maps": "dev-master",
+        "bitweb/zf2-cron-module": "2.0.*",
+        "mikemix/dompdfmodule": "1.*",
+        "facebook/php-sdk-v4" : "~5.0",
+        "guzzlehttp/guzzle" : "6.*",
+        "linkedinapi/linkedin" : "*",
+        "acelaya/zf2-acmailer" : "5.0",
+        
+        "zfcampus/zf-apigility" : "~1.1",
+        "zfcampus/zf-apigility-admin" : "~1.0",
+        "zfcampus/zf-apigility-admin-ui": "1.2.2",
+        "zfcampus/zf-apigility-documentation": "^1.0.5",
+        "zfcampus/zf-apigility-documentation-swagger": "~1.0-dev",
+        "zfcampus/zf-apigility-documentation-apiblueprint": "~1.0-dev",
+        "zfcampus/zf-deploy": "~1.0",
+        "zfcampus/zf-development-mode" : "~2.0",
+        "zendframework/zftool": "dev-master",
+        "zendframework/zend-developer-tools": "dev-master"
+    }
+}

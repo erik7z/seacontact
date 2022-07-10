@@ -1,0 +1,34 @@
+<?php
+	$filters =(isset($section))? ['section' => $section] : [];
+	$route =(isset($route))?  $route : 'sc/news';
+	$filter =(isset($filter))?  $filter : 'tag';
+?>
+
+<div class="col-md-12  tags_map">
+	<div class="well well-sm mb05">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<h4 class="text-mutted mt01 mb05 small text-center" style="color: #bbb;"><strong><?=$this->translate('Popular #Tags');?></strong></h4>
+
+				<?php 
+					$tags_map = $tags_map->toArray();
+					end($tags_map);
+					$last_key = key($tags_map);
+					$count_min = $tags_map[$last_key]['count'];
+					$count_max = $tags_map[0]['count'];
+					$div = (($count_max - $count_min) > 0)? $count_max - $count_min : 1 ;
+					$font_min = 8;
+					$font_max = 14;
+
+					$font_coeff = (($font_max - $font_min) / $div);
+				?>
+				<?php  //shuffle($tags_map);?>
+				<?php foreach ($tags_map as $tag): ?>
+					<?php $font_size = $font_min + ($tag['count'] * $font_coeff);?>
+					<?php $filters = array_merge($filters, [$filter =>  $tag['name']]);?>
+					<a href="<?=$this->url($route, [], ['query' => ['filters' => $filters]]);?>" class="tag" title="<?=$tag['description'].' ('.$tag['count'].')';?>" ><span style="font-size: <?=$font_size;?>px;">#<?=$tag['name'];?>(<?=$tag['count'];?>)</span></a>
+				<?php endforeach ?>
+			</div>
+		</div>
+	</div>
+</div>

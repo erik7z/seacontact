@@ -1,0 +1,85 @@
+<div class="col-md-12 table-responsive">
+	<div class="box">
+		<div class="box-header">
+			<h4><?=$this->translate('Notifications');?></h4>
+		</div>
+		<div class="box-body">
+			<table class="table table-hover table-notifications">
+				<?php foreach($notifications as $notification) {?>
+					<?php 
+						$user_url = $this->url('sc/userinfo', array('user' =>  zgetUserLogin($notification), 'controller' => null));
+						$user_name = zhashUserName(zgetUserName($notification), 0, $this->isPermitted('_user_fields\name', $notification->from_user_id));
+						$notif_title = ($notification->title)? $notification->title : zlessChars(strip_tags(htmlspecialchars_decode($notification->text)), 50);
+						if(!$notif_title) $notif_title = $this->translate('View');
+
+						// parsing notification section
+						if ($notification->not_section == \Application\Model\NewsTable::SECTION_VACANCY) {
+							$notif_url = $this->url('sc/vacancies/actions', ['action' => 'view', 'id' => $notification->not_section_id]);
+						} elseif ($notification->not_section == \Application\Model\NewsTable::SECTION_LOGBOOK) {
+							$notif_url = $this->url('sc/logbook/actions', ['action' => 'view', 'id' => $notification->not_section_id]);
+						} elseif ($notification->not_section == \Application\Model\NewsTable::SECTION_QUESTIONS) {
+							$notif_url = $this->url('sc/questions/actions', ['action' => 'view', 'id' => $notification->not_section_id]);
+						} elseif ($notification->not_section == \Application\Model\NewsTable::SECTION_USER) {
+							$notif_url = $user_url;
+						} else {
+							$notif_url = $user_url;
+						}
+
+						// parsing notification type
+						if ($notification->not_type == \Application\Model\UserNotificationsTable::TYPE_LIKE) {
+							$icon = 'fa fa-heart';
+							$message = $this->translate('Liked your post');
+						} elseif ($notification->not_type == \Application\Model\UserNotificationsTable::TYPE_COMMENT) {
+							$icon = 'fa fa-comments';
+							$message = $this->translate('Leaved comment');
+							$message .= ' : <span class="text-info">"'.zlessChars(strip_tags(htmlspecialchars_decode($notification->not_message)), 50).'"</span> '.$this->translate('To your post');
+						} elseif ($notification->not_type == \Application\Model\UserNotificationsTable::TYPE_ANSWER) {
+							$icon = 'fa fa-bolt';
+							$message = $this->translate('Answered on question that you subscribed');
+						} elseif ($notification->not_type == \Application\Model\UserNotificationsTable::TYPE_VOTE) {
+							$icon = 'fa fa-bar-chart';
+							$message = $this->translate('Rated your post');
+						} elseif ($notification->not_type == \Application\Model\UserNotificationsTable::TYPE_SUBSCRIBER) {
+							$icon = 'fa fa-user-plus';
+							$message = $this->translate('Subscribed to your publication');
+						} elseif ($notification->not_type == \Application\Model\UserNotificationsTable::TYPE_UNLOCK_CV) {
+							$icon = 'fa fa-unlock';
+							$message = $this->translate('Unlocked your contact information');
+						} elseif ($notification->not_type == \Application\Model\UserNotificationsTable::TYPE_PRIVATE_MESSAGE) {
+							$icon = 'fa fa-comment';
+							$message = $this->translate('Sent you a private message');
+						} elseif ($notification->not_type == \Application\Model\UserNotificationsTable::TYPE_NEW_CONTACT) {
+							$icon = 'fa fa-users';
+							$message = $this->translate('Added you to his contacts list');
+						} else {
+							$icon = 'fa fa-bell';
+							$message = $notification->not_message;
+						}
+
+
+					?>
+					<tr <?php if(!$notification->readed):?> style="background-color: #EEF0F3;" <?php endif ?>>
+						<td class="text-center">
+							<i class="<?=$icon;?> text-info"></i>
+						</td>
+						<td>
+							<a href="<?=$user_url;?>">
+								<img style="max-height: 24px" alt="<?=$user_name;?>" src="<?=zgetUserAvatar($notification);?>">
+								<?=$user_name;?>
+							</a>
+						</td>
+						<td>
+							<?=$message;?>
+							<?=($notif_title)? ':' : '';?> 
+							<a href="<?=$notif_url;?>">
+								<b><?=$notif_title;?></b>
+							</a>
+						</td>
+						<td><?=zgetTimePosted($notification->time);?></td>
+					</tr>			
+				<?php }?>
+			</table>
+		</div>
+	</div>
+
+</div>

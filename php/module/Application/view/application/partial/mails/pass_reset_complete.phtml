@@ -1,0 +1,20 @@
+
+<?php
+
+$header = $this->translate('Password change on').' '._ADDRESS_NO_SLASH_.' '.$this->translate('successfully completed!');
+$text1 = array( 
+				$this->translate('Dear , sir').' '.$this->name,
+				$this->translate('Password successfully changed on').' '._ADDRESS_NO_SLASH_.', '.$this->translate('you can now enter the site with login'),
+				'<h3>'.$this->login.'</h3>',
+				$this->translate('And new password'),
+				'<h3>'.$this->password.'</h3>',
+				$this->translate('on the'),
+				
+			);
+$btn_link = $this->login_page;
+$btn_text = $this->translate('Login page');
+
+$footer = $this->translate('If you didn\'t attempt to change password on the').' '._ADDRESS_NO_SLASH_.' '.$this->translate('please ignore this email');
+
+?>
+<?=$this->partial('application/partial/mails/default_template', array('header' => $header, 'text1' => $text1, 'btn_link' => $btn_link, 'btn_text' => $btn_text, 'footer' => $footer ));?>

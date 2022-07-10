@@ -1,0 +1,69 @@
+<?php 
+	$check_form_element = isset($check_form_element)? $check_form_element : null;
+	$auth_redirect = isset($auth_redirect)? $auth_redirect : null;
+	if(!isset($modal_name)) throw new \Application\Exception\Exception("Modal name not provided", 1);
+	
+?>
+
+<script type="text/javascript">
+
+	function socialAuth(params, social_auth_params, social_info) {
+		var initial = params;
+		initial.social_auth_params = social_auth_params;
+		initial.social_info = social_info;
+
+		$.post('/social-auth',initial, function(response){
+			if(response.success == 1) {
+				if(typeof(tinyMCE) != 'undefined') tinyMCE.triggerSave();
+				<?php if($check_form_element):?>
+					var form_content = $('<?=$check_form_element;?>').val();
+					if(form_content == 'undefined') {
+						<?php if($auth_redirect):?> window.location.href = '<?=$auth_redirect;?>'; <?php else :?> window.location.reload(); <?php endif ?>
+					}
+					else {
+						$.notify({message: response.message },notify_success_settings);
+						$('.auth_container').slideUp('slow');
+					}
+				<?php else: ?>
+					<?php if($auth_redirect):?> window.location.href = '<?=$auth_redirect;?>'; <?php else :?> window.location.reload(); <?php endif ?>
+				<?php endif ?>
+			} else {
+				if(response.code == 701) {
+					$('<?=$modal_name;?>').modal('show');
+					loadContent('/fast-reg', params, function(response) {
+						loopSubmit(params, 'type_selected', function(response) {
+							socialAuth(params);
+						});
+					});
+				} else if (response.code == 702) {
+					$('<?=$modal_name;?>').modal('show');
+					params.code = response.extra_data.code;
+					loadContent('/complete-registration', params, function(response) {
+						loopSubmit(params, 'type_selected', function(response) {
+							socialAuth(params, social_auth_params);
+						});
+					});
+				}
+			}
+		}, 'json');
+	}
+
+	function fbAuth(response) {
+		console.log(response);
+		if (response.status === 'connected') {
+			var params = {social_id: response.authResponse.userID, reg_type: 'social', social_type: 'fb'};
+			socialAuth(params,response.authResponse);
+		} else if (response.status === 'not_authorized') {
+			console.log('not authorized in app');
+		} else {
+			console.log('not logged in Facebook');
+		}
+	}
+
+	function fbLoginStatus() {
+		FB.getLoginStatus(function(response) {
+			fbAuth(response);
+		});
+	}
+
+</script>

@@ -1,0 +1,24 @@
+
+
+********Original Message*******
+From: <?=$from_name;?> [mailto:<?=$from_mail;?>] 
+Sent: <?=zformatDateTimeYear($time);?>
+<?php $mail_to = json_decode($mail_to);?>
+
+To:  <?php foreach ($mail_to as $to): ?> <?=isset($to->name)? $to->name : '';?> [mailto:<?=$to->email;?>] <?php endforeach ?>
+<?php if ($mail_cc && $mail_cc != ''): ?>
+
+<?php $mail_cc = json_decode($mail_cc);?>
+	<?php if ($mail_cc): ?>
+		Cc:  <?php foreach ($mail_cc as $cc): ?> <?=isset($cc->name)? $cc->name : '' ;?> [mailto:<?=$cc->email;?>] <?php endforeach ?>
+	<?php endif ?>
+<?php endif ?>
+
+Subject: <?=$subject;?>
+
+<?=htmlspecialchars_decode($text);?>
+
+<?php if ($signature): ?>
+<?=htmlspecialchars_decode($signature);?>
+<?php endif ?>
+*******************************

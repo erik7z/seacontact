@@ -1,0 +1,185 @@
+<?php
+	$user_id = (isset($user_id)) ? $user_id : $user;
+	$this->section = \Application\Model\NewsTable::SECTION_ANSWERS;
+	$this->base_url = $this->page_url = $this->url('sc/questions/actions', 
+		['action' => 'answer', 'id' => $this->id]
+	);
+	$active_url = (isset($active_url)) ? $active_url : $this->routeMatch()->getUrl();
+	
+	$question_url = $this->url('sc/questions/actions', 
+		['action' => 'view', 'id' => $question_id]
+	).'#answer'.$this->id;
+	$show_social = (isset($show_social))? $show_social : 1;
+	$full_view = (isset($full_view))? $full_view : 0;
+	$show_question = (isset($show_question))? $show_question : 0;
+	$rating = $up_votes - $down_votes + $soc_likes;
+	$can_accept = $this->isPermitted('application\controller\questions.toggle-accept', null, $this->id);
+	$show_accept = (!$correct && $can_accept)? 1:0;
+
+	$login = zgetUserLogin($this->vars());
+	$author_page = ($login)? $this->url('sc/userinfo', array('user' => $login, 'controller' => null)) : $soc_page;
+	$author_name = zgetUserName($this->vars());
+	if(!$author_name) $author_name = html_entity_decode(zgetUserName($this->vars(), 'soc_'));
+	$avatar = zgetUserAvatar($this->vars(), '', 1);
+	if(!$avatar) $avatar = zgetUserAvatar($this->vars(), 'soc_');
+?>
+
+<div class="row data-block news-entry answer-entry" id="answer_<?=$this->id;?>" data-xhrctr="answer_<?=$this->id;?>" data-activeurl="<?=$active_url;?>">
+	<ul class="pe-social social-labels col-md-1 col-xs-12 text-right">
+		<?php if ($show_social): ?>
+			<li class="share share_facebook" title="<?=$this->translate('share in');?> Facebook">
+				<i class="pe-so-facebook pe-bg pe-hover pe-2x" data-url="<?=$this->base_url;?>"></i>
+			</li>
+			<li class="share" title="<?=$this->translate('share in');?> Vkontakte">
+				<a href="http://vk.com/share.php?url=<?=$this->base_url;?>" target="_blank">
+					<i class="pe-so-vk pe-bg pe-hover pe-1x" data-url="<?=$this->base_url;?>"></i>
+				</a>
+			</li>
+			<li class="share share_linkedin" title="<?=$this->translate('share in');?> LinkedIn">
+				<i class="pe-so-linkedin pe-bg pe-hover pe-2x" data-url="<?=$this->base_url;?>"></i>
+			</li>
+		<?php endif ?>
+	</ul>
+	<div class="col-md-10 col-xs-11 block-content">
+		<div class="row">
+			<?php $bg = ($time > time())? 'style="background-color: #EFF5FB;"' : '';?>
+			<div class="drop-shadow col-md-12" <?=$bg;?>>
+				<div class="row">
+					<div class="col-md-2 data-avatar">
+						<?php if ($this->anonym): ?>
+							<div class="row pb">
+								<img src="<?=_ADDRESS_._IMGWWW_._ANONYM_AVA_;?>" style="width: 48px; height: 48px;" />
+							</div>
+						<?php else: ?>
+							<div class="row">
+								<a href="<?=$author_page;?>">
+									<img src="<?=$avatar;?>" style="width: 48px; height: 48px;" />
+								</a>
+								<a href="<?=$author_page;?>">
+									<h4 class="<?=($login)? 'text-info' : 'text-muted';?>"><b><?=$author_name;?></b></h4>
+								</a>
+							</div>
+						<?php endif ?>
+					</div>
+					<div class="col-md-10">
+						<div class="row data-text pt" >
+							<div class="col-md-<?=($correct || $can_accept)? 10 : 12;?>">
+								<?php if ($show_question): ?>
+									<span class="text-danger"><i><?=$this->translate('Answer');?> </i></span> <br/>
+								<?php endif ?>
+								<div class="pl">
+									<?php 
+										$text = htmlspecialchars_decode($text);
+										$is_plain_text = ($text == strip_tags($text))? 1 : 0;
+									 	if ($show_question || !$full_view) $text = zhtml_cut($text, 200);
+									?>
+									<?php if ($is_plain_text): ?><p><?php endif ?>
+										<?=$text;?>
+									<?php if ($is_plain_text): ?></p><?php endif ?>
+								</div>
+
+							</div>
+							<?php if($correct || $can_accept): ?>
+								<div class="col-md-2 pt pb text-center">
+									<?php if ($correct): ?>
+										<?php if($can_accept):?><a href="<?=$this->url('sc/questions/actions', ['action' => 'toggle-accept', 'id' => $this->id]);?>" data-xhrtoggle="toggle_answer" data-xhrtarg="answer_<?=$this->id;?>"><?php endif?>
+											<span class="answer-toggle <?=($can_accept)? 'change-icon' : '';?> " title="<?=$this->translate('Correct Answer');?>">
+												<span class="fa fa-check fa-2x"></span>
+												<?php if($can_accept):?><span class="fa fa-times fa-2x"></span><?php endif?>
+											</span>
+										<?php if($can_accept):?></a><?php endif?>
+									<?php elseif($can_accept): ?>
+										<a href="<?=$this->url('sc/questions/actions', ['action' => 'toggle-accept', 'id' => $this->id]);?>" data-xhrtoggle="toggle_answer" data-xhrtarg="answer_<?=$this->id;?>">
+											<span class="answer-accept" title="<?=$this->translate('Accept Answer');?>">
+												<span class="fa fa-check fa-2x"></span>
+											</span>
+										</a>
+									<?php endif ?>
+								</div>
+							<?php endif ?>
+						</div>
+						<div class="row ">
+							<div class="col-md-12">
+								<?php if(isset($pics)) :?>
+									<?php $pics = json_decode($pics);?>
+									<?php $grid = ($time > time()) ? '-postponed' : '';?>
+									<?=$this->partial('application/partial/pics-grid', ['pics' => $pics, 'grid_id' => $grid, 'gallery_id' => '#answer_pics_'.$this->id]);?>
+								<?php endif	?>
+							</div>	
+						</div>
+						<?php if ($show_question): ?>
+							<div class="row">
+								<div class="col-md-12">
+									<p>
+										<i class="text-danger"><?=$this->translate('On question');?>:</i> 
+										<?php
+											$q_text = htmlspecialchars_decode($this->q_text);
+											$q_text = (!$full_view)?  zshorterText(strip_tags($q_text), 40) : $q_text;
+										?>
+										<i><?=$q_text;?></i>
+										<span class="pull-right">
+											<a href="<?=$question_url;?>" class="read_more_link" data-section="answer" data-id="<?=$this->id;?>">
+												<i class="fa fa-angle-double-right"></i> <strong class="small"><?=$this->translate('Read more');?></strong>
+											</a>
+										</span>
+										
+									</p> 
+								</div>
+							</div>
+						<?php endif ?>
+						<div class="row">
+							<div class="col-md-12 pb">
+								<span class="pull-left small">
+									<?php if ($this->isPermitted('application\controller\questions.answer-edit', $this->user_id, $this->id)): ?>
+										[
+										<a href="<?= $this->url('sc/questions/actions', array('action' => 'answer-edit','id' => $this->id)); ?>" class="edit_answer" data-id="<?=$this->id;?>" target="_parent" >
+											<span class="fa fa-pencil text-info"></span>
+										</a>
+										]
+									<?php endif ?> 	
+
+									<?php if ($this->isPermitted('application\controller\questions.answer-delete', $this->user_id, $this->id)): ?>
+										&nbsp;
+										[
+										<a href="<?= $this->url('sc/questions/actions', array('action' => 'answer-delete','id' => $this->id)); ?>" target="_parent" data-xhrdelete="delete_answer" data-xhrtarg="answer_<?=$this->id;?>" >
+											<span class="fa fa-trash-o text-muted"></span>
+										</a>
+										]
+									<?php endif ?>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div> <!-- -->
+			<div class="activity-block col-md-12">
+				<?=$this->partial('my/partial/activity-block');?>
+			</div> 						
+		</div> <!-- row -->
+	</div>
+	<?php if (!$this->userInfo()): ?>
+		<ul class="col-md-1 col-xs-1 pe-social data-edit" data-xhrctr="answer_rating_<?=$this->id;?>">
+			<?php if($this->isPermitted('application\controller\questions.answer-change-rating', $user_id, $this->id) && $vote_status != 'up') :?>
+				<li>
+					<a href="<?= $this->url('sc/questions/actions', ['action' => 'answer-change-rating', 'id' => $this->id], ['query' => ['rating' => 'up']]); ?>" 
+						data-xhrtoggle="change_rating" data-xhrtarg="answer_rating_<?=$this->id;?>" data-contenturl="<?=$this->url('sc/questions/actions', ['action' => 'answer', 'id' => $this->id]);?>">
+						<span class="fa fa-arrow-up"></span>
+					</a>
+				</li>
+			<?php endif?>
+				<li class="text-center rating">
+					<?php $color = ($rating > 0)? 'success' : 'danger';?>
+					<b class="text-<?=$color;?>"><?=$rating;?></b>
+				</li>
+			<?php if($this->isPermitted('application\controller\questions.answer-change-rating', $this->user_id, $this->id) && $vote_status != 'down') :?>
+				<li>
+					<a href="<?= $this->url('sc/questions/actions', ['action' => 'answer-change-rating', 'id' => $this->id], ['query' => ['rating' => 'down']]); ?>" 
+						data-xhrtoggle="change_rating" data-xhrtarg="answer_rating_<?=$this->id;?>" data-contenturl="<?=$this->url('sc/questions/actions', ['action' => 'answer', 'id' => $this->id]);?>">
+						<span class="fa fa-arrow-down"></span>
+					</a>
+				</li>
+			<?php endif?>
+		</ul>
+	<?php endif ?>
+
+</div> 

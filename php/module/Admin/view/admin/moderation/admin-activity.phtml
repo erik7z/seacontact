@@ -1,0 +1,116 @@
+<section classs="container-fluid">
+	<div class="row">
+		<div class="col-md-12 table-responsive">
+			<div class="box">
+				<div class="box-header bg-info">
+					<div class="row">
+						<div class="col-md-2"><h4><?=$this->translate('Admins Activity');?></h4></div>
+						<div class="col-md-9 text-center">
+							<?php foreach ($admins as $admin): ?>
+								<a href="<?=$this->url('admin/actions', ['controller' => 'moderation'], ['query' => ['filters' => ['admin_id' => $admin->id]]]);?>">
+									<?php
+										$btn_color = (isset($filters['admin_id']) && $filters['admin_id'] == $admin->id)? 'success' : 'default';
+									?>
+									<button class="btn btn-<?=$btn_color;?> btn-xs">
+										<span class="fa fa-user"></span> <?=zgetUserName($admin);?>
+									</button>
+								</a>
+							<?php endforeach ?>
+							<?php if (isset($filters['admin_id'])): ?>
+								<a href="<?=$this->url('admin/actions', ['controller' => 'moderation']);?>">
+									<button class="btn btn-danger btn-xs">
+										<span class="fa fa-ban"></span> <?=$this->translate('Clean Filters');?>
+									</button>
+								</a>
+							<?php endif ?>
+						</div>
+					</div>
+				</div>
+				<div class="box-body">
+					<table class="table table-bordered table-hover table-condensed table-favorites">
+						<thead>
+							<tr>
+								<th class="col-md-2"><?=$this->translate('Admin');?></th>
+								<th class="col-md-1"><?=$this->translate('Role');?></th>
+								<th class="col-md-5"><?=$this->translate('Action');?></th>
+								<th class="col-md-2"><?=$this->translate('Action Note');?></th>
+								<th class="col-md-1"><?=$this->translate('Time');?></th>
+								<th class="col-md-1"><?=$this->translate('IP');?></th>
+							</tr>
+						</thead>
+						<?php foreach($data_list as $action) {?>
+							<tr>
+								<td>
+									<a href="<?=$this->url('admin/actions', array('controller' => 'userdb', 'action' => 'user', 'id' => $action->user_id));?>" target="_blank">
+										<img src="<?=zgetUserAvatar($action);?>" alt="<?=zgetUserName($action);?>" width="30px" height="30px">
+									</a>
+									<a href="<?=_ADDRESS_.zgetUserLogin($action);?>">
+										<?=zgetUserName($action);?>
+									</a>
+
+								</td>
+								<td>
+									<?=$action->role;?>
+								</td>
+								<td>
+									<?php 
+										if ($action->controller == 'userdb' || $action->controller == 'access'){
+											$link_controller = 'userdb';
+											$link_action = ($action->action == 'index')? 'index' : 'user';
+										} else if ($action->controller == 'crewmail') {
+											$link_controller = 'mailbox';
+											$link_action = ($action->action == 'index')? 'index' : 'view';
+										} else if ($action->controller == 'officemail') {
+											$link_controller = 'mailbox';
+											$link_action = ($action->action == 'index')? 'index' : 'view';
+										} else if ($action->controller == 'tasks') {
+											$link_controller = 'tasks';
+											$link_action = ($action->action == 'index')? 'index' : 'view';
+										} else if ($action->controller == 'vacancies') {
+											$link_controller = 'vacancies';
+											$link_action = ($action->action == 'index')? 'index' : 'view';
+										}
+										$link_query = ($action->query) ? ['query' => $action->query] : '';
+									?>
+									<a href="<?=$this->url('admin/actions', ['controller' => $link_controller, 'action' => $link_action, 'id' => $action->action_id], $link_query);?>" target="_blank">
+										<span class="fa fa-external-link" aria-hidden="true"></span>
+									</a>
+									<?=$action->controller;?> | 
+									<?=$action->action;?> | 
+									<?php if ($action->action_id): ?> <?=$action->action_id;?> | <?php endif ?>
+									<?php 
+										if ($action->query) {
+											parse_str($action->query, $query_params);
+											$str = '';
+											$c = 0;
+											foreach ($query_params['filters'] as $key => $value) {
+												if($c > 0) $str .= ' , ';
+												$str .= $key.' = ';
+												if(is_array($value)) {
+													foreach ($value as $inner_value) {
+														$str .= $inner_value.' ';
+													}
+												} else $str .= $value.' ';
+												$c++;
+											}
+										}
+									?>
+									<?=($action->query)? '['.$str.']' : '';?> 
+								<td>
+									<?=$action->note;?>
+								</td>
+								<td><span class="hidden"><?=$action->time;?></span> <?=zformatDateTime($action->time);?></td>
+								<td><?=$action->ip;?></td>
+							</tr>			
+						<?php }?>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+	<div class="col-md-12 text-center">
+		<?=$this->partial('application/partial/custom_pagination');?>
+	</div>
+	</div>
+</section>
