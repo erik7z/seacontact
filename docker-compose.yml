@@ -27,7 +27,6 @@ services:
       - ${_REDIS_PORT_}
 
   php:
-#    build: ./php
     image: zzzloy777/sc:latest
     volumes:
       - static_content:/home/seacontact/
@@ -66,7 +65,7 @@ services:
       - scredis
 
   nginx:
-    build: ./nginx
+    image: zzzloy777/sc-nginx
     ports:
       - 80:80
       - 443:443
