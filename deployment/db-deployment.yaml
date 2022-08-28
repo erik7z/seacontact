@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sc-depl-db
+  labels:
+    env: development
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: sc-proj-db
+  template:
+    metadata:
+      labels:
+        project: sc-proj-db
+    spec:
+      containers:
+        - name: sc-db
+          image: mysql:5.7
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              subPath: "seacontact.com/db/data"
+              name: ez-volume
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_USER
+              value: "root"
+            - name: MYSQL_ROOT_PASSWORD
+              value: "cr3wsilent"
+            - name: MYSQL_USER
+              value: "root"
+            - name: MYSQL_PASSWORD
+              value: "cr3wsilent"
+            - name: MYSQL_DATABASE
+              value: "seacontact"
+      volumes:
+        - name: ez-volume
+          persistentVolumeClaim:
+            claimName: ez-volume-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sc-serv-db
+  labels:
+    env: development
+spec:
+  selector:
+    project: sc-proj-db
+  type: NodePort
+  ports:
+    - name: mysql7474
+      port: 3306
+      targetPort: 3306
