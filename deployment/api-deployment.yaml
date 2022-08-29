@@ -31,7 +31,7 @@ spec:
             - name: _MYSQL_PASSWORD_
               value: "cr3wsilent"
             - name: _REDIS_IP_
-              value: "scredis"
+              value: "localhost"
             - name: _REDIS_PORT_
               value: "6379"
             - name: _GMAPS_KEY_
@@ -92,7 +92,7 @@ spec:
             - name: PHP_FPM_HOST
               value: "127.0.0.1"
             - name: NGINX_PHP_SOURCE
-              value: "/var/www/html"
+              value: "/var/www/html/public_html"
             - name: NGINX_HOST
               value: "seacontact.com"
             - name: SSL_CERT_HOST
@@ -100,6 +100,11 @@ spec:
           volumeMounts:
             - mountPath: /var/www/html
               name: static
+        - name: scredis
+          image: redis:6.0-alpine
+          ports:
+            - containerPort: 6379
+
 ---
 apiVersion: v1
 kind: Service
@@ -118,3 +123,6 @@ spec:
     - name: nginx443
       port: 443
       targetPort: 443
+    - name: redis6379
+      port: 6379
+      targetPort: 6379

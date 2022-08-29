@@ -1,0 +1,69 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: askseaman-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "askseaman-ip"
+spec:
+  rules:
+    - host: askseaman.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: askseaman-serv-client
+                port:
+                  number: 80
+            pathType: Prefix
+            path: "/"
+    - host: api.askseaman.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: askseaman-serv-api
+                port:
+                  number: 4000
+            pathType: Prefix
+            path: "/"
+    - host: "seacontact.com"
+      http:
+        paths:
+          - backend:
+              service:
+                name: sc-serv-api
+                port:
+                  number: 80
+            pathType: Prefix
+            path: "/"
+    - host: "*.seacontact.com"
+      http:
+        paths:
+          - backend:
+              service:
+                name: sc-serv-api
+                port:
+                  number: 80
+            pathType: Prefix
+            path: "/"
+    - host: "www.en.seacontact.com"
+      http:
+        paths:
+          - backend:
+              service:
+                name: sc-serv-api
+                port:
+                  number: 80
+            pathType: Prefix
+            path: "/"
+    - host: "www.ru.seacontact.com"
+      http:
+        paths:
+          - backend:
+              service:
+                name: sc-serv-api
+                port:
+                  number: 80
+            pathType: Prefix
+            path: "/"
+---
