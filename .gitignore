@@ -2,7 +2,7 @@
 !php/public_html/index.php
 !php/public_html/robots.txt
 .DS_Store
-.env
+../deployments/seacontact/.env
 .idea
 _misc
 db/data
