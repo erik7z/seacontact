@@ -3,6 +3,7 @@
 !php/public_html/robots.txt
 .DS_Store
 .idea
+.env
 _misc
 db/data
 db/db
