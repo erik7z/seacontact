@@ -2,9 +2,9 @@
 Social network for Seamans
 Built with PHP / ZENDFRAMEWORK 2 / MYSQL / JQUERY / BOOTSTRAP 
 
-Working version can be found on: https://seacontact.ru
+Working version can be found on: http://seacontact.com
 
-Public api is available at: https://api.seacontact.ru
+Public api is available at: http://api.seacontact.com
 
 To build up your version of this platform, you need to have docker & docker-compose installed on your machine.
 
